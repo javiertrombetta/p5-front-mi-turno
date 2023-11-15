@@ -1,9 +1,6 @@
-import { Inter } from 'next/font/google'
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import theme from '../styles/LightThemeMUI';
 import './globals.css';
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'Mi turno web',
@@ -13,7 +10,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <MUIThemeProvider theme={theme}>
-      <html lang="en">
+      <html lang="en">        
         <body>
           {children}
         </body>
