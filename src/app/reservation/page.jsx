@@ -1,13 +1,12 @@
-import React from "react";
-import Stepper from "../../components/Stepper";
-import BasicDateCalendar from "@/components/Calendar";
-import BasicSelect from "@/components/SelectForm";
-
-import Button from "@mui/material/Button";
+import { Container } from "@mui/material";
 import Checkout from "../../components/Checkout";
 
 const Reservation = () => {
-  return <Checkout />;
+  return (
+    <Container maxWidth="lg">
+      <Checkout />
+    </Container>
+  );
 };
 
 export default Reservation;
