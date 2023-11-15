@@ -14,6 +14,12 @@ const theme = createTheme({
       light: "#A5DCFF",
       dark: "#005295",
     },
+    tertiary: {
+      main: "#7FB7BE",
+    },
+    quaternary: {
+      main: "#D3F3EE",
+    },
     error: {
       main: "#f44336",
       light: "#FFCDD2",

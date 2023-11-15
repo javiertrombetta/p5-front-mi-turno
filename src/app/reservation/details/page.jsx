@@ -1,9 +1,9 @@
 // pages/reservation/index.js
-import React from 'react';
-import Navbar from '../../../components/Navbarzzz';
-import Thanks from '../../../components/ReservationThanks';
-import ReservationDetails from '../../../components/ReservationDetails';
-import { Box, Card, Container, Divider } from '@mui/material';
+import React from "react";
+import Navbar from "../../../components/Navbarzzz";
+import Thanks from "../../../components/ReservationThanks";
+import ReservationDetails from "../../../components/ReservationDetails";
+import { Box, Card, Container, Divider } from "@mui/material";
 
 export default function ReservationPage() {
   return (
