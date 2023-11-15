@@ -26,7 +26,7 @@ export default function SignIn() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ marginTop: "5rem" }}>
       <CssBaseline />
       <Box
         sx={{
@@ -36,10 +36,10 @@ export default function SignIn() {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+        <Avatar sx={{ m: 1, bgcolor: "tertiary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5" color="secondary">
+        <Typography component="h1" variant="h5">
           Sign in
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -64,15 +64,22 @@ export default function SignIn() {
             autoComplete="current-password"
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="secondary" />}
+            control={<Checkbox value="remember" color="tertiary" />}
             label="Remember me"
           />
           <Button
-            color="secondary"
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, color: "black" }}
+            sx={{
+              mt: 3,
+              mb: 2,
+              color: "tertiary.main",
+              "&:hover": {
+                backgroundColor: "tertiary.main",
+                color: "#fff",
+              },
+            }}
           >
             Sign In
           </Button>
@@ -83,7 +90,7 @@ export default function SignIn() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/register" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
