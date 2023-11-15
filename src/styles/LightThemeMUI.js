@@ -10,6 +10,12 @@ const theme = createTheme({
     secondary: {
       main: "#ff0000",
     },
+    tertiary: {
+      main: "#7FB7BE",
+    },
+    quaternary: {
+      main: "#D3F3EE",
+    },
     error: {
       main: "#f44336",
     },
