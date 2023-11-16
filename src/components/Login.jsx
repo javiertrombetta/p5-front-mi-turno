@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { Divider } from "@mui/material";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -36,7 +37,7 @@ export default function SignIn() {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "tertiary.main" }}>
+        <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
@@ -63,38 +64,56 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="tertiary" />}
-            label="Remember me"
-          />
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography>
+              <FormControlLabel
+                control={
+                  <Checkbox value="remember" color="primary" size="body2" />
+                }
+                label="Remember me"
+              />
+            </Typography>
+
+            <Link
+              href="#"
+              variant="body1"
+              sx={{ color: "black", textDecoration: "none" }}
+            >
+              Forgot password?
+            </Link>
+          </Box>
+
           <Button
             type="submit"
             fullWidth
             variant="contained"
+            color="primary"
             sx={{
-              mt: 3,
-              mb: 2,
-              color: "tertiary.main",
-              "&:hover": {
-                backgroundColor: "tertiary.main",
-                color: "#fff",
-              },
+              textTransform: "capitalize",
+              color: "white",
+              ":hover": { bgcolor: "primary.dark", color: "white" },
             }}
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
+          <Divider sx={{ marginBottom: "1rem", marginTop: "1rem" }} />
+          <Link href="/register">
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{
+                textTransform: "initial",
+                bgcolor: "primary.light",
+                color: "primary.main",
+                ":hover": {
+                  bgcolor: "primary.dark",
+                  color: "white",
+                },
+              }}
+            >
+              Don't have an account? Sign Up
+            </Button>
+          </Link>
         </Box>
       </Box>
     </Container>
