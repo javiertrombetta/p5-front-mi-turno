@@ -15,7 +15,11 @@ import AddressReservationForm from "./AddresReservationForm";
 import BasicSelect from "./SelectForm";
 import BasicDateCalendar from "./Calendar";
 
-const steps = ["Select your location", "Select the day", "Fill out the form"];
+const steps = [
+  "Seleccione la sucursal",
+  "Selecione el día",
+  "Complete el formulario",
+];
 
 function getStepContent(step) {
   switch (step) {
@@ -59,7 +63,7 @@ export default function Checkout() {
           sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
         >
           <Typography component="h1" variant="h4" align="center">
-            Reservation
+            Hacer una Reserva
           </Typography>
           <Stepper
             activeStep={activeStep}
