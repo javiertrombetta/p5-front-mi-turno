@@ -9,7 +9,7 @@ import { Button } from "@mui/material";
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="text.secondary">
+    <Typography variant="body1" color="text.secondary">
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
         Your Website
@@ -46,13 +46,10 @@ export default function Footer() {
         component="footer"
         sx={{ mt: "auto", display: "flex", marginLeft: "0" }}
       >
-        <Container
-          maxWidth="sm"
-          sx={{ py: 3, fontFamily: "monospace", fontSize: "0.8rem" }}
-        >
+        <Container maxWidth="sm" sx={{ py: 3 }}>
           Tenés alguna consulta?
           <Button>
-            <WhatsAppIcon color="tertiary" />
+            <WhatsAppIcon sx={{ color: "#7FB7BE" }} />
           </Button>
         </Container>
       </Box>
