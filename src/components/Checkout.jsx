@@ -15,19 +15,6 @@ import AddressReservationForm from "./AddresReservationForm";
 import BasicSelect from "./SelectForm";
 import BasicDateCalendar from "./Calendar";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
 const steps = ["Select your location", "Select the day", "Fill out the form"];
 
 function getStepContent(step) {
