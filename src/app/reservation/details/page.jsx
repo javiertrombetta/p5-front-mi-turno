@@ -1,9 +1,10 @@
 // pages/reservation/index.js
 import React from "react";
-import Navbar from "../../../components/Navbarzzz";
+import Navbar from "@/commons/Navbar";
 import Thanks from "../../../components/ReservationThanks";
 import ReservationDetails from "../../../components/ReservationDetails";
 import { Box, Card, Container, Divider } from "@mui/material";
+import Footer from "@/commons/Footer";
 
 export default function ReservationPage() {
   return (
@@ -20,6 +21,7 @@ export default function ReservationPage() {
           </Box>
         </Card>
       </Container>
+      <Footer />
     </>
   );
 }
