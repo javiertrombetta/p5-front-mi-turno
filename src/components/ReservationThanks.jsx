@@ -4,18 +4,20 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 export default function Thanks() {
   return (
-    <Box sx={{ textAlign: 'center', my: 4 }}>
+    <Box sx={{ textAlign: 'center' }}>
       <CheckCircleOutlineIcon color="success" sx={{ fontSize: 100 }} />
-      <Typography variant="h3" gutterBottom sx={{ my: 5}}>
+      <Typography variant="h3" gutterBottom sx={{ my: 1}}>
         ¡Gracias por tu reserva!
       </Typography>
-      <Typography variant="subtitle1" gutterBottom sx={{ my: 5}}>
-        En hasta 5 minutos, recibirás un correo electrónico con todos los detalles de tu reservación.
+      <Typography variant="subtitle1" gutterBottom sx={{ mt: 3}}>
+        Revisá tu casilla [EMAIL_DE_CONTACTO] con todos los detalles de tu reservación.
       </Typography>
-      <Button variant="contained" color="primary" sx={{ my: 2, py: 2, px: 10 }}>
+      <Typography variant="subtitle1" gutterBottom sx={{ mb: 3}}>
+        Recordá revisar tu casilla de correo no deseado.
+      </Typography>
+      <Button variant="contained" color="primary" sx={{ my: 5, fontSize: "1.1em",textTransform: "initial", py: 2, px: 10 }}>
         ¿Querés imprimir tu comprobante?
       </Button>
-
     </Box>
   );
 }
