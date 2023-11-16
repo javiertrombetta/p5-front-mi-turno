@@ -3,7 +3,7 @@ import Checkout from "../../components/Checkout";
 
 const Reservation = () => {
   return (
-    <Container maxWidth="lg">
+    <Container>
       <Checkout />
     </Container>
   );
