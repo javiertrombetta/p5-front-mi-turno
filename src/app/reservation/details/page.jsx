@@ -2,9 +2,10 @@ import React from "react";
 import Thanks from "@/components/ReservationThanks";
 import ReservationDetails from "@/components/ReservationDetails";
 import { Box, Card, Container, Divider } from "@mui/material";
+import Footer from "@/commons/Footer";
 
 export default function ReservationPage() {
-  return (  
+  return (
     <Container maxWidth="lg">
       <Card variant="none">
         <Box sx={{ my: 10 }}>
@@ -16,6 +17,5 @@ export default function ReservationPage() {
         </Box>
       </Card>
     </Container>
-    
   );
 }
