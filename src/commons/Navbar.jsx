@@ -16,7 +16,7 @@ function Navbar() {
   return (
     <Box sx={{ marginBottom: "5rem" }}>
       <CssBaseline />
-      <AppBar component="nav" sx={{ backgroundColor: "tertiary.main" }}>
+      <AppBar component="nav" sx={{ backgroundColor: "primary.main" }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <IconButton
             color="inherit"
@@ -28,14 +28,11 @@ function Navbar() {
             variant="extended"
             size="small"
             sx={{
-              color: "#fff",
+              padding: "10px",
               textTransform: "capitalize",
-              padding: "0.8rem",
-              fontFamily: "monospace",
-              "&:hover": {
-                backgroundColor: "#fff",
-                color: "tertiary.main",
-              },
+              bgcolor: "primary.light",
+              color: "primary.main",
+              ":hover": { bgcolor: "primary.dark", color: "white" },
             }}
           >
             {navItems[2]}
@@ -60,8 +57,6 @@ function Navbar() {
                 marginRight: "0.5rem",
                 color: "#fff",
                 textTransform: "capitalize",
-                fontFamily: "monospace",
-                fontSize: "0.9rem",
               }}
             >
               {navItems[0]}
@@ -81,8 +76,6 @@ function Navbar() {
                 marginRight: "0.5rem",
                 color: "#fff",
                 textTransform: "capitalize",
-                fontFamily: "monospace",
-                fontSize: "0.9rem",
               }}
             >
               {navItems[1]}

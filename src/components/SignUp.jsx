@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { Divider } from "@mui/material";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -36,35 +37,25 @@ export default function SignUp() {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "tertiary.main" }}>
+        <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component="h2" variant="h5">
           Sign up
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
-                autoComplete="given-name"
-                name="firstName"
+                name="fullName"
                 required
                 fullWidth
-                id="firstName"
-                label="First Name"
+                id="fulltName"
+                label="First & Last Name"
                 autoFocus
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="family-name"
-              />
-            </Grid>
+
             <Grid item xs={12}>
               <TextField
                 required
@@ -98,35 +89,48 @@ export default function SignUp() {
               />
             </Grid>
             <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="tertiary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
+              <Typography variant="body2">
+                <FormControlLabel
+                  control={
+                    <Checkbox value="allowExtraEmails" color="primary" />
+                  }
+                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  sx={{ marginBottom: "10px" }}
+                />
+              </Typography>
             </Grid>
           </Grid>
           <Button
             type="submit"
             fullWidth
             variant="contained"
+            color="primary"
             sx={{
-              mt: 3,
-              mb: 2,
-              color: "tertiary.main",
-              "&:hover": {
-                backgroundColor: "tertiary.main",
-                color: "#fff",
-              },
+              textTransform: "capitalize",
+              color: "white",
+              ":hover": { bgcolor: "primary.dark", color: "white" },
             }}
           >
             Sign Up
           </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Link href="/" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
+          <Divider sx={{ marginBottom: "1rem", marginTop: "1rem" }} />
+          <Link href="/">
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{
+                textTransform: "initial",
+                bgcolor: "primary.light",
+                color: "primary.main",
+                ":hover": {
+                  bgcolor: "primary.dark",
+                  color: "white",
+                },
+              }}
+            >
+              Already have an account? Sign In
+            </Button>
+          </Link>
         </Box>
       </Box>
     </Container>
