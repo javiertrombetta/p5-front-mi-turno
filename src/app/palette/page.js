@@ -40,8 +40,14 @@ const Palette = () => {
             Botón Secundario Alternativo
           </Button>
           <Button variant="contained" color="error" sx={{ color: 'white', ':hover': { bgcolor: 'error.dark', color: 'white', borderColor:'error.dark' } }}>
-            Botón Cancelar
+            Botón Cancelar Oscuro
           </Button>
+          <Button variant="contained" sx={{ bgcolor: 'error.light', color: 'error.main', ':hover': { bgcolor: 'error.dark', color: 'white' } }}>
+            Botón Cancelar Claro
+          </Button>
+          <Button variant="outlined" color="error" sx={{ color: 'error.main', ':hover': { bgcolor: 'error.dark', color: 'white', borderColor:'error.dark' } }}>
+            Botón Cancelar Alternativo
+          </Button>   
         </Box>        
       </main>
     </div>  
