@@ -10,8 +10,8 @@ import { useState } from "react";
 
 const EditProfileForm = () => {
   const [formData, setFormData] = useState({
-    name: "John Doe",
-    email: "john.doe@example.com",
+    name: "Carlos Menem",
+    email: "carlosmenem@example.com",
     password: "********",
     dni: "12345678",
     phone: "123-456-7890",
