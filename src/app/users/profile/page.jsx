@@ -1,7 +1,7 @@
 "use client";
 import UserCard from "@/components/UserCard";
 import { Container } from "@mui/material";
-import EditProfileForm from "@/components/EditProfileForm";
+import EditProfileForm from "@/components/FormEditOperator";
 
 const page = () => {
   return (
