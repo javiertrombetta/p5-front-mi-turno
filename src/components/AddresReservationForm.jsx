@@ -11,10 +11,12 @@ export default function AddressForm() {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Shipping address
+        Termine su reserva
       </Typography>
       <Grid item xs={12} sm={6}>
-        <InputLabel id="demo-select-small-label">Timetable</InputLabel>
+        <InputLabel id="demo-select-small-label">
+          Seleccione un horario
+        </InputLabel>
         <Select
           fullWidth
           labelId="demo-select-small-label"
@@ -28,6 +30,15 @@ export default function AddressForm() {
           <MenuItem value={10}>10:00</MenuItem>
           <MenuItem value={20}>10:15</MenuItem>
           <MenuItem value={30}>10:30</MenuItem>
+          <MenuItem value={40}>10:45</MenuItem>
+          <MenuItem value={50}>11:00</MenuItem>
+          <MenuItem value={60}>11:15</MenuItem>
+          <MenuItem value={70}>11:30</MenuItem>
+          <MenuItem value={80}>11:45</MenuItem>
+          <MenuItem value={90}>12:00</MenuItem>
+          <MenuItem value={100}>12:15</MenuItem>
+          <MenuItem value={110}>12:30</MenuItem>
+          <MenuItem value={120}>12:45</MenuItem>
         </Select>
       </Grid>
       <Grid container spacing={3}>
@@ -36,7 +47,7 @@ export default function AddressForm() {
             required
             id="firstName"
             name="firstName"
-            label="First name"
+            label="Nombre"
             fullWidth
             autoComplete="given-name"
             variant="standard"
@@ -47,7 +58,7 @@ export default function AddressForm() {
             required
             id="lastName"
             name="lastName"
-            label="Last name"
+            label="Apellido"
             fullWidth
             autoComplete="family-name"
             variant="standard"
@@ -59,7 +70,7 @@ export default function AddressForm() {
             required
             id="address1"
             name="address1"
-            label="Email"
+            label="Correo Electrónico"
             fullWidth
             autoComplete="shipping address-line1"
             variant="standard"
@@ -69,7 +80,7 @@ export default function AddressForm() {
           <TextField
             id="address2"
             name="address2"
-            label="Password"
+            label="Contraseña"
             fullWidth
             autoComplete="shipping address-line2"
             variant="standard"
@@ -81,7 +92,7 @@ export default function AddressForm() {
             required
             id="zip"
             name="zip"
-            label="Phone"
+            label="Telefono"
             fullWidth
             autoComplete="shipping postal-code"
             variant="standard"
