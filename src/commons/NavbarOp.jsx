@@ -5,13 +5,13 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { Link } from "@mui/material";
 import Image from "next/image";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Link } from "@mui/material";
 
-const navItems = ["Reservar", "Mis Reservas", "Mi Cuenta", "Cerrar Sesión"];
+const navItems = ["Reservas", "Mi Cuenta", "Cerrar Sesión"];
 
-function Navbar() {
+function NavbarOp() {
   return (
     <AppBar
       position="static"
@@ -24,21 +24,6 @@ function Navbar() {
         </Link>
 
         <Box>
-          <Link href="/reservation">
-            <Button
-              variant="contained"
-              sx={{
-                borderRadius: "15px",
-                marginX: "1rem",
-                textTransform: "initial",
-                bgcolor: "primary.light",
-                color: "primary.main",
-                ":hover": { bgcolor: "primary.dark", color: "white" },
-              }}
-            >
-              {navItems[0]}
-            </Button>
-          </Link>
           <Link href="#">
             <Button
               variant="text"
@@ -57,7 +42,7 @@ function Navbar() {
                   marginLeft: "5px",
                 }}
               />
-              {navItems[1]}
+              {navItems[0]}
             </Button>
           </Link>
           <Link href="/profile">
@@ -77,7 +62,7 @@ function Navbar() {
                   marginLeft: "5px",
                 }}
               />
-              {navItems[2]}
+              {navItems[1]}
             </Button>
           </Link>
         </Box>
@@ -86,4 +71,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default NavbarOp;
