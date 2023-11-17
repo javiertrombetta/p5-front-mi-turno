@@ -2,7 +2,7 @@
 
 import { Container } from "@mui/material";
 import UserCard from "@/components/UserCard";
-import EditProfileForm from "@/components/FormEditOperator";
+import EditProfileForm from "@/components/EditProfileForm";
 
 const page = () => {
   return (
