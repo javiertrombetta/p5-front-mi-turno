@@ -41,7 +41,7 @@ export default function SignUp() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h2" variant="h5">
-          Sign up
+          Registro
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
@@ -51,7 +51,7 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="fulltName"
-                label="First & Last Name"
+                label="Nombre Completo"
                 autoFocus
               />
             </Grid>
@@ -61,7 +61,7 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Correo Electrónico"
                 name="email"
                 autoComplete="email"
               />
@@ -71,7 +71,7 @@ export default function SignUp() {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label="Contraseña"
                 type="password"
                 id="password"
                 autoComplete="new-password"
@@ -82,22 +82,11 @@ export default function SignUp() {
                 required
                 fullWidth
                 name="password"
-                label="Repeat Password"
+                label="Repetir Contraseña"
                 type="password"
                 id="password"
                 autoComplete="new-password"
               />
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="body2">
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                  sx={{ marginBottom: "10px" }}
-                />
-              </Typography>
             </Grid>
           </Grid>
           <Button
@@ -106,12 +95,13 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             sx={{
+              marginTop: "1rem",
               textTransform: "capitalize",
               color: "white",
               ":hover": { bgcolor: "primary.dark", color: "white" },
             }}
           >
-            Sign Up
+            Registrarse
           </Button>
           <Divider sx={{ marginBottom: "1rem", marginTop: "1rem" }} />
           <Link href="/">
@@ -128,7 +118,7 @@ export default function SignUp() {
                 },
               }}
             >
-              Already have an account? Sign In
+              Ya estás registrado? Inicia Sesión
             </Button>
           </Link>
         </Box>
