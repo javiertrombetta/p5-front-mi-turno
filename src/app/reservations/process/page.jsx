@@ -1,14 +1,10 @@
 import { Container } from "@mui/material";
-import Checkout from "../../../components/Checkout";
-import Navbar from "@/commons/Navbar";
-import Footer from "@/commons/Footer";
+import Checkout from "../../components/Checkout";
 
 const Reservation = () => {
   return (
     <Container maxWidth="lg">
-      <Navbar />
       <Checkout />
-      <Footer />
     </Container>
   );
 };
