@@ -60,7 +60,7 @@ function Navbar() {
               {navItems[1]}
             </Button>
           </Link>
-          <Link href="/profile">
+          <Link href="/user/profile">
             <Button
               variant="text"
               key={navItems[1]}
