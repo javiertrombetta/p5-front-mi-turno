@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import Checkout from "../../components/Checkout";
+import Checkout from "@/components/Checkout";
 
 const Reservation = () => {
   return (

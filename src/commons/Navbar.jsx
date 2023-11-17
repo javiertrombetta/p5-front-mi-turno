@@ -24,7 +24,7 @@ function Navbar() {
         </Link>
 
         <Box>
-          <Link href="/reservation">
+          <Link href="/reservation/process">
             <Button
               variant="contained"
               sx={{
@@ -39,7 +39,7 @@ function Navbar() {
               {navItems[0]}
             </Button>
           </Link>
-          <Link href="#">
+          <Link href="/reservation">
             <Button
               variant="text"
               key={navItems[0]}

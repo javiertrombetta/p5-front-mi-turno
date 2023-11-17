@@ -10,7 +10,7 @@ export default function BasicSelect() {
   const [sucursal, setSucursal] = React.useState("");
 
   const handleChange = (event) => {
-    setAge(event.target.value);
+    setSucursal(event.target.value);
   };
 
   return (
