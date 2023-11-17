@@ -5,10 +5,11 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import Link from "next/link";
 import Image from "next/image";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Link } from "@mui/material";
 
-const navItems = ["Reservar", "Mis Reservas", "Mi Cuenta"];
+const navItems = ["Reservar", "Mis Reservas", "Mi Cuenta", "Cerrar Sesión"];
 
 function Navbar() {
   return (
@@ -18,64 +19,67 @@ function Navbar() {
       sx={{ backgroundColor: "primary.main" }}
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Link href="/" passHref>
-          <Image src="/img/logo.png" alt="Logo" height="60" width="60" />
+        <Link href="#">
+          <Image src="/img/logo2.png" alt="Logo" height="50" width="40" />
         </Link>
+
         <Box>
-          <Button
-            variant="text"
-            key={navItems[0]}
-            sx={{
-              color: "white",
-              marginX: "1rem",
-              textTransform: "capitalize",
-            }}
-          >
-            {navItems[0]}
-            <CalendarMonthIcon
+          <Link href="/reservation">
+            <Button
+              variant="contained"
               sx={{
-                display: "flex",
-                alignContent: "center",
-                marginLeft: "5px",
+                borderRadius: "15px",
+                marginX: "1rem",
+                textTransform: "initial",
+                bgcolor: "primary.light",
+                color: "primary.main",
+                ":hover": { bgcolor: "primary.dark", color: "white" },
               }}
-            />
-          </Button>
-          <Button
-            variant="text"
-            key={navItems[0]}
-            sx={{
-              color: "white",
-              marginX: "1rem",
-              textTransform: "capitalize",
-            }}
-          >
-            {navItems[1]}
-            <CalendarMonthIcon
+            >
+              {navItems[0]}
+            </Button>
+          </Link>
+          <Link href="#">
+            <Button
+              variant="text"
+              key={navItems[0]}
               sx={{
-                display: "flex",
-                alignContent: "center",
-                marginLeft: "5px",
+                color: "white",
+                marginX: "1rem",
+                textTransform: "capitalize",
               }}
-            />
-          </Button>
-          <Button
-            variant="text"
-            key={navItems[1]}
-            sx={{
-              color: "white",
-              marginX: "1rem",
-              textTransform: "capitalize",
-            }}
-          >
-            {navItems[2]}
-            <AccountCircleIcon
+            >
+              {" "}
+              <CalendarMonthIcon
+                sx={{
+                  display: "flex",
+                  alignContent: "center",
+                  marginLeft: "5px",
+                }}
+              />
+              {navItems[1]}
+            </Button>
+          </Link>
+          <Link href="/profile">
+            <Button
+              variant="text"
+              key={navItems[1]}
               sx={{
-                display: "flex",
-                alignContent: "center",
-                marginLeft: "5px",
+                color: "white",
+                marginX: "1rem",
+                textTransform: "capitalize",
               }}
-            />
-          </Button>
+            >
+              <AccountCircleIcon
+                sx={{
+                  display: "flex",
+                  alignContent: "center",
+                  marginLeft: "5px",
+                }}
+              />
+              {navItems[2]}
+            </Button>
+          </Link>
         </Box>
       </Toolbar>
     </AppBar>

@@ -41,7 +41,7 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Iniciar Sesión
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -49,7 +49,7 @@ export default function SignIn() {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="Correo Electrónico"
             name="email"
             autoComplete="email"
             autoFocus
@@ -59,7 +59,7 @@ export default function SignIn() {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="Contraseña"
             type="password"
             id="password"
             autoComplete="current-password"
@@ -70,7 +70,7 @@ export default function SignIn() {
                 control={
                   <Checkbox value="remember" color="primary" size="body2" />
                 }
-                label="Remember me"
+                label="Recordarme"
               />
             </Typography>
 
@@ -79,7 +79,7 @@ export default function SignIn() {
               variant="body1"
               sx={{ color: "black", textDecoration: "none" }}
             >
-              Forgot password?
+              Olvidaste tu contraseña?
             </Link>
           </Box>
 
@@ -94,7 +94,7 @@ export default function SignIn() {
               ":hover": { bgcolor: "primary.dark", color: "white" },
             }}
           >
-            Sign In
+            Iniciar Sesión
           </Button>
           <Divider sx={{ marginBottom: "1rem", marginTop: "1rem" }} />
           <Link href="/register">
@@ -111,7 +111,7 @@ export default function SignIn() {
                 },
               }}
             >
-              Don't have an account? Sign Up
+              No tenés cuenta? Registrate
             </Button>
           </Link>
         </Box>
