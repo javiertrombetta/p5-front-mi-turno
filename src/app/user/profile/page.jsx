@@ -2,7 +2,7 @@
 
 import { Container } from "@mui/material";
 import UserCard from "@/components/UserCard";
-import EditProfileForm from "@/components/FormEditOperator";
+ import EditProfileForm from "@/components/AddresProfileForm";
 
 const page = () => {
   return (
@@ -17,7 +17,7 @@ const page = () => {
       }}
     >
       <UserCard />
-      <EditProfileForm />
+    <EditProfileForm />
     </Container>
   );
 };
