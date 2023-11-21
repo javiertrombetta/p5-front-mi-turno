@@ -2,7 +2,9 @@ import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
 import Navbar from "@/commons/Navbar";
 import Footer from "@/commons/Footer";
 import theme from "../styles/LightThemeMUI";
-import "./globals.css";
+
+import "@/app/ui/globals.css";
+import { inter } from '@/app/ui/fonts';
 
 export const metadata = {
   title: "Mi turno web",
@@ -16,7 +18,7 @@ export default function RootLayout({ children }) {
         <body>
           <Navbar />
           <div style={{ marginTop: "3em", minHeight: "calc(100vh - 128px)" }}>
-            {children}
+            <body className={`${inter.className} antialiased`}>{children}</body>
           </div>
           <Footer />
         </body>
