@@ -1,5 +1,5 @@
 "use client";
-import Chart from "@/components/Chart";
+//import Chart from "@/components/Chart";
 import { Container } from "@mui/material";
 import React from "react";
 
