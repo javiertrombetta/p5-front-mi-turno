@@ -22,53 +22,48 @@ ChartJS.register(
   Filler
 );
 
-var beneficios = [0, 56, 20, 36, 80, 40, 30, -20, 25, 30, 12, 60];
-var meses = [
-  "Enero",
-  "Febrero",
-  "Marzo",
-  "Abril",
-  "Mayo",
-  "Junio",
-  "Julio",
-  "Agosto",
-  "Septiembre",
-  "Octubre",
-  "Noviembre",
-  "Diciembre",
-];
+var reservas = [0, 12, 44, 26, 18, 30];
+var meses = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"];
 
 var midata = {
   labels: meses,
   datasets: [
     // Cada una de las líneas del gráfico
     {
-      label: "Beneficios",
-      data: beneficios,
+      label: "Reservas",
+      data: reservas,
       tension: 0.5,
       fill: true,
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
+      borderColor: "#CC6AFF",
+      backgroundColor: "#A442F1",
       pointRadius: 5,
-      pointBorderColor: "rgba(255, 99, 132)",
-      pointBackgroundColor: "rgba(255, 99, 132)",
+      pointBorderColor: "#CC6AFF",
+      pointBackgroundColor: "#CC6AFF",
     },
     {
-      label: "Otra línea",
+      label: "Cancelaciones",
       data: [20, 25, 60, 65, 45, 10, 0, 25, 35, 7, 20, 25],
+      backgroundColor: "#CC6AFF",
     },
   ],
 };
 
 var misoptions = {
-  /* scales : {
-        y : {
-            min : 0
-        },
-        x: {
-            ticks: { color: 'rgb(255, 99, 132)'}
-        }
-    } */
+  maintainAspectRatio: false, // Desactiva el mantenimiento de la relación de aspecto
+  responsive: true, // Permite la capacidad de respuesta
+
+  // Ajusta el tamaño del gráfico
+  /*  width: 400,
+  height: 200, */
+
+  scales: {
+    y: {
+      min: 0,
+    },
+    x: {
+      ticks: { color: "rgb(255, 99, 132)" },
+    },
+  },
 };
 
 export default function ChartLines() {
