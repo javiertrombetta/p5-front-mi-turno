@@ -12,7 +12,9 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { Divider } from "@mui/material";
+import { Divider, IconButton, InputAdornment, InputLabel } from "@mui/material";
+import Input from "@mui/material/Input";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -24,6 +26,16 @@ export default function SignIn() {
       email: data.get("email"),
       password: data.get("password"),
     });
+  };
+
+  //password visibility
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
   };
 
   return (
@@ -43,45 +55,54 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Iniciar Sesión
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Correo Electrónico"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Contraseña"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography>
-              <FormControlLabel
-                control={
-                  <Checkbox value="remember" color="primary" size="body2" />
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <InputLabel htmlFor="email">Correo Electrónico </InputLabel>
+              <Input fullWidth id="email" type="text" required />
+            </Grid>
+            <Grid item xs={12}>
+              <InputLabel htmlFor="standard-adornment-password">
+                Contraseña
+              </InputLabel>
+              <Input
+                fullWidth
+                id="standard-adornment-password"
+                type={showPassword ? "text" : "password"}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
                 }
-                label="Recordarme"
               />
-            </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Typography>
+                  <FormControlLabel
+                    control={
+                      <Checkbox value="remember" color="primary" size="body2" />
+                    }
+                    label="Recordarme"
+                  />
+                </Typography>
 
-            <Link
-              href="#"
-              variant="body1"
-              sx={{ color: "black", textDecoration: "none" }}
-            >
-              Olvidaste tu contraseña?
-            </Link>
-          </Box>
+                <Link
+                  href="/forgot-password"
+                  variant="body1"
+                  sx={{ color: "black", textDecoration: "none" }}
+                >
+                  Olvidaste tu contraseña?
+                </Link>
+              </Box>
+            </Grid>
+          </Grid>
 
           <Button
             type="submit"

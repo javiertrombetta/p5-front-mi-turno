@@ -9,13 +9,13 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { Divider, IconButton, InputAdornment, InputLabel } from "@mui/material";
+import { IconButton, InputAdornment, InputLabel } from "@mui/material";
 import Input from "@mui/material/Input";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
-export default function SignUp() {
+export default function NewPassword() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -41,7 +41,7 @@ export default function SignUp() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ marginTop: "5rem" }}>
       <CssBaseline />
       <Box
         sx={{
@@ -54,23 +54,14 @@ export default function SignUp() {
         <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h2" variant="h5">
-          Registro
+        <Typography component="h1" variant="h5">
+          Reestablecer Contraseña
         </Typography>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <InputLabel htmlFor="fullName">Nombre Completo</InputLabel>
-              <Input fullWidth id="fullName" type="text" required />
-            </Grid>
-
-            <Grid item xs={12}>
-              <InputLabel htmlFor="email">Correo Electrónico </InputLabel>
-              <Input fullWidth id="email" type="text" required />
-            </Grid>
-            <Grid item xs={12}>
               <InputLabel htmlFor="standard-adornment-password">
-                Contraseña
+                Nueva Contraseña
               </InputLabel>
               <Input
                 fullWidth
@@ -91,7 +82,7 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12}>
               <InputLabel htmlFor="standard-adornment-password2">
-                Repetir contraseña
+                Repetir Contraseña
               </InputLabel>
               <Input
                 fullWidth
@@ -100,7 +91,7 @@ export default function SignUp() {
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
-                      aria-label="toggle password2 visibility"
+                      aria-label="toggle password visibility"
                       onClick={handleClickShowPassword2}
                       onMouseDown={handleMouseDownPassword2}
                     >
@@ -111,6 +102,7 @@ export default function SignUp() {
               />
             </Grid>
           </Grid>
+
           <Button
             type="submit"
             fullWidth
@@ -123,26 +115,8 @@ export default function SignUp() {
               ":hover": { bgcolor: "primary.dark", color: "white" },
             }}
           >
-            Registrarse
+            Reestablecer Contraseña
           </Button>
-          <Divider sx={{ marginBottom: "1rem", marginTop: "1rem" }} />
-          <Link href="/">
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{
-                textTransform: "initial",
-                bgcolor: "primary.light",
-                color: "primary.main",
-                ":hover": {
-                  bgcolor: "primary.dark",
-                  color: "white",
-                },
-              }}
-            >
-              Ya estás registrado? Inicia Sesión
-            </Button>
-          </Link>
         </Box>
       </Box>
     </Container>
