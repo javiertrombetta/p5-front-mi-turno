@@ -5,8 +5,6 @@ import CardTotalAssists from "@/components/CardTotalAssists";
 import CardTotalCancelations from "@/components/CardTotalCancelations";
 import CardTotalReservation from "@/components/CardTotalReservation";
 import ChartWithTitle from "@/components/ChartWithTitle";
-
-import BasicSelect from "@/components/SelectForm";
 import { Container, Grid, MenuItem, Select, Typography } from "@mui/material";
 
 import React from "react";
@@ -29,9 +27,7 @@ const page = () => {
             label="Seleccionar sucursal"
             sx={{ minWidth: "32.5%", marginBottom: 2 }}
           >
-            {/* Agrega un MenuItem para el valor por defecto */}
             <MenuItem value={-1}>--Elige sucursal--</MenuItem>
-            {/* Mapear las sucursales dentro del componente Select */}
             {sucursales.map((sucursal, index) => (
               <MenuItem key={index} value={index}>
                 {sucursal.sucursal}
