@@ -4,7 +4,7 @@ import Footer from "@/commons/Footer";
 import theme from "../styles/LightThemeMUI";
 
 import "@/app/ui/globals.css";
-import { inter } from '@/app/ui/fonts';
+import { inter } from "@/app/ui/fonts";
 
 export const metadata = {
   title: "Mi turno web",
@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
         <body>
           <Navbar />
           <div style={{ marginTop: "3em", minHeight: "calc(100vh - 128px)" }}>
-            <body className={`${inter.className} antialiased`}>{children}</body>
+            {children}
           </div>
           <Footer />
         </body>
