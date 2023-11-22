@@ -10,9 +10,6 @@ const CardTotalCancelations = () => {
   return (
     <Card
       style={{
-        /* width: "32%",
-        minWidth: "250px",
-         */
         borderRadius: "15px",
         borderBottom: `30px solid #9421C3`,
       }}
@@ -24,11 +21,7 @@ const CardTotalCancelations = () => {
           <Typography variant="h3" component="div">
             12
           </Typography>
-          <Typography
-            variant="h6"
-            component="p"
-            style={{ color: "white", fontSize: "1rem" }}
-          >
+          <Typography variant="h6" style={{ color: "white", fontSize: "1rem" }}>
             Total de cancelaciones
           </Typography>
         </div>
