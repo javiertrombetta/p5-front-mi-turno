@@ -23,5 +23,5 @@ var data = {
 };
 
 export default function ChartPies() {
-  return <Pie data={data} options={options} />;
+  return <Pie data={data} options={options} className="h-full" />;
 }

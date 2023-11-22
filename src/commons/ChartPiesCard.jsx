@@ -4,13 +4,7 @@ import React from "react";
 
 const ChartPiesCard = () => {
   return (
-    <Box
-      border={1} // Grosor del borde
-      borderRadius={5} // Radio de bordes para hacerlos redondeados
-      borderColor="grey.300" // Color del borde
-      p={2} // Padding interno
-      boxShadow={3} // Sombra (opcional)
-    >
+    <Box border={1} borderRadius={5} borderColor="grey.300" p={2} boxShadow={3}>
       <ChartPies />
     </Box>
   );
