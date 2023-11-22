@@ -10,10 +10,6 @@ const CardTotalReservation = () => {
   return (
     <Card
       style={{
-        /* 
-          width: "32%",
-        minWidth: "250px",
-        */
         borderRadius: "15px",
         borderBottom: `30px solid #9421C3`,
       }}
