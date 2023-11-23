@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <div>
       <Head>
-        <title>Home</title>
+        <title>Mi Turno Web App</title>
         <meta name="description" content="Bienvenido" />
       </Head>
       <main>
