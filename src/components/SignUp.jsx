@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,24 +9,30 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { Divider, IconButton, InputAdornment, InputLabel } from "@mui/material";
+import {
+  Alert,
+  Divider,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+} from "@mui/material";
 import Input from "@mui/material/Input";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-
-// TODO remove, this demo shouldn't need to reset the theme.
+import dataRegister from "@/app/lib/dataRegister";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
+  //dni input just admit numbers
+  // const [dni, setDni] = React.useState("");
+  // const handleDniChange = (e) => {
+  //   const value = e.target.value;
+
+  //   if (/^\d*$/.test(value)) {
+  //     setDni(value);
+  //   }
+  // };
 
   //password visibility
-
   const [showPassword, setShowPassword] = React.useState(false);
   const [showPassword2, setShowPassword2] = React.useState(false);
 
@@ -40,6 +46,57 @@ export default function SignUp() {
     event.preventDefault();
   };
 
+  //user register
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    dni: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [samePasswordAlert, setSamePasswordAlert] = useState(false);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((input) => {
+      return { ...input, [name]: value };
+    });
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    if (
+      !formData.fullName ||
+      !formData.dni ||
+      !formData.email ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
+      setShowAlert(true);
+    } else if (formData.password !== formData.confirmPassword) {
+      setSamePasswordAlert(true);
+    } else {
+      try {
+        await dataRegister(formData);
+        setFormData({
+          fullName: "",
+          dni: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+        setShowAlert(false);
+        setSamePasswordAlert(false);
+        router.push("/");
+      } catch (error) {
+        console.error("Error al registrar el usuario:", error);
+      }
+    }
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -57,25 +114,48 @@ export default function SignUp() {
         <Typography component="h2" variant="h5">
           Registro
         </Typography>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Box component="form" onSubmit={onSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <InputLabel htmlFor="fullName">Nombre Completo</InputLabel>
-              <Input fullWidth id="fullName" type="text" required />
+              <InputLabel>Nombre Completo</InputLabel>
+              <Input
+                fullWidth
+                type="text"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleChange}
+              />
             </Grid>
 
             <Grid item xs={12}>
-              <InputLabel htmlFor="email">Correo Electrónico </InputLabel>
-              <Input fullWidth id="email" type="text" required />
-            </Grid>
-            <Grid item xs={12}>
-              <InputLabel htmlFor="standard-adornment-password">
-                Contraseña
-              </InputLabel>
+              <InputLabel>DNI</InputLabel>
               <Input
                 fullWidth
-                id="standard-adornment-password"
+                type="number"
+                name="dni"
+                value={formData.dni}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <InputLabel>Correo Electrónico </InputLabel>
+              <Input
+                fullWidth
+                type="text"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <InputLabel>Contraseña</InputLabel>
+              <Input
+                fullWidth
                 type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -90,13 +170,13 @@ export default function SignUp() {
               />
             </Grid>
             <Grid item xs={12}>
-              <InputLabel htmlFor="standard-adornment-password2">
-                Repetir contraseña
-              </InputLabel>
+              <InputLabel>Repetir contraseña</InputLabel>
               <Input
                 fullWidth
-                id="standard-adornment-password2"
                 type={showPassword2 ? "text" : "password"}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -125,6 +205,27 @@ export default function SignUp() {
           >
             Registrarse
           </Button>
+          {showAlert ? (
+            <Alert
+              severity="error"
+              sx={{ color: "red", backgroundColor: "transparent" }}
+            >
+              Debes completar todos los campos
+            </Alert>
+          ) : (
+            ""
+          )}
+          {samePasswordAlert ? (
+            <Alert
+              severity="error"
+              sx={{ color: "red", backgroundColor: "transparent" }}
+            >
+              Ambas contraseñas deben ser iguales
+            </Alert>
+          ) : (
+            ""
+          )}
+
           <Divider sx={{ marginBottom: "1rem", marginTop: "1rem" }} />
           <Link href="/">
             <Button
