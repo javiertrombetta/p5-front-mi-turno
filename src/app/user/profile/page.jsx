@@ -1,10 +1,7 @@
-"use client";
-
 import { Container } from "@mui/material";
-import UserCard from "@/components/UserCard";
-import EditProfileForm from "@/components/EditProfileForm";
+import ProfileContainer from "@/components/ProfileContainer";
 
-const page = () => {
+const Profile = () => {
   return (
     <Container
       component="main"
@@ -12,14 +9,14 @@ const page = () => {
       sx={{
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
-        backgroundColor: "#f2f2f2", // Color gris claro
+        backgroundColor: "white",
         padding: 3,
       }}
     >
-      <UserCard />
-      <EditProfileForm />
+      <ProfileContainer />
     </Container>
   );
 };
 
-export default page;
+export default Profile;
+
