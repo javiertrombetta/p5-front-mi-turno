@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
         <body>
           <Navbar />
           <div style={{ marginTop: "3em", minHeight: "calc(100vh - 128px)" }}>
-            <body className={`${inter.className} antialiased`}>{children}</body>
+            {children}
           </div>
           <Footer />
         </body>
