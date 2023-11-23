@@ -182,9 +182,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Divider } from "@mui/material";
-import axios from "axios";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+
+// TODO remove, this demo shouldn't need to reset the theme.
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -236,6 +235,16 @@ export default function SignIn() {
       });
   };
 
+  //password visibility
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <Container component="main" maxWidth="xs" sx={{ marginTop: "5rem" }}>
       <CssBaseline />
@@ -263,8 +272,6 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
-            value={email}
-            onChange={handleEmail}
           />
           <TextField
             margin="normal"
@@ -275,14 +282,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
-            value={password}
-            onChange={handlePassword}
           />
-          {error && (
-            <Typography variant="body2" color="error" sx={{ mt: 1 }}>
-              {error}
-            </Typography>
-          )}
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography>
               <FormControlLabel
@@ -301,6 +301,7 @@ export default function SignIn() {
               Olvidaste tu contraseña?
             </Link>
           </Box>
+
           <Button
             type="submit"
             fullWidth

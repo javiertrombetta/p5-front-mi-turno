@@ -2,7 +2,9 @@ import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
 import Navbar from "@/commons/Navbar";
 import Footer from "@/commons/Footer";
 import theme from "../styles/LightThemeMUI";
-import "./globals.css";
+
+import "@/app/ui/globals.css";
+import { inter } from "@/app/ui/fonts";
 
 export const metadata = {
   title: "Mi turno web",
