@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -8,10 +9,17 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Image from "next/image";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "@mui/material";
+import dataLogout from "@/app/lib/dataLogout";
+import { useRouter } from "next/navigation";
 
 const navItems = ["Reservar", "Mis Reservas", "Mi Cuenta", "Cerrar Sesión"];
 
 function Navbar() {
+  const router = useRouter();
+  const clickLogout = () => {
+    dataLogout();
+    router.push("/");
+  };
   return (
     <AppBar
       position="static"
@@ -19,7 +27,7 @@ function Navbar() {
       sx={{ backgroundColor: "primary.main" }}
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Link href="#">
+        <Link href="/">
           <Image src="/img/logo2.png" alt="Logo" height="50" width="40" />
         </Link>
 
@@ -80,6 +88,24 @@ function Navbar() {
               {navItems[2]}
             </Button>
           </Link>
+          <Button
+            onClick={clickLogout}
+            variant="text"
+            key={navItems[3]}
+            sx={{
+              color: "white",
+              // marginX: "1rem",
+              textTransform: "capitalize",
+            }}
+          >
+            <LogoutIcon
+              sx={{
+                display: "flex",
+                alignContent: "center",
+                marginLeft: "5px",
+              }}
+            />
+          </Button>
         </Box>
       </Toolbar>
     </AppBar>
