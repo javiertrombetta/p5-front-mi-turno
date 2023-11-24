@@ -1,10 +1,11 @@
 import axios from "axios";
 
-const dataRegister = async (formData) => {
+const dataLogout = async () => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/users/register",
-      formData
+      "http://localhost:3000/users/logout",
+      {},
+      { withCredentials: true }
     );
     return response.data;
   } catch (error) {
@@ -13,4 +14,4 @@ const dataRegister = async (formData) => {
   }
 };
 
-export default dataRegister;
+export default dataLogout;
