@@ -2,9 +2,11 @@ import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
 import Navbar from "@/commons/Navbar";
 import Footer from "@/commons/Footer";
 import theme from "../styles/LightThemeMUI";
-
+//import Provider from "./provider";
+import { store } from "../hooks/store";
 import "@/app/ui/globals.css";
 import { inter } from "@/app/ui/fonts";
+//import { Provider } from "react-redux";
 
 export const metadata = {
   title: "Mi turno web",
