@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -11,6 +12,8 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import DescriptionIcon from "@mui/icons-material/Description";
 import LogoutIcon from "@mui/icons-material/Logout";
 import StoreMallDirectoryIcon from "@mui/icons-material/StoreMallDirectory";
+import { useRouter } from "next/navigation";
+import dataLogout from "@/app/lib/dataLogout";
 
 const navItems = [
   "Sucursales",
@@ -21,6 +24,11 @@ const navItems = [
 ];
 
 function NavbarAdmin() {
+  const router = useRouter();
+  const clickLogout = () => {
+    dataLogout();
+    router.push("/");
+  };
   return (
     <AppBar
       position="static"
@@ -113,6 +121,25 @@ function NavbarAdmin() {
               {navItems[3]}
             </Button>
           </Link>
+          <Button
+            onClick={clickLogout}
+            variant="text"
+            key={navItems[4]}
+            sx={{
+              color: "white",
+              // marginX: "1rem",
+              textTransform: "capitalize",
+            }}
+          >
+            {" "}
+            <LogoutIcon
+              sx={{
+                display: "flex",
+                alignContent: "center",
+                marginLeft: "5px",
+              }}
+            />
+          </Button>
         </Box>
       </Toolbar>
     </AppBar>
