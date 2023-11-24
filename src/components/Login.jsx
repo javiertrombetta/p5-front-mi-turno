@@ -11,27 +11,43 @@
 // import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 // import Typography from "@mui/material/Typography";
 // import Container from "@mui/material/Container";
-// import { Divider } from "@mui/material";
-// import axios from "axios";
+// import { Divider, InputAdornment, IconButton } from "@mui/material";
+// import { Visibility, VisibilityOff } from "@mui/icons-material";
 // import { useState, useEffect } from "react";
 // import { useRouter } from "next/navigation";
+// import { useDispatch, useSelector } from "react-redux";
+// import { setUser, selectUser } from "../hooks/slices/userSlice";
+// import axios from "axios";
 
 // export default function SignIn() {
 //   const [email, setEmail] = useState("");
 //   const [password, setPassword] = useState("");
 //   const [error, setError] = useState("");
+//   const [showPassword, setShowPassword] = useState(false);
+//   const user = useSelector(selectUser);
 //   const router = useRouter();
+//   const dispatch = useDispatch();
 
 //   useEffect(() => {
-//     axios
-//       .get("http://localhost:3000/me", { withCredentials: true })
-//       .then(() => {
-//         router.push("/reservation/process");
-//       })
-//       .catch((error) => {
-//         console.error("Error al verificar la autenticación:", error);
-//       });
-//   }, []);
+//     if (user) {
+//       router.push("/reservation/my");
+//     } else {
+//       axios
+//         .get("http://localhost:3000/me", { withCredentials: true })
+//         .then((response) => {
+//           const userData = response.data;
+//           if (userData.dni) {
+//             dispatch(setUser(userData));
+//             router.push("/reservation/my");
+//           } else {
+//             console.error("Usuario no autenticado");
+//           }
+//         })
+//         .catch((error) => {
+//           console.error("Error al verificar la autenticación:", error);
+//         });
+//     }
+//   }, [user, dispatch]);
 
 //   const handleEmail = (e) => {
 //     setEmail(e.target.value);
@@ -66,6 +82,12 @@
 //       });
 //   };
 
+//   const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+//   const handleMouseDownPassword = (event) => {
+//     event.preventDefault();
+//   };
+
 //   return (
 //     <Container component="main" maxWidth="xs" sx={{ marginTop: "5rem" }}>
 //       <CssBaseline />
@@ -93,7 +115,6 @@
 //             name="email"
 //             autoComplete="email"
 //             autoFocus
-//             value={email}
 //             onChange={handleEmail}
 //           />
 //           <TextField
@@ -102,11 +123,22 @@
 //             fullWidth
 //             name="password"
 //             label="Contraseña"
-//             type="password"
+//             type={showPassword ? "text" : "password"}
 //             id="password"
 //             autoComplete="current-password"
-//             value={password}
 //             onChange={handlePassword}
+//             InputProps={{
+//               endAdornment: (
+//                 <InputAdornment position="end">
+//                   <IconButton
+//                     onClick={handleClickShowPassword}
+//                     onMouseDown={handleMouseDownPassword}
+//                   >
+//                     {showPassword ? <VisibilityOff /> : <Visibility />}
+//                   </IconButton>
+//                 </InputAdornment>
+//               ),
+//             }}
 //           />
 //           {error && (
 //             <Typography variant="body2" color="error" sx={{ mt: 1 }}>
@@ -131,6 +163,7 @@
 //               Olvidaste tu contraseña?
 //             </Link>
 //           </Box>
+
 //           <Button
 //             type="submit"
 //             fullWidth
@@ -181,26 +214,34 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { Divider } from "@mui/material";
-
-// TODO remove, this demo shouldn't need to reset the theme.
+import { Divider, InputAdornment, IconButton } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "../hooks/slices/userSlice";
+import { checkAuth, loginUser } from "../app/lib/dataLogin";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const user = useSelector(selectUser);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/me", { withCredentials: true })
-      .then(() => {
-        router.push("/reservation/process");
-      })
-      .catch((error) => {
-        console.error("Error al verificar la autenticación:", error);
-      });
-  }, []);
+    const checkAuthAsync = async () => {
+      try {
+        await checkAuth(user, dispatch, router);
+      } catch (error) {
+        console.error("Error en checkAuth:", error);
+      }
+    };
+
+    checkAuthAsync();
+  }, [user, dispatch, router]);
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -212,38 +253,14 @@ export default function SignIn() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    axios
-      .post(
-        "http://localhost:3000/users/login",
-        {
-          email: email,
-          password: password,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      .then(() => {
-        router.push("/reservation/process");
-      })
-      .catch((error) => {
-        console.error("Error al iniciar sesión:", error);
-        setError(
-          "Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo."
-        );
-      });
+    loginUser(email, password, router, setError);
   };
-
-  //password visibility
-
-  const [showPassword, setShowPassword] = React.useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  // const handleMouseDownPassword = (e) => {
+  //   e.preventDefault();
+  // };
 
   return (
     <Container component="main" maxWidth="xs" sx={{ marginTop: "5rem" }}>
@@ -272,6 +289,7 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={handleEmail}
           />
           <TextField
             margin="normal"
@@ -279,10 +297,28 @@ export default function SignIn() {
             fullWidth
             name="password"
             label="Contraseña"
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="password"
             autoComplete="current-password"
+            onChange={handlePassword}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={handleClickShowPassword}
+                    //onMouseDown={handleMouseDownPassword}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
+          {error && (
+            <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+              {error}
+            </Typography>
+          )}
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography>
               <FormControlLabel
