@@ -5,7 +5,7 @@ const UserInfo = ({ user }) => {
     return name.split(' ').map((n) => n[0]).join('').toUpperCase();
   };
 
-  const avatarUrl = user.avatarUrl || `https://via.placeholder.com/150?text=${getInitials(user.name)}`;
+  const avatarUrl = user.avatarUrl || `https://via.placeholder.com/300?text=${getInitials(user.name)}`;
 
   return (
     <>
