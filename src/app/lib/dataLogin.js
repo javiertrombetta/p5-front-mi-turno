@@ -4,7 +4,7 @@ import { setUser } from "../../hooks/slices/userSlice";
 export const checkAuth = async (user, dispatch, router) => {
   try {
     if (user) {
-      router.push("/reservation/my");
+      //router.push("/reservation/my");
     } else {
       const response = await axios.get("http://localhost:3000/me", {
         withCredentials: true,
@@ -14,7 +14,7 @@ export const checkAuth = async (user, dispatch, router) => {
 
       if (userData.dni) {
         dispatch(setUser(userData));
-        router.push("/reservation/my");
+        //router.push("/reservation/my");
       } else {
         console.error("Usuario no autenticado");
       }
@@ -24,15 +24,14 @@ export const checkAuth = async (user, dispatch, router) => {
   }
 };
 
-export const loginUser = async (email, password, router, setError) => {
+export const loginUser = async (email, password, setError) => {
   try {
-    await axios.post(
+    const response = await axios.post(
       "http://localhost:3000/users/login",
       { email, password },
       { withCredentials: true }
     );
-
-    router.push("/reservation/process");
+    return response.data;
   } catch (error) {
     console.error("Error en loginUser:", error);
     setError(

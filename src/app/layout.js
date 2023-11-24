@@ -2,10 +2,11 @@ import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
 import Navbar from "@/commons/Navbar";
 import Footer from "@/commons/Footer";
 import theme from "../styles/LightThemeMUI";
-import Provider from "./provider";
+//import Provider from "./provider";
 import { store } from "../hooks/store";
 import "@/app/ui/globals.css";
 import { inter } from "@/app/ui/fonts";
+//import { Provider } from "react-redux";
 
 export const metadata = {
   title: "Mi turno web",
@@ -14,18 +15,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <Provider store={store}>
-      <MUIThemeProvider theme={theme}>
-        <html lang="en">
-          <body>
-            <Navbar />
-            <div style={{ marginTop: "3em", minHeight: "calc(100vh - 128px)" }}>
-              {children}
-            </div>
-            <Footer />
-          </body>
-        </html>
-      </MUIThemeProvider>
-    </Provider>
+    <MUIThemeProvider theme={theme}>
+      <html lang="en">
+        <body>
+          <Navbar />
+          <div style={{ marginTop: "3em", minHeight: "calc(100vh - 128px)" }}>
+            {children}
+          </div>
+          <Footer />
+        </body>
+      </html>
+    </MUIThemeProvider>
   );
 }

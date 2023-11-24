@@ -15,8 +15,6 @@
 // import { Visibility, VisibilityOff } from "@mui/icons-material";
 // import { useState, useEffect } from "react";
 // import { useRouter } from "next/navigation";
-// import { useDispatch, useSelector } from "react-redux";
-// import { setUser, selectUser } from "../hooks/slices/userSlice";
 // import axios from "axios";
 
 // export default function SignIn() {
@@ -24,30 +22,25 @@
 //   const [password, setPassword] = useState("");
 //   const [error, setError] = useState("");
 //   const [showPassword, setShowPassword] = useState(false);
-//   const user = useSelector(selectUser);
+
 //   const router = useRouter();
-//   const dispatch = useDispatch();
 
 //   useEffect(() => {
-//     if (user) {
-//       router.push("/reservation/my");
-//     } else {
-//       axios
-//         .get("http://localhost:3000/me", { withCredentials: true })
-//         .then((response) => {
-//           const userData = response.data;
-//           if (userData.dni) {
-//             dispatch(setUser(userData));
-//             router.push("/reservation/my");
-//           } else {
-//             console.error("Usuario no autenticado");
-//           }
-//         })
-//         .catch((error) => {
-//           console.error("Error al verificar la autenticación:", error);
-//         });
-//     }
-//   }, [user, dispatch]);
+//     axios
+//       .get("http://localhost:3000/me", { withCredentials: true })
+//       .then((response) => {
+//         const userData = response.data;
+
+//         if (userData.dni) {
+//           router.push("/reservation/my");
+//         } else {
+//           console.error("Usuario no autenticado");
+//         }
+//       })
+//       .catch((error) => {
+//         console.error("Error al verificar la autenticación:", error);
+//       });
+//   }, []);
 
 //   const handleEmail = (e) => {
 //     setEmail(e.target.value);
@@ -83,10 +76,6 @@
 //   };
 
 //   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-//   const handleMouseDownPassword = (event) => {
-//     event.preventDefault();
-//   };
 
 //   return (
 //     <Container component="main" maxWidth="xs" sx={{ marginTop: "5rem" }}>
@@ -130,10 +119,7 @@
 //             InputProps={{
 //               endAdornment: (
 //                 <InputAdornment position="end">
-//                   <IconButton
-//                     onClick={handleClickShowPassword}
-//                     onMouseDown={handleMouseDownPassword}
-//                   >
+//                   <IconButton onClick={handleClickShowPassword}>
 //                     {showPassword ? <VisibilityOff /> : <Visibility />}
 //                   </IconButton>
 //                 </InputAdornment>
@@ -221,6 +207,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../hooks/slices/userSlice";
 import { checkAuth, loginUser } from "../app/lib/dataLogin";
+import { setUser } from "../hooks/slices/userSlice";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -253,14 +240,12 @@ export default function SignIn() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    loginUser(email, password, router, setError);
+    const userData = loginUser(email, password, router, setError);
+    dispatch(setUser(userData));
+    //router.push("/reservation/process");
   };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  // const handleMouseDownPassword = (e) => {
-  //   e.preventDefault();
-  // };
 
   return (
     <Container component="main" maxWidth="xs" sx={{ marginTop: "5rem" }}>
