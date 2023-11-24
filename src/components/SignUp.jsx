@@ -16,7 +16,9 @@ import {
   InputAdornment,
   InputLabel,
 } from "@mui/material";
-import Input from "@mui/material/Input";
+import InputText from "@/commons/InputText";
+import InputEmail from "@/commons/InputEmail";
+import InputPassword from "@/commons/InputPassword";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import dataRegister from "@/app/lib/dataRegister";
 import { useRouter } from "next/navigation";
@@ -46,6 +48,27 @@ export default function SignUp() {
     event.preventDefault();
   };
 
+  //password check
+
+  const [hasCapital, setHasCapital] = useState(false);
+  const pswHasCapital = (str) => {
+    return /[A-Z]/.test(str);
+  };
+
+  const [hasMinuscule, setHasMinuscule] = useState(false);
+  const pswHasMinuscule = (str) => {
+    return /[a-z]/.test(str);
+  };
+  const [hasNumber, setHasNumber] = useState(false);
+  const pswHasNumber = (str) => {
+    return /\d/.test(str);
+  };
+
+  const [has8Caracters, setHas8Caracters] = useState(false);
+  const atLeast8Caracters = (str) => {
+    return str.length >= 8;
+  };
+
   //user register
   const router = useRouter();
 
@@ -59,6 +82,7 @@ export default function SignUp() {
 
   const [showAlert, setShowAlert] = useState(false);
   const [samePasswordAlert, setSamePasswordAlert] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((input) => {
@@ -79,9 +103,18 @@ export default function SignUp() {
       setShowAlert(true);
     } else if (formData.password !== formData.confirmPassword) {
       setSamePasswordAlert(true);
+    } else if (!pswHasCapital(formData.password)) {
+      setHasCapital(true);
+    } else if (!pswHasMinuscule(formData.password)) {
+      setHasMinuscule(true);
+    } else if (!pswHasNumber(formData.password)) {
+      setHasNumber(true);
+    } else if (!atLeast8Caracters(formData.password)) {
+      setHas8Caracters(true);
     } else {
       try {
         await dataRegister(formData);
+        alert("Ha sido registrado correctamente.");
         setFormData({
           fullName: "",
           dni: "",
@@ -91,21 +124,33 @@ export default function SignUp() {
         });
         setShowAlert(false);
         setSamePasswordAlert(false);
+
         router.push("/");
       } catch (error) {
         console.error("Error al registrar el usuario:", error);
       }
     }
   };
+
+  // Navegar a la página anterior
+  const handleBack = () => {
+    router.back();
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Box
         sx={{
+          width: "32rem",
           marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          margin: "auto",
+          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+          padding: 6,
+          borderRadius: 2,
+          backgroundColor: "white",
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
@@ -117,8 +162,8 @@ export default function SignUp() {
         <Box component="form" onSubmit={onSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <InputLabel>Nombre Completo</InputLabel>
-              <Input
+              <InputText
+                label="Nombre y Apellido"
                 fullWidth
                 type="text"
                 name="fullName"
@@ -128,10 +173,9 @@ export default function SignUp() {
             </Grid>
 
             <Grid item xs={12}>
-              <InputLabel>DNI</InputLabel>
-              <Input
+              <InputText
                 fullWidth
-                type="number"
+                label="DNI"
                 name="dni"
                 value={formData.dni}
                 onChange={handleChange}
@@ -139,20 +183,18 @@ export default function SignUp() {
             </Grid>
 
             <Grid item xs={12}>
-              <InputLabel>Correo Electrónico </InputLabel>
-              <Input
+              <InputEmail
                 fullWidth
-                type="text"
+                label="Correo Electrónico"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
-              <InputLabel>Contraseña</InputLabel>
-              <Input
+              <InputPassword
                 fullWidth
-                type={showPassword ? "text" : "password"}
+                label="Contraseña"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
@@ -170,10 +212,9 @@ export default function SignUp() {
               />
             </Grid>
             <Grid item xs={12}>
-              <InputLabel>Repetir contraseña</InputLabel>
-              <Input
+              <InputPassword
                 fullWidth
-                type={showPassword2 ? "text" : "password"}
+                label="Repetir Contraseña"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
@@ -198,7 +239,7 @@ export default function SignUp() {
             color="primary"
             sx={{
               marginTop: "1rem",
-              textTransform: "capitalize",
+              textTransform: "initial",
               color: "white",
               ":hover": { bgcolor: "primary.dark", color: "white" },
             }}
@@ -225,6 +266,46 @@ export default function SignUp() {
           ) : (
             ""
           )}
+          {hasCapital ? (
+            <Alert
+              severity="error"
+              sx={{ color: "red", backgroundColor: "transparent" }}
+            >
+              La contraseña debe tener al menos una letra mayúscula
+            </Alert>
+          ) : (
+            ""
+          )}
+          {hasMinuscule ? (
+            <Alert
+              severity="error"
+              sx={{ color: "red", backgroundColor: "transparent" }}
+            >
+              La contraseña debe tener al menos una minúscula
+            </Alert>
+          ) : (
+            ""
+          )}
+          {hasNumber ? (
+            <Alert
+              severity="error"
+              sx={{ color: "red", backgroundColor: "transparent" }}
+            >
+              La contraseña debe tener al menos un número
+            </Alert>
+          ) : (
+            ""
+          )}
+          {has8Caracters ? (
+            <Alert
+              severity="error"
+              sx={{ color: "red", backgroundColor: "transparent" }}
+            >
+              La contraseña debe tener al menos 8 caracteres
+            </Alert>
+          ) : (
+            ""
+          )}
 
           <Divider sx={{ marginBottom: "1rem", marginTop: "1rem" }} />
           <Link href="/">
@@ -244,6 +325,16 @@ export default function SignUp() {
               Ya estás registrado? Inicia Sesión
             </Button>
           </Link>
+          <Grid item xs={12} textAlign="center">
+            <Button
+              variant="text"
+              color="primary"
+              sx={{ height: "2em", textTransform: "none", marginY: "1rem" }}
+              onClick={handleBack}
+            >
+              Volver
+            </Button>
+          </Grid>
         </Box>
       </Box>
     </Container>
