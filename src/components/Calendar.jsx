@@ -6,14 +6,12 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 
-dayjs.locale('es');
+dayjs.locale("es");
 
-export default function BasicDateCalendar() {
+export default function BasicDateCalendar({ selectedBranch }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} locale="es">
       <DateCalendar />
     </LocalizationProvider>
   );
 }
-
-

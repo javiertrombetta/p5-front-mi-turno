@@ -9,33 +9,69 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import AddressReservationForm from "./AddresReservationForm";
 import BasicSelect from "./SelectForm";
 import BasicDateCalendar from "./Calendar";
-
-const steps = [
-  "Seleccione la sucursal",
-  "Selecione el día",
-  "Complete el formulario",
-];
-
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <BasicSelect />;
-    case 1:
-      return <BasicDateCalendar />;
-    case 2:
-      return <AddressReservationForm />;
-    default:
-      throw new Error("Unknown step");
-  }
-}
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 export default function Checkout() {
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
+  const [branches, setBranches] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState(null);
+
+  // traemos las sucursales
+  useEffect(() => {
+    const fetchBranches = async () => {
+      try {
+        //axios.get("http://localhost:3000/branches/allBranches");
+        setBranches([
+          { id: 1, name: "Sucursal 1" },
+          { id: 2, name: "Sucursal 2" },
+          // ... otras sucursales
+        ]);
+      } catch (error) {
+        console.error("Error al cargar las sucursales", error);
+      }
+    };
+
+    // Llama a la función para cargar las sucursales
+    fetchBranches();
+  }, []);
+
+  //Nos aseguramos que seleccionamos la sucursal
+  useEffect(() => {
+    console.log(selectedBranch);
+  }, [selectedBranch]);
+
+  const steps = [
+    "Seleccione la sucursal",
+    "Selecione el día",
+    "Complete el formulario",
+  ];
+
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return (
+          <BasicSelect
+            branches={branches}
+            onBranchSelect={handleBranchSelect}
+          />
+        );
+      case 1:
+        return <BasicDateCalendar selectedBranch={selectedBranch} />;
+      case 2:
+        return <AddressReservationForm />;
+      default:
+        throw new Error("Unknown step");
+    }
+  }
+
+  const handleBranchSelect = (branch) => {
+    setSelectedBranch(branch);
+  };
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
