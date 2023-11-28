@@ -4,8 +4,8 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+//import FormControlLabel from "@mui/material/FormControlLabel";
+//import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -19,7 +19,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../hooks/slices/userSlice";
 import { checkAuth, loginUser } from "../services/dataLogin";
 import { setUser } from "../hooks/slices/userSlice";
-
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,11 +32,31 @@ export default function SignIn() {
     const checkAuthAsync = async () => {
       try {
         const userData = await checkAuth(user, dispatch, router);
-        if (userData) router.push("/reservation/me");
+        if (userData) {
+          setTimeout(() => {
+            switch (userData.role) {
+              case "super":
+                router.push("/user/super");
+                break;
+              case "admin":
+                router.push("/user/admin");
+                break;
+              case "oper":
+                router.push("/");
+                break;
+              case "user":
+                router.push("/reservation");
+                break;
+              default:
+                console.error("Rol desconocido");
+            }
+          }, 700);
+        }
       } catch (error) {
         console.error("Error en autenticar:", error);
       }
     };
+
     checkAuthAsync();
   }, [user, dispatch, router]);
 
