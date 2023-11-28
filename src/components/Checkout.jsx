@@ -25,7 +25,7 @@ export default function Checkout() {
   useEffect(() => {
     const fetchBranches = async () => {
       try {
-        //axios.get("http://localhost:3000/branches/allBranches");
+        axios.get("http://localhost:3000/branches/allBranches");
         setBranches([
           { id: 1, name: "Sucursal 1" },
           { id: 2, name: "Sucursal 2" },
