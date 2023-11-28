@@ -11,7 +11,7 @@ dayjs.locale("es");
 export default function BasicDateCalendar({ selectedBranch }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} locale="es">
-      <DateCalendar />
+      <DateCalendar views={["day"]} />
     </LocalizationProvider>
   );
 }

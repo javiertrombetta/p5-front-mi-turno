@@ -18,11 +18,90 @@ import { useState, useEffect } from "react";
 
 export default function Checkout() {
   const [activeStep, setActiveStep] = useState(0);
-  const [branches, setBranches] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState(null);
+  const [branches, setBranches] = useState([
+    {
+      id: 1,
+      name: "Sucursal 1",
+      email: "sucursal1@example.com",
+      phoneNumber: 123456789,
+      address: "Dirección 1",
+      capacity: 50,
+      openingTime: "09:00 AM",
+      closingTime: "06:00 PM",
+    },
+    {
+      id: 2,
+      name: "Sucursal 2",
+      email: "sucursal2@example.com",
+      phoneNumber: 987654321,
+      address: "Dirección 2",
+      capacity: 30,
+      openingTime: "10:00 AM",
+      closingTime: "07:00 PM",
+    },
+    {
+      id: 3,
+      name: "Sucursal 3",
+      email: "sucursal1@example.com",
+      phoneNumber: 123456789,
+      address: "Dirección 1",
+      capacity: 50,
+      openingTime: "09:00 AM",
+      closingTime: "06:00 PM",
+    },
+    {
+      id: 4,
+      name: "Sucursal 4",
+      email: "sucursal1@example.com",
+      phoneNumber: 123456789,
+      address: "Dirección 1",
+      capacity: 50,
+      openingTime: "09:00 AM",
+      closingTime: "06:00 PM",
+    },
+    {
+      id: 5,
+      name: "Sucursal 5",
+      email: "sucursal1@example.com",
+      phoneNumber: 123456789,
+      address: "Dirección 1",
+      capacity: 50,
+      openingTime: "09:00 AM",
+      closingTime: "06:00 PM",
+    },
+    {
+      id: 6,
+      name: "Sucursal 6",
+      email: "sucursal1@example.com",
+      phoneNumber: 123456789,
+      address: "Dirección 1",
+      capacity: 50,
+      openingTime: "09:00 AM",
+      closingTime: "06:00 PM",
+    },
+    {
+      id: 7,
+      name: "Sucursal 7",
+      email: "sucursal1@example.com",
+      phoneNumber: 123456789,
+      address: "Dirección 1",
+      capacity: 50,
+      openingTime: "09:00 AM",
+      closingTime: "06:00 PM",
+    },
+
+    // Agrega más sucursales según sea necesario
+  ]);
+
+  // Crea las sucursales
+  const branchesData = useEffect(() => {
+    // setBranches(branchesData);
+    //console.log(branches);
+  }, []);
 
   // traemos las sucursales
-  useEffect(() => {
+  /* useEffect(() => {
     const fetchBranches = async () => {
       try {
         axios.get("http://localhost:3000/branches/allBranches");
@@ -38,18 +117,30 @@ export default function Checkout() {
 
     // Llama a la función para cargar las sucursales
     fetchBranches();
-  }, []);
+  }, []); */
 
   //Nos aseguramos que seleccionamos la sucursal
-  useEffect(() => {
+  /* useEffect(() => {
     console.log(selectedBranch);
-  }, [selectedBranch]);
+  }, [selectedBranch]); */
 
   const steps = [
     "Seleccione la sucursal",
     "Selecione el día",
     "Complete el formulario",
   ];
+
+  const handleBranchSelect = (branch) => {
+    setSelectedBranch(branch);
+  };
+
+  const handleNext = () => {
+    setActiveStep(activeStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep(activeStep - 1);
+  };
 
   function getStepContent(step) {
     switch (step) {
@@ -68,18 +159,6 @@ export default function Checkout() {
         throw new Error("Unknown step");
     }
   }
-
-  const handleBranchSelect = (branch) => {
-    setSelectedBranch(branch);
-  };
-
-  const handleNext = () => {
-    setActiveStep(activeStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep(activeStep - 1);
-  };
 
   return (
     <React.Fragment>
