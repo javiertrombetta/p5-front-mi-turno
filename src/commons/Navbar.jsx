@@ -9,7 +9,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Image from "next/image";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "@mui/material";
-import dataLogout from "@/app/lib/dataLogout";
+import dataLogout from "@/services/dataLogout";
 import { useRouter } from "next/navigation";
 
 const navItems = ["Reservar", "Mis Reservas", "Mi Cuenta", "Cerrar Sesión"];
