@@ -11,6 +11,7 @@ export default function BasicSelect({ branches, onBranchSelect }) {
     const selectedBranchId = event.target.value;
     const selectedBranch =
       branches.find((branch) => branch.id === selectedBranchId) || null;
+    console.log(selectedBranch);
     onBranchSelect(selectedBranch);
   };
 
