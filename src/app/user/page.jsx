@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Container, Typography } from '@mui/material';
 import Lists from '@/commons/Lists';
 import EditIcon from '@mui/icons-material/Edit';
-import {dataAllUsers } from '../../../services/dataAllUsers'
+import {dataAllUsers } from '@/services/dataAllUsers'
 
 // const usersData = [
 //   { id: 1, fullname: 'Facundo Velasco', mail: 'facundo@velasco.com', phone: '1159876325', role: 'Usuario', company: '', branch: '', password: 'password1', lastAccess: '2023-03-10 08:45'},
