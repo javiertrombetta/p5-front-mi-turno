@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { Divider, InputAdornment, IconButton } from "@mui/material";
+import { Divider, InputAdornment, IconButton, Alert } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -69,11 +69,20 @@ export default function SignIn() {
   const handlePassword = (e) => {
     setPassword(e.target.value);
   };
+  //user doesnt exist alert
+  // const [showAlert, setShowAlert] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const userData = await loginUser(email, password, router, setError);
+      // Verificar si el usuario no existe en la base de datos
+      // if (!userData) {
+      //   // Modificar el estado de showAlert a true
+      //   console.log("Setting showAlert to true");
+      //   setShowAlert(true);
+      //   return; // Salir de la función para evitar ejecutar dispatch(setUser(userData))
+      // }
       dispatch(setUser(userData));
     } catch (error) {
       console.error(error);
@@ -171,6 +180,16 @@ export default function SignIn() {
           >
             Iniciar Sesión
           </Button>
+          {/* {showAlert ? (
+            <Alert
+              severity="error"
+              sx={{ color: "red", backgroundColor: "transparent" }}
+            >
+              Lo sentimos, no pudimos encontrar tu cuenta
+            </Alert>
+          ) : (
+            ""
+          )} */}
           <Divider sx={{ marginBottom: "1rem", marginTop: "1rem" }} />
           <Link href="/register">
             <Button

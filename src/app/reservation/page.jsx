@@ -5,7 +5,7 @@ import { Box, Container, Typography } from "@mui/material";
 import BranchesList from "@/commons/Lists";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
-import getUserReservations from "../lib/dataUserReservation";
+import getUserReservations from "@/services/dataUserReservation";
 
 const reservationsData = [
   {
@@ -110,6 +110,7 @@ const transformData = (data) => {
 };
 
 const dataUserReservation = getUserReservations();
+console.log(dataUserReservation);
 
 const columns = [
   "Nombre y Apellido",
