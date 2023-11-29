@@ -148,7 +148,7 @@ export default function SignIn() {
             </Typography> */}
 
             <Link
-              href="#"
+              href="/forgot-password"
               variant="body1"
               sx={{ color: "black", textDecoration: "none" }}
             >
