@@ -45,6 +45,15 @@ export default function Checkout() {
     setActiveStep(activeStep - 1);
   };
 
+  //create reservation
+
+  const [reservationForm, getReservationForm] = React.useState({
+    userId: "",
+    branchId: "",
+    date: "",
+    time: "",
+  });
+
   return (
     <React.Fragment>
       <CssBaseline />
