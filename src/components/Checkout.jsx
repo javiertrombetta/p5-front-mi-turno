@@ -9,33 +9,40 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import AddressReservationForm from "./AddresReservationForm";
 import BasicSelect from "./SelectForm";
 import BasicDateCalendar from "./Calendar";
-
-const steps = [
-  "Seleccione la sucursal",
-  "Selecione el día",
-  "Complete el formulario",
-];
-
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <BasicSelect />;
-    case 1:
-      return <BasicDateCalendar />;
-    case 2:
-      return <AddressReservationForm />;
-    default:
-      throw new Error("Unknown step");
-  }
-}
+import { useState } from "react";
+import currentDate from "@/utils/currentDate";
+import dayjs from "dayjs";
+import { dataBranches } from "@/services/dataBranches";
+import { dataTimes } from "@/services/dataTimes";
 
 export default function Checkout() {
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
+  //Branches
+  const [branches, setBranches] = useState(dataBranches);
+  const [selectedBranch, setSelectedBranch] = useState("");
+  //Date
+  const [dateSelected, setDateSelected] = useState(dayjs(currentDate()));
+  //times
+  const [times, setTimes] = useState(dataTimes);
+  const [timeSelected, setTimeSelected] = useState("");
+
+  const handleSelectChangeBranch = (event) => {
+    setSelectedBranch(event.target.value);
+  };
+
+  const handleSelectChangeTime = (event) => {
+    setTimeSelected(event.target.value);
+  };
+
+  const steps = [
+    "Seleccione la sucursal",
+    "Selecione el día",
+    "Complete el formulario",
+  ];
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -44,6 +51,38 @@ export default function Checkout() {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return (
+          <BasicSelect
+            branches={branches}
+            onChange={handleSelectChangeBranch}
+            value={selectedBranch}
+            label="Sucursal"
+          />
+        );
+      case 1:
+        return (
+          <BasicDateCalendar
+            setDateSelected={setDateSelected}
+            dateSelected={dateSelected}
+          />
+        );
+      case 2:
+        return (
+          <AddressReservationForm
+            times={times}
+            onChange={handleSelectChangeTime}
+            value={timeSelected}
+            label="Horarios"
+          />
+        );
+      default:
+        throw new Error("Unknown step");
+    }
+  }
 
   return (
     <React.Fragment>
