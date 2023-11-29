@@ -20,7 +20,7 @@ import InputText from "@/commons/InputText";
 import InputEmail from "@/commons/InputEmail";
 import InputPassword from "@/commons/InputPassword";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import dataRegister from "@/app/lib/dataRegister";
+import dataRegister from "@/services/dataRegister";
 import { useRouter } from "next/navigation";
 
 export default function SignUp() {
