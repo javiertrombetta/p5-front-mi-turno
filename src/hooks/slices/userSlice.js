@@ -11,12 +11,6 @@ const userReducer = createReducer(initialState, {
     state.userData = action.payload;
   },
 });
-// const userReducer = createReducer(initialState, (builder) => {
-// builder.addCase(setUser, (state, action) => {
-//   state.userData = action.payload;
-// });
-// });
-
 export const selectUser = (state) => state.user.userData;
 
 export default userReducer;

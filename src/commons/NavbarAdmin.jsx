@@ -13,7 +13,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import LogoutIcon from "@mui/icons-material/Logout";
 import StoreMallDirectoryIcon from "@mui/icons-material/StoreMallDirectory";
 import { useRouter } from "next/navigation";
-import dataLogout from "@/app/lib/dataLogout";
+import dataLogout from "@/services/dataLogout";
 
 const navItems = [
   "Sucursales",
