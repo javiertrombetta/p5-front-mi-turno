@@ -5,6 +5,7 @@
 :root {
   --background-color: white;
   --text-color: black;
+  --primary-dark: #4B0069;
 }
 
 html, body {
