@@ -2,11 +2,10 @@
 import React from "react";
 import Head from "next/head";
 import SignIn from "@/components/Login";
-import Provider from "./provider";
 
 const Home = () => {
   return (
-    <Provider>
+    <div>
       <Head>
         <title>Mi Turno Web App</title>
         <meta name="description" content="Bienvenido" />
@@ -14,7 +13,7 @@ const Home = () => {
       <main>
         <SignIn />
       </main>
-    </Provider>
+    </div>
   );
 };
 
