@@ -1,7 +1,5 @@
 "use client";
 import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
-import Navbar from "@/commons/Navbar";
-import Footer from "@/commons/Footer";
 import theme from "../styles/LightThemeMUI";
 import { store } from "../hooks/store";
 import "@/app/ui/globals.css";
@@ -20,15 +18,11 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <Provider store={store}>
           <body>
-            <Navbar />
             <RoutesProtection>
-              <div
-                style={{ marginTop: "3em", minHeight: "calc(100vh - 128px)" }}
-              >
+              <div style={{ marginTop: "3em", minHeight: "calc(100vh - 128px)" }}>
                 {children}
               </div>
-            </RoutesProtection>
-            <Footer />
+            </RoutesProtection> 
           </body>
         </Provider>
       </html>
