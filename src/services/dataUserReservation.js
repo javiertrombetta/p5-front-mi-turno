@@ -1,20 +1,21 @@
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { selectUser } from "@/hooks/slices/userSlice";
 
 const getUserReservations = async () => {
-  const user = useSelector(selectUser);
+  const user = useSelector((state) => state.auth.user);
   console.log(user);
   try {
-    const reservations = await axios.get(
-      `http://localhost:3000/reservations/me`,
-      { dni: user.dni },
-      {
-        withCredentials: true,
-      }
-    );
-    console.log(reservations.data);
-    return reservations.data.payload;
+    if (user.dni) {
+      const reservations = await axios.get(
+        `http://localhost:3000/reservations/me`,
+        { dni: user.dni },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(reservations.data);
+      return reservations.data;
+    }
   } catch (error) {
     if (error.response) {
       // El servidor respondió con un código de estado fuera del rango 2xx
