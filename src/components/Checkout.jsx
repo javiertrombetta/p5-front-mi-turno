@@ -13,126 +13,36 @@ import Typography from "@mui/material/Typography";
 import AddressReservationForm from "./AddresReservationForm";
 import BasicSelect from "./SelectForm";
 import BasicDateCalendar from "./Calendar";
-import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import currentDate from "@/utils/currentDate";
+import dayjs from "dayjs";
+import { dataBranches } from "@/services/dataBranches";
+import { dataTimes } from "@/services/dataTimes";
 
 export default function Checkout() {
   const [activeStep, setActiveStep] = useState(0);
-  const [selectedBranch, setSelectedBranch] = useState(null);
-  const [branches, setBranches] = useState([
-    {
-      id: 1,
-      name: "Sucursal 1",
-      email: "sucursal1@example.com",
-      phoneNumber: 123456789,
-      address: "Dirección 1",
-      capacity: 50,
-      openingTime: "09:00 AM",
-      closingTime: "06:00 PM",
-    },
-    {
-      id: 2,
-      name: "Sucursal 2",
-      email: "sucursal2@example.com",
-      phoneNumber: 987654321,
-      address: "Dirección 2",
-      capacity: 30,
-      openingTime: "10:00 AM",
-      closingTime: "07:00 PM",
-    },
-    {
-      id: 3,
-      name: "Sucursal 3",
-      email: "sucursal1@example.com",
-      phoneNumber: 123456789,
-      address: "Dirección 1",
-      capacity: 50,
-      openingTime: "09:00 AM",
-      closingTime: "06:00 PM",
-    },
-    {
-      id: 4,
-      name: "Sucursal 4",
-      email: "sucursal1@example.com",
-      phoneNumber: 123456789,
-      address: "Dirección 1",
-      capacity: 50,
-      openingTime: "09:00 AM",
-      closingTime: "06:00 PM",
-    },
-    {
-      id: 5,
-      name: "Sucursal 5",
-      email: "sucursal1@example.com",
-      phoneNumber: 123456789,
-      address: "Dirección 1",
-      capacity: 50,
-      openingTime: "09:00 AM",
-      closingTime: "06:00 PM",
-    },
-    {
-      id: 6,
-      name: "Sucursal 6",
-      email: "sucursal1@example.com",
-      phoneNumber: 123456789,
-      address: "Dirección 1",
-      capacity: 50,
-      openingTime: "09:00 AM",
-      closingTime: "06:00 PM",
-    },
-    {
-      id: 7,
-      name: "Sucursal 7",
-      email: "sucursal1@example.com",
-      phoneNumber: 123456789,
-      address: "Dirección 1",
-      capacity: 50,
-      openingTime: "09:00 AM",
-      closingTime: "06:00 PM",
-    },
+  //Branches
+  const [branches, setBranches] = useState(dataBranches);
+  const [selectedBranch, setSelectedBranch] = useState("");
+  //Date
+  const [dateSelected, setDateSelected] = useState(dayjs(currentDate()));
+  //times
+  const [times, setTimes] = useState(dataTimes);
+  const [timeSelected, setTimeSelected] = useState("");
 
-    // Agrega más sucursales según sea necesario
-  ]);
+  const handleSelectChangeBranch = (event) => {
+    setSelectedBranch(event.target.value);
+  };
 
-  // Crea las sucursales
-  const branchesData = useEffect(() => {
-    // setBranches(branchesData);
-    //console.log(branches);
-  }, []);
-
-  // traemos las sucursales
-  /* useEffect(() => {
-    const fetchBranches = async () => {
-      try {
-        axios.get("http://localhost:3000/branches/allBranches");
-        setBranches([
-          { id: 1, name: "Sucursal 1" },
-          { id: 2, name: "Sucursal 2" },
-          // ... otras sucursales
-        ]);
-      } catch (error) {
-        console.error("Error al cargar las sucursales", error);
-      }
-    };
-
-    // Llama a la función para cargar las sucursales
-    fetchBranches();
-  }, []); */
-
-  //Nos aseguramos que seleccionamos la sucursal
-  /* useEffect(() => {
-    console.log(selectedBranch);
-  }, [selectedBranch]); */
+  const handleSelectChangeTime = (event) => {
+    setTimeSelected(event.target.value);
+  };
 
   const steps = [
     "Seleccione la sucursal",
     "Selecione el día",
     "Complete el formulario",
   ];
-
-  const handleBranchSelect = (branch) => {
-    setSelectedBranch(branch);
-  };
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -148,13 +58,27 @@ export default function Checkout() {
         return (
           <BasicSelect
             branches={branches}
-            onBranchSelect={handleBranchSelect}
+            onChange={handleSelectChangeBranch}
+            value={selectedBranch}
+            label="Sucursal"
           />
         );
       case 1:
-        return <BasicDateCalendar selectedBranch={selectedBranch} />;
+        return (
+          <BasicDateCalendar
+            setDateSelected={setDateSelected}
+            dateSelected={dateSelected}
+          />
+        );
       case 2:
-        return <AddressReservationForm />;
+        return (
+          <AddressReservationForm
+            times={times}
+            onChange={handleSelectChangeTime}
+            value={timeSelected}
+            label="Horarios"
+          />
+        );
       default:
         throw new Error("Unknown step");
     }

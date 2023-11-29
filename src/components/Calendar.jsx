@@ -8,10 +8,15 @@ import "dayjs/locale/es";
 
 dayjs.locale("es");
 
-export default function BasicDateCalendar({ selectedBranch }) {
+export default function BasicDateCalendar({ setDateSelected, dateSelected }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} locale="es">
-      <DateCalendar views={["day"]} />
+      <DateCalendar
+        views={["day"]}
+        disablePast
+        value={dateSelected}
+        onChange={(newValue) => setDateSelected(newValue)}
+      />
     </LocalizationProvider>
   );
 }
