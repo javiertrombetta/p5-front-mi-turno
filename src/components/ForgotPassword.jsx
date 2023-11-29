@@ -11,19 +11,32 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { InputLabel } from "@mui/material";
 import Input from "@mui/material/Input";
+import { forgotPassword } from "@/services/dataForgotAndResetPassword";
+import { useState } from "react";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
 export default function ForgotPassword() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-    });
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
   };
 
-  //password visibility
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await forgotPassword(email);
+      setMessage(response.message);
+      setError("");
+    } catch (error) {
+      setMessage("");
+      setError("El usuario no existe.");
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs" sx={{ marginTop: "5rem" }}>
@@ -40,13 +53,20 @@ export default function ForgotPassword() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Reestablecer Contraseña{" "}
+          Reestablecer Contraseña
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <InputLabel htmlFor="email">Correo Electrónico </InputLabel>
-              <Input fullWidth id="email" type="text" required />
+              <InputLabel htmlFor="email">Correo Electrónico</InputLabel>
+              <Input
+                fullWidth
+                id="email"
+                type="text"
+                value={email}
+                onChange={handleEmailChange}
+                required
+              />
             </Grid>
           </Grid>
 
@@ -62,9 +82,12 @@ export default function ForgotPassword() {
               ":hover": { bgcolor: "primary.dark", color: "white" },
             }}
           >
-            Reestablecer Contraseña{" "}
+            Reestablecer Contraseña
           </Button>
         </Box>
+
+        {message && <Typography sx={{ mt: 2 }}>{message}</Typography>}
+        {error && <Typography sx={{ mt: 2, color: "red" }}>{error}</Typography>}
       </Box>
     </Container>
   );
