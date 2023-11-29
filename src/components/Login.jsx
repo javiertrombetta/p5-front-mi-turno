@@ -208,6 +208,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../hooks/slices/userSlice";
 import { checkAuth, loginUser } from "../app/lib/dataLogin";
 import { setUser } from "../hooks/slices/userSlice";
+import InputEmail from "@/commons/InputEmail";
+import InputPassword from "@/commons/InputPassword";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
