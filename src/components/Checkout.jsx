@@ -18,9 +18,12 @@ import currentDate from "@/utils/currentDate";
 import dayjs from "dayjs";
 import { dataBranches } from "@/services/dataBranches";
 import { dataTimes } from "@/services/dataTimes";
+import { useRouter } from "next/navigation";
 
 export default function Checkout() {
   const [activeStep, setActiveStep] = useState(0);
+  const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
+
   //Branches
   const [branches, setBranches] = useState(dataBranches);
   const [selectedBranch, setSelectedBranch] = useState("");
@@ -32,10 +35,12 @@ export default function Checkout() {
 
   const handleSelectChangeBranch = (event) => {
     setSelectedBranch(event.target.value);
+    setIsNextButtonDisabled(event.target.value === "");
   };
 
   const handleSelectChangeTime = (event) => {
     setTimeSelected(event.target.value);
+    setIsNextButtonDisabled(event.target.value === "");
   };
 
   const steps = [
@@ -143,6 +148,7 @@ export default function Checkout() {
                   variant="contained"
                   onClick={handleNext}
                   sx={{ mt: 3, ml: 1 }}
+                  disabled={isNextButtonDisabled}
                 >
                   {activeStep === steps.length - 1
                     ? "Confirmar Reserva"
