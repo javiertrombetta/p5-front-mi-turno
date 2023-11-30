@@ -22,3 +22,16 @@ export const updateUserInfo = async (userData) => {
   }
 };
 
+export const changeUserPassword = async (currentPassword, newPassword) => {
+  try {
+    const response = await axios.put(
+      `${API_URL}/users/me/change-password`, 
+      { currentPassword, newPassword },
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error al cambiar la contraseña:', error);
+    throw error;
+  }
+};
