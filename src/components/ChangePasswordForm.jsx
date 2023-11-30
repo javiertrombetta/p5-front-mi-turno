@@ -3,7 +3,9 @@ import { useState } from "react";
 import { Grid, Button } from "@mui/material";
 import InputPassword from '@/commons/InputPassword';
 import { useRouter } from 'next/navigation';
-import Link from '@mui/material/Link';
+import { persistor } from "@/hooks/store";
+import { changeUserPassword } from "@/services/dataUser";
+import Alert from '@/commons/Alert';
 
 const ChangePasswordForm = () => {
   const router = useRouter();
@@ -13,42 +15,69 @@ const ChangePasswordForm = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
+  const [alert, setAlert] = useState({
+    open: false,
+    type: 'info',
+    message: '',
+  }); 
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
     setErrors({ ...errors, [event.target.name]: "" });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleLogoutAndRedirect = () => {
+    setTimeout(() => {     
+      persistor.purge().then(() => {
+       
+        router.push('/');
+      });
+    }, 2000);
+  };  
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const newErrors = {};
     if (!formData.currentPassword.trim()) newErrors.currentPassword = "Este campo no puede estar vacío";
     if (!formData.newPassword.trim()) newErrors.newPassword = "Este campo no puede estar vacío";
-    if (!formData.confirmPassword.trim()) newErrors.confirmPassword = "Este campo no puede estar vacío";
-
     if (formData.newPassword !== formData.confirmPassword) {
-      newErrors.newPassword = "Las contraseñas no coinciden";
       newErrors.confirmPassword = "Las contraseñas no coinciden";
     }
-
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    console.log("Datos de cambio de contraseña:", formData);
-    // Aquí puedes continuar con la lógica para cambiar la contraseña
-  };  
+    try {
+      setAlert({ open: true, type: 'info', message: 'Cambiando contraseña...' });
+      const response = await changeUserPassword(formData.currentPassword, formData.newPassword);
+      setAlert({
+        open: true,
+        type: 'success',
+        message: response.message,
+      });
+      handleLogoutAndRedirect();    
+    } 
+    catch (error) {
+      setAlert({
+        open: true,
+        type: 'error',
+        message: error.response?.data?.message || 'Error al cambiar la contraseña',
+      });
+    }
+  };
+
+  const handleCloseAlert = () => {
+    setAlert({ ...alert, open: false });
+  };
 
   const handleBack = () => {
-    // Navegar a la página anterior
     router.back();
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         <Grid item xs={12}>
           <InputPassword
             name="currentPassword"
@@ -85,7 +114,7 @@ const ChangePasswordForm = () => {
             fullWidth
             variant="contained"
             color="primary"
-            sx={{ height: "3.5em", marginTop: "1em" }}
+            sx={{ height: "4em", marginTop: "1em" }}
           >
             Aceptar
           </Button>
@@ -94,13 +123,19 @@ const ChangePasswordForm = () => {
           <Button
             variant="text"
             color="primary"
-            sx={{ height: "2em", textTransform: "none" }}
+            sx={{ height: "1rem", textTransform: "none" }}
             onClick={handleBack}
           >
             Volver
           </Button>
         </Grid>        
       </Grid>
+      <Alert 
+        open={alert.open} 
+        type={alert.type} 
+        message={alert.message} 
+        onClose={handleCloseAlert} 
+      />
     </form>
   );
 };

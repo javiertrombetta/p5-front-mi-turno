@@ -1,6 +1,5 @@
-"use client";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,27 +8,41 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-
 import InputEmail from '@/commons/InputEmail';
 import InputPassword from '@/commons/InputPassword';
 import Alert from '@/commons/Alert';
 import { loginUser } from "@/services/dataLogin";
 import { loginSuccess } from "@/hooks/slices/authSlice";
-
 import { useRouter } from "next/navigation";
 
-export default function SignIn() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: ""
-  });
-  const [alert, setAlert] = useState({
-    open: false,
-    type: 'info',
-    message: ''
-  });
+export default function SignIn() {  
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const user = useSelector((state) => state.auth.user);
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [alert, setAlert] = useState({ open: false, type: 'info', message: '' });
   const router = useRouter();
   const dispatch = useDispatch();
+
+  useEffect(() => {    
+    if (user) {
+      switch (user.role) {
+        case "super":
+          router.push("/user/super");
+          break;
+        case "admin":
+          router.push("/user/admin");
+          break;
+        case "oper":
+          router.push("/");
+          break;
+        case "user":
+          router.push("/reservation");
+          break;
+        default:
+          console.error("Rol desconocido");
+      }
+    }
+  }, [isLoggedIn, router, user]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,13 +50,14 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isLoggedIn) return;
     setAlert({ open: true, type: 'info', message: 'Accediendo...' });
     try {
-      const response = await loginUser(formData.email, formData.password);      
-      dispatch(loginSuccess({
-        user: response
-      }));   
+      const response = await loginUser(formData.email, formData.password);     
       setTimeout(() => {
+        dispatch(loginSuccess({
+          user: response
+        }));
         switch (response.role) {
           case "super":
             router.push("/user/super");
@@ -60,7 +74,8 @@ export default function SignIn() {
           default:
             console.error("Rol desconocido");
         }
-      }, 700);
+      }, 500);
+
     } catch (error) {
       let message = 'Error de servidor o conexión';
       if (error.response && error.response.data && error.response.data.message) {
@@ -164,3 +179,4 @@ export default function SignIn() {
     </Container>
   );  
 }
+
