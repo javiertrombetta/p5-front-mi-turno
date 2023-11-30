@@ -13,6 +13,7 @@ import dataLogout from "@/services/dataLogout";
 import { useRouter } from "next/navigation";
 import { logoutSuccess } from '@/hooks/slices/authSlice';
 import { useDispatch } from 'react-redux';
+import { persistor } from '@/hooks/store';
 
 const navItems = ["Reservar", "Mis Reservas", "Mi Cuenta", "Cerrar Sesión"];
 
@@ -24,6 +25,7 @@ function Navbar() {
     try {
       await dataLogout();
       dispatch(logoutSuccess());
+      persistor.purge(); 
       router.push("/");
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
