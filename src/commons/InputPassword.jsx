@@ -20,7 +20,7 @@ const InputPassword = ({
   onChange,
   error,
   helperText,
-  margin = "dense",
+  margin = "normal",
   disabled = false,
 }) => {
   const [showPassword, setShowPassword] = useState(false);

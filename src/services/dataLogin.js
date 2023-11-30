@@ -12,7 +12,7 @@ export const checkAuth = async (user, router, dispatch) => {
   }
 };
 
-export const loginUser = async (email, password, setError) => {
+export const loginUser = async (email, password) => {
   try {
     const response = await axios.post(
       "http://localhost:3000/users/login",
@@ -20,11 +20,7 @@ export const loginUser = async (email, password, setError) => {
       { withCredentials: true }
     );
     return response.data.payload;
-  } catch (error) {
-    console.error("Error en loginUser:", error);
-    setError(
-      "Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo."
-    );
+  } catch (error) { 
     throw error;
   }
 };
