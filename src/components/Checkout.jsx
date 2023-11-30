@@ -120,8 +120,7 @@ export default function Checkout() {
             ))}
           </Stepper>
           {activeStep === steps.length ? (
-            {
-              /* <React.Fragment>
+            <React.Fragment>
               <Typography variant="h5" gutterBottom>
                 Gracias por su reserva!
               </Typography>
@@ -129,8 +128,7 @@ export default function Checkout() {
                 El número de su orden es #2001539. Le hemos enviado un mail con
                 su confirmación.
               </Typography>
-            </React.Fragment> */
-            }
+            </React.Fragment>
           ) : (
             <React.Fragment>
               {getStepContent(activeStep)}
