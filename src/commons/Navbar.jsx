@@ -11,15 +11,27 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "@mui/material";
 import dataLogout from "@/services/dataLogout";
 import { useRouter } from "next/navigation";
+import { logoutSuccess } from '@/hooks/slices/authSlice';
+import { useDispatch } from 'react-redux';
+import { persistor } from '@/hooks/store';
 
 const navItems = ["Reservar", "Mis Reservas", "Mi Cuenta", "Cerrar Sesión"];
 
 function Navbar() {
   const router = useRouter();
-  const clickLogout = () => {
-    dataLogout();
-    router.push("/");
+  const dispatch = useDispatch();
+
+  const clickLogout = async () => {
+    try {
+      await dataLogout();
+      dispatch(logoutSuccess());
+      persistor.purge(); 
+      router.push("/");
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
   };
+  
   return (
     <AppBar
       position="static"
