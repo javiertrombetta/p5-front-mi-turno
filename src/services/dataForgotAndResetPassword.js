@@ -11,3 +11,15 @@ export const forgotPassword = async (email) => {
     throw error;
   }
 };
+
+export const resetPassword = async (token, newPassword) => {
+  try {
+    const response = await axios.post('http://localhost:3000/users/reset-password', {
+      token,
+      newPassword,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
