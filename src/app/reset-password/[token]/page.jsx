@@ -11,7 +11,7 @@ import InputPassword from '@/commons/InputPassword';
 import Alert from '@/commons/Alert';
 import { resetPassword } from "@/services/dataForgotAndResetPassword";
 
-export default function NewPassword({ params }) {
+export default function ResetPassword({ params }) {
   const [formData, setFormData] = useState({
     password: '',
     confirmPassword: ''
