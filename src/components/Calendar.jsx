@@ -15,7 +15,7 @@ export default function BasicDateCalendar({ setDateSelected, dateSelected }) {
         views={["day"]}
         disablePast
         value={dateSelected}
-        onChange={(newValue) => setDateSelected(newValue)}
+        onChange={setDateSelected}
       />
     </LocalizationProvider>
   );

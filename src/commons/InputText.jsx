@@ -5,7 +5,7 @@ const InputText = ({ label, name, value, onChange, disabled = false, margin = "n
   const [error, setError] = useState(false);
 
   const handleBlur = () => {
-    setError(value.trim() === "");
+    setError((value ?? "").trim() === "");
   };
 
   const handleChange = (e) => {

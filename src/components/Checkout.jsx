@@ -20,9 +20,13 @@ import { dataBranches } from "@/services/dataBranches";
 import { dataTimes } from "@/services/dataTimes";
 import { useRouter } from "next/navigation";
 
+import { createReservation } from "@/services/dataReservation";
+
 export default function Checkout() {
   const [activeStep, setActiveStep] = useState(0);
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
+
+  const router = useRouter();
 
   //Branches
   const [branches, setBranches] = useState(dataBranches);
@@ -35,28 +39,55 @@ export default function Checkout() {
 
   const handleSelectChangeBranch = (event) => {
     setSelectedBranch(event.target.value);
-    setIsNextButtonDisabled(event.target.value === "");
+    setIsNextButtonDisabled(!event.target.value);
+  };
+
+  const handleDateChange = (newValue) => {
+    setDateSelected(newValue);
+    setIsNextButtonDisabled(newValue.isBefore(dayjs(), 'day'));
   };
 
   const handleSelectChangeTime = (event) => {
     setTimeSelected(event.target.value);
-    setIsNextButtonDisabled(event.target.value === "");
+    setIsNextButtonDisabled(!event.target.value);
   };
 
+  const handleSubmit = async () => {
+    if (!selectedBranch || !dateSelected || !timeSelected) {
+      alert("Por favor, completa todos los campos antes de enviar.");
+      return;
+    }  
+    const reservationData = {
+      branchId: selectedBranch,
+      date: dateSelected.format("YYYY-MM-DD"), // Formatea la fecha al formato esperado por el backend
+      time: timeSelected // Asegúrate de que este sea el formato de hora esperado por tu backend
+    };
+  
+    try {
+      const response = await createReservation(reservationData);
+      console.log("Reserva creada con éxito:", response);
+      router.push('/reservation/detail');
+    } catch (error) {
+      console.error("Error al crear la reserva:", error);
+      alert("Hubo un error al crear la reserva. Por favor, inténtalo de nuevo.");
+    }
+  };
   const steps = [
     "Seleccione la sucursal",
     "Selecione el día",
     "Complete el formulario",
   ];
-
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    if (activeStep === steps.length - 1) {
+      handleSubmit();
+    } else {
+      setActiveStep(activeStep + 1);
+      setIsNextButtonDisabled(true);
+    }
   };
-
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
-
   function getStepContent(step) {
     switch (step) {
       case 0:
@@ -71,7 +102,7 @@ export default function Checkout() {
       case 1:
         return (
           <BasicDateCalendar
-            setDateSelected={setDateSelected}
+            setDateSelected={handleDateChange}
             dateSelected={dateSelected}
           />
         );
@@ -88,7 +119,13 @@ export default function Checkout() {
         throw new Error("Unknown step");
     }
   }
-
+  const handleFinalStep = () => {
+    if (activeStep === steps.length - 1) {
+      handleSubmit();
+    } else {
+      handleNext();
+    }
+  };
   return (
     <React.Fragment>
       <CssBaseline />
@@ -143,16 +180,8 @@ export default function Checkout() {
                     Volver
                   </Button>
                 )}
-
-                <Button
-                  variant="contained"
-                  onClick={handleNext}
-                  sx={{ mt: 3, ml: 1 }}
-                  disabled={isNextButtonDisabled}
-                >
-                  {activeStep === steps.length - 1
-                    ? "Confirmar Reserva"
-                    : "Siguiente"}
+                <Button variant="contained" onClick={handleFinalStep} sx={{ mt: 3, ml: 1 }} disabled={isNextButtonDisabled}>
+                  {activeStep === steps.length - 1 ? "Confirmar Reserva" : "Siguiente"}
                 </Button>
               </Box>
             </React.Fragment>
