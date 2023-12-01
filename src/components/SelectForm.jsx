@@ -9,13 +9,14 @@ export default function BasicSelect({ branches, onChange, value, label, error, h
     <FormControl fullWidth error={error}>
       <InputLabel>{label}</InputLabel>
       <Select value={value} onChange={onChange} label={label}>
-        {branches.map((branch) => (
-          <MenuItem key={branch.id} value={branch.id}>
-            {branch.name}
-          </MenuItem>
-        ))}
+      {branches && branches.map((branch) => (
+        <MenuItem key={branch.id} value={branch.id}>
+          {branch.name}
+        </MenuItem>
+      ))}
       </Select>
       {error && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>
   );
 }
+

@@ -21,13 +21,25 @@ export const createReservation = async (reservationData) => {
 
 export const getReservationsData = async () => {
   try {
-    const response = await axios.get(`${API_URL}/reservations/me`, {
-      withCredentials: true, // si estás usando cookies
+    const response = await axios.get(`${API_URL}reservations/me`, {
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {
     console.error("Error al obtener las reservas del cliente:", error);
     return null;
+  }
+};
+
+export const getReservationById = async (reservationId) => {
+  try {
+    const response = await axios.get(`${API_URL}/reservations/${reservationId}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener la reserva:", error.response?.data?.message || error.message);
+    throw error;
   }
 };
 
