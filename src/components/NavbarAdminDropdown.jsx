@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { Link } from "@mui/material";
 
-const dropdownItems = ["Sucursal", "Crear sucursal"];
+const dropdownItems = ["Sucursal", "Crear sucursal", "Crear empresa"];
 
 const Dropdown = () => {
   const [selectedOption, setSelectedOption] = useState("");
@@ -38,8 +38,15 @@ const Dropdown = () => {
         <MenuItem value={dropdownItems[0]} component={Link} to="#">
           {dropdownItems[0]}
         </MenuItem>
-        <MenuItem value={dropdownItems[1]} component={Link} to="#">
+        <MenuItem value={dropdownItems[1]} component={Link} to="/create-branch">
           {dropdownItems[1]}{" "}
+        </MenuItem>
+        <MenuItem
+          value={dropdownItems[1]}
+          component={Link}
+          to="/create-business"
+        >
+          {dropdownItems[2]}{" "}
         </MenuItem>
       </Select>
     </div>
