@@ -1,8 +1,8 @@
-import * as React from 'react';
+import React, { useRef } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
-export default function Thanks({ email }) {
+export default function Thanks({ email, onPrint }) {
   return (
     <Box sx={{ textAlign: 'center' }}>
       <CheckCircleOutlineIcon color="success" sx={{ fontSize: 100 }} />
@@ -15,10 +15,16 @@ export default function Thanks({ email }) {
       <Typography variant="subtitle1" gutterBottom sx={{ mb: 3 }}>
         Recordá revisar tu casilla de correo no deseado.
       </Typography>
-      <Button variant="contained" color="primary" sx={{ my: 5, fontSize: "1.1em", textTransform: "initial", py: 2, px: 10 }}>
+      <Button 
+        onClick={onPrint}
+        variant="contained" 
+        color="primary" 
+        sx={{ my: 5, fontSize: "1.1em", textTransform: "initial", py: 2, px: 10 }}
+      >
         ¿Querés imprimir tu comprobante?
-      </Button>
+      </Button>      
     </Box>
   );
 }
+
 

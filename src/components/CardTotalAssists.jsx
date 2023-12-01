@@ -16,7 +16,6 @@ const CardTotalAssists = () => {
       sx={{ backgroundColor: "#CC6AFF" }}
     >
       <CardContent style={{ display: "flex", alignItems: "center" }}>
-        {/* Sección Izquierda */}
         <div style={{ flex: 1, color: "white" }}>
           <Typography variant="h3" component="div">
             69
