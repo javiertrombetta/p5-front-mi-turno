@@ -8,22 +8,26 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import InputEmail from '@/commons/InputEmail';
-import InputPassword from '@/commons/InputPassword';
-import Alert from '@/commons/Alert';
+import InputEmail from "@/commons/InputEmail";
+import InputPassword from "@/commons/InputPassword";
+import Alert from "@/commons/Alert";
 import { loginUser } from "@/services/dataLogin";
 import { loginSuccess } from "@/hooks/slices/authSlice";
 import { useRouter } from "next/navigation";
 
-export default function SignIn() {  
+export default function SignIn() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const user = useSelector((state) => state.auth.user);
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [alert, setAlert] = useState({ open: false, type: 'info', message: '' });
+  const [alert, setAlert] = useState({
+    open: false,
+    type: "info",
+    message: "",
+  });
   const router = useRouter();
   const dispatch = useDispatch();
 
-  useEffect(() => {    
+  useEffect(() => {
     if (user) {
       switch (user.role) {
         case "super":
@@ -51,13 +55,15 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLoggedIn) return;
-    setAlert({ open: true, type: 'info', message: 'Accediendo...' });
+    setAlert({ open: true, type: "info", message: "Accediendo..." });
     try {
-      const response = await loginUser(formData.email, formData.password);     
+      const response = await loginUser(formData.email, formData.password);
       setTimeout(() => {
-        dispatch(loginSuccess({
-          user: response
-        }));
+        dispatch(
+          loginSuccess({
+            user: response,
+          })
+        );
         switch (response.role) {
           case "super":
             router.push("/user/super");
@@ -75,19 +81,22 @@ export default function SignIn() {
             console.error("Rol desconocido");
         }
       }, 500);
-
     } catch (error) {
-      let message = 'Error de servidor o conexión';
-      if (error.response && error.response.data && error.response.data.message) {
+      let message = "Error de servidor o conexión";
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         message = error.response.data.message;
       } else if (error.message) {
         message = error.message;
       }
-      setAlert({ 
-        open: true, 
-        type: 'error', 
-        message: message
-      }); 
+      setAlert({
+        open: true,
+        type: "error",
+        message: message,
+      });
     }
   };
 
@@ -137,46 +146,45 @@ export default function SignIn() {
               ":hover": { bgcolor: "primary.dark", color: "white" },
               mt: 5,
               mb: 2,
-              py: 2
+              py: 2,
             }}
           >
             Iniciar Sesión
           </Button>
-          <Link 
-            href="/forgot-password" 
-            variant="body2" 
-            sx={{ 
-              textDecoration: "none", 
-              ':hover': {
-                color: 'var(--primary-dark)',
-              }
+          <Link
+            href="/forgot-password"
+            variant="body2"
+            sx={{
+              textDecoration: "none",
+              ":hover": {
+                color: "var(--primary-dark)",
+              },
             }}
           >
             ¿Olvidaste tu contraseña?
           </Link>
-          <Link 
-            href="/register" 
-            variant="body2" 
-            sx={{ 
-              textDecoration: "none", 
-              display: "block", 
-              mt: 2, 
-              ':hover': {
-                color: 'var(--primary-dark)',
-              }
+          <Link
+            href="/register"
+            variant="body2"
+            sx={{
+              textDecoration: "none",
+              display: "block",
+              mt: 2,
+              ":hover": {
+                color: "var(--primary-dark)",
+              },
             }}
           >
             ¿No tienes cuenta? Regístrate
           </Link>
         </Box>
       </Box>
-      <Alert 
-        open={alert.open} 
-        type={alert.type} 
-        message={alert.message} 
-        onClose={handleCloseAlert} 
+      <Alert
+        open={alert.open}
+        type={alert.type}
+        message={alert.message}
+        onClose={handleCloseAlert}
       />
     </Container>
-  );  
+  );
 }
-
