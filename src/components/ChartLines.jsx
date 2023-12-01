@@ -28,7 +28,6 @@ var meses = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"];
 var midata = {
   labels: meses,
   datasets: [
-    // Cada una de las líneas del gráfico
     {
       label: "Reservas",
       data: reservas,
@@ -49,13 +48,8 @@ var midata = {
 };
 
 var misoptions = {
-  maintainAspectRatio: false, // Desactiva el mantenimiento de la relación de aspecto
-  responsive: true, // Permite la capacidad de respuesta
-
-  // Ajusta el tamaño del gráfico
-  /*  width: 400,
-  height: 200, */
-
+  maintainAspectRatio: false,
+  responsive: true,
   scales: {
     y: {
       min: 0,

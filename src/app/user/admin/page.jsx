@@ -34,7 +34,6 @@ const columnMappings = {
 };
 
 function Operators() {
-  // Filtrar para mostrar solo usuarios con el rol "Operario"
   const filteredUsersData = usersData.filter(user => user.role === 'Operario');
 
   return (
