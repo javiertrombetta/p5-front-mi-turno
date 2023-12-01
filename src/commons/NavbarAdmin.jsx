@@ -4,18 +4,21 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
-import NavbarDropdown from "@/components/NavbarAdminDropdown";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Link } from "@mui/material";
-import Image from "next/image";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import DescriptionIcon from "@mui/icons-material/Description";
 import LogoutIcon from "@mui/icons-material/Logout";
 import StoreMallDirectoryIcon from "@mui/icons-material/StoreMallDirectory";
-import { useRouter } from "next/navigation";
 import dataLogout from "@/services/dataLogout";
+import { useRouter } from "next/navigation";
+import { logoutSuccess } from '@/hooks/slices/authSlice';
+import { useDispatch } from 'react-redux';
+import { persistor } from "@/hooks/store";
 
 const navItems = [
+  "Crear Sucursal",
+  "Crear Empresa",
   "Sucursales",
   "Operadores",
   "Reportes",
@@ -25,9 +28,16 @@ const navItems = [
 
 function NavbarAdmin() {
   const router = useRouter();
-  const clickLogout = () => {
-    dataLogout();
-    router.push("/");
+  const dispatch = useDispatch();
+  const clickLogout = async () => {
+    try {
+      await dataLogout();
+      dispatch(logoutSuccess());
+      persistor.purge(); 
+      router.push("/");
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
   };
   return (
     <AppBar
@@ -36,13 +46,40 @@ function NavbarAdmin() {
       sx={{ backgroundColor: "primary.main" }}
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <NavbarDropdown />
+        <Box>
+          <Link href="/user/super/create-branch">
+            <Button
+              variant="text"
+              key={navItems[0]}
+              sx={{
+                color: "white",
+                marginX: "1rem",
+                textTransform: "capitalize",
+              }}
+            >
+              {navItems[0]}
+            </Button>
+          </Link>
+          <Link href="/user/super/create-business">
+            <Button
+              variant="text"
+              key={navItems[1]}
+              sx={{
+                color: "white",
+                marginX: "1rem",
+                textTransform: "capitalize",
+              }}
+            >
+              {navItems[1]}
+            </Button>
+          </Link>
+        </Box>
 
         <Box>
           <Link href="#">
             <Button
               variant="text"
-              key={navItems[0]}
+              key={navItems[2]}
               sx={{
                 color: "white",
                 marginX: "1rem",
@@ -56,13 +93,13 @@ function NavbarAdmin() {
                   marginLeft: "5px",
                 }}
               />
-              {navItems[0]}
+              {navItems[2]}
             </Button>
           </Link>
           <Link href="#">
             <Button
               variant="text"
-              key={navItems[1]}
+              key={navItems[3]}
               sx={{
                 color: "white",
                 marginX: "1rem",
@@ -76,13 +113,13 @@ function NavbarAdmin() {
                   marginLeft: "5px",
                 }}
               />
-              {navItems[1]}
+              {navItems[3]}
             </Button>
           </Link>
           <Link href="#">
             <Button
               variant="text"
-              key={navItems[2]}
+              key={navItems[4]}
               sx={{
                 color: "white",
                 marginX: "1rem",
@@ -97,13 +134,13 @@ function NavbarAdmin() {
                   marginLeft: "5px",
                 }}
               />
-              {navItems[2]}
+              {navItems[4]}
             </Button>
           </Link>
-          <Link href="/profile">
+          <Link href="/user/profile">
             <Button
               variant="text"
-              key={navItems[3]}
+              key={navItems[5]}
               sx={{
                 color: "white",
                 marginX: "1rem",
@@ -118,13 +155,13 @@ function NavbarAdmin() {
                   marginLeft: "5px",
                 }}
               />
-              {navItems[3]}
+              {navItems[5]}
             </Button>
           </Link>
           <Button
             onClick={clickLogout}
             variant="text"
-            key={navItems[4]}
+            key={navItems[6]}
             sx={{
               color: "white",
               // marginX: "1rem",
