@@ -8,6 +8,9 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import Alert from '@/commons/Alert';
 import { getReservationsData } from "@/services/dataReservation";
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
 
 const Reservations = () => {
   const [reservations, setReservations] = useState([]);
@@ -24,7 +27,7 @@ const Reservations = () => {
         const data = await getReservationsData();
         const formattedData = data.map(item => ({
           ...item,
-          date: dayjs(item.date).format("DD/MM/YYYY") + " " + item.time.substring(0, 5),
+          date: dayjs.utc(item.date).format("DD/MM/YYYY") + " " + item.time.substring(0, 5),
           branchName: item.branch.name,
         }));
         setReservations(formattedData);       

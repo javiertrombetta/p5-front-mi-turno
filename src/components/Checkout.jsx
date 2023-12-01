@@ -177,13 +177,13 @@ export default function Checkout() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar position="absolute" color="default" elevation={0} sx={{ position: "relative", borderBottom: (t) => `1px solid ${t.palette.divider}` }}></AppBar>
-      <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+      <AppBar position="absolute" color="default" elevation={0} ></AppBar>
+      <Container component="main" maxWidth="md" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
           <Typography component="h1" variant="h4" align="center">
             Hacer una Reserva
           </Typography>
-          <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
+          <Stepper activeStep={activeStep} sx={{ py: 10}}>
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
@@ -204,11 +204,11 @@ export default function Checkout() {
               {getStepContent(activeStep)}
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 {activeStep !== 0 && (
-                  <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
+                  <Button onClick={handleBack} sx={{ mt: 3, ml: 1, px: 4, py: 2  }}>
                     Volver
                   </Button>
                 )}
-                <Button variant="contained" onClick={handleNext} sx={{ mt: 3, ml: 1 }} disabled={isNextButtonDisabled}>
+                <Button variant="contained" onClick={handleNext} sx={{ mt: 3, ml: 1, px: 4, py: 2 }} disabled={isNextButtonDisabled}>
                   {activeStep === steps.length - 1 ? "Confirmar Reserva" : "Siguiente"}
                 </Button>
               </Box>
