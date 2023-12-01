@@ -4,8 +4,9 @@ import { useState } from "react";
 const InputText = ({ label, name, value, onChange, disabled = false, margin = "normal", type = "text" }) => {
   const [error, setError] = useState(false);
 
-  const handleBlur = () => {
-    setError((value ?? "").trim() === "");
+  const handleBlur = () => {    
+    const trimmedValue = typeof value === 'string' ? value.trim() : "";
+    setError(trimmedValue === "");
   };
 
   const handleChange = (e) => {
