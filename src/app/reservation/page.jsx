@@ -1,101 +1,124 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Box, Container, Typography } from '@mui/material';
-import BranchesList from '@/commons/Lists';
-import EditIcon from '@mui/icons-material/Edit'
-import CancelIcon from '@mui/icons-material/Cancel';
+import React, { useEffect, useState } from 'react';
+import { Container, Typography, Box, CircularProgress } from '@mui/material';
+import Lists from "@/commons/Lists";
+import EditIcon from "@mui/icons-material/Edit";
+import CancelIcon from "@mui/icons-material/Cancel";
+import Alert from '@/commons/Alert';
+import { getReservationsData } from "@/services/dataReservation";
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
-const reservationsData = [
-  { id: 1, apenom: 'Facundo Velasco', reservationDate: '15/12/2023', reservationTime: '09:30', branchName: 'Sucursal Norte', reservation_id: '1141472791015' },
-  { id: 2, apenom: 'Laura Martínez', reservationDate: '16/12/2023', reservationTime: '10:00', branchName: 'Sucursal Centro', reservation_id: '2141472791025' },
-  { id: 3, apenom: 'Miguel Ángel', reservationDate: '17/12/2023', reservationTime: '11:30', branchName: 'Sucursal Este', reservation_id: '3141472791035' },
-  { id: 4, apenom: 'Sofía Castro', reservationDate: '18/12/2023', reservationTime: '12:00', branchName: 'Sucursal Oeste', reservation_id: '4141472791045' },
-  { id: 5, apenom: 'Carlos Pérez', reservationDate: '19/12/2023', reservationTime: '13:30', branchName: 'Sucursal Sur', reservation_id: '5141472791055' },
-  { id: 6, apenom: 'Lucía Gómez', reservationDate: '20/12/2023', reservationTime: '14:00', branchName: 'Sucursal Franco', reservation_id: '6141472791065' },
-  { id: 7, apenom: 'Esteban Quito', reservationDate: '21/12/2023', reservationTime: '15:30', branchName: 'Sucursal Darío', reservation_id: '7141472791075' },
-  { id: 8, apenom: 'Ana María', reservationDate: '22/12/2023', reservationTime: '16:00', branchName: 'Sucursal Este', reservation_id: '8141472791085' },
-  { id: 9, apenom: 'Juan Domínguez', reservationDate: '23/12/2023', reservationTime: '17:30', branchName: 'Sucursal Oeste', reservation_id: '9141472791095' },
-  { id: 10, apenom: 'María Fernanda', reservationDate: '24/12/2023', reservationTime: '18:00', branchName: 'Sucursal Centro', reservation_id: '10141472791005' }
-];
+dayjs.extend(utc);
 
-const formatHour = (hour) => {  
-  const [hrs, mins] = hour.split(':');  
-  return `${hrs.length === 1 ? '0' + hrs : hrs}:${mins}`;
-};
+const Reservations = () => {
+  const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [alertInfo, setAlertInfo] = useState({
+    open: false,
+    type: 'info',
+    message: ''
+  });
 
-const formatDateTime = (date, time) => {
-  return `${date} - ${formatHour(time)}`;
-};
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        const data = await getReservationsData();
+        const formattedData = data.map(item => ({
+          ...item,
+          date: dayjs.utc(item.date).format("DD/MM/YYYY") + " " + item.time.substring(0, 5),
+          branchName: item.branch.name,
+        }));
+        setReservations(formattedData);       
+      } catch (error) {
+        setAlertInfo({
+          open: true,
+          type: 'error',
+          message: 'Error al cargar las reservas.'
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReservations();
+  }, []);
 
-const transformData = (data) => {
-  return data.map(reservation => ({
-    ...reservation,
-    'Reserva': formatDateTime(reservation.reservationDate, reservation.reservationTime),
-  }));
-};
+  const handleCloseAlert = () => {
+    setAlertInfo({ ...alertInfo, open: false });
+  };
 
-const columns = ['Nombre y Apellido', 'Reserva', 'Sucursal', 'N° de la reserva'];
+  if (loading) {
+    return <CircularProgress />;
+  }
 
-function handleEditClick(reservation) {  
-  console.log('Editando reserva:', reservation);
-}
-
-function handleCancelClick(reservation) {  
-  console.log('Cancelando reserva:', reservation);
-}
+  if (reservations.length === 0) {
+    return <Typography>No se encontraron reservas.</Typography>;
+  }
 
 
- const onButtonClick = () => {};
 
-const columnMappings = {
-  'Nombre y Apellido': 'apenom',
-  'Reserva': 'Reserva',
-  'Sucursal': 'branchName',
-  'N° de la reserva': 'reservation_id'
-};
-
-function Reservations() {
-  const transformedData = transformData(reservationsData);
+  const columns = ["Nombre y Apellido", "Reserva", "Sucursal", "N° de la reserva"];
+  const columnMappings = {
+    "Nombre y Apellido": "clientName",
+    Reserva: "date",
+    Sucursal: "branchName",
+    "N° de la reserva": "id",
+  };
 
   const dropdownOptions = (reservation) => [
-    { 
-      label: "Editar", 
-      action: () => handleEditClick(reservation),      
+    {
+      label: "Editar",
+      action: () => console.log("Editando reserva:", reservation),
       icon: <EditIcon />,
       style: {
-        ':hover': { bgcolor: 'secondary.dark', color: 'white' }
-      }
+        ":hover": { bgcolor: "secondary.dark", color: "white" },
+      },
     },
-    { 
-      label: "Cancelar", 
-      action: () => handleCancelClick(reservation),
+    {
+      label: "Cancelar",
+      action: () => console.log("Cancelando reserva:", reservation),
       icon: <CancelIcon />,
-      style: {   
-        ':hover': { bgcolor: 'error.dark', color: 'white' }
-      }
-    }    
+      style: {
+        ":hover": { bgcolor: "error.dark", color: "white" },
+      },
+    },
   ];
-  
+
+  const onButtonClick = (data) => {
+    console.log("Button clicked with data:", data);
+  };
+
   return (
     <Container maxWidth="xl">
       <Box sx={{ mx: 10 }}>
-        <Typography variant="h5" textAlign="center" component="div" sx={{ fontWeight: 'bold', padding: '1em', }}>
+        <Typography
+          variant="h5"
+          textAlign="center"
+          component="div"
+          sx={{ fontWeight: "bold", padding: "1em" }}
+        >
           RESERVAS
         </Typography>
-        <BranchesList 
-          data={transformedData}
+        <Lists
+          data={reservations}
           columns={columns}
           columnMappings={columnMappings}
           buttonLabel="Opciones"
-          onButtonClick={{onButtonClick}}
-          buttonIcon={<EditIcon />} 
+          onButtonClick={onButtonClick}
+          buttonIcon={<EditIcon />}
           buttonType="dropdown"
           dropdownOptions={dropdownOptions}
         />
       </Box>
+      <Alert
+        open={alertInfo.open}
+        type={alertInfo.type}
+        message={alertInfo.message}
+        onClose={handleCloseAlert}
+      />
     </Container>
   );
-}
+};
 
 export default Reservations;
