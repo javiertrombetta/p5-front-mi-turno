@@ -12,6 +12,4 @@ const branchesReducer = createReducer(initialState, {
   },
 });
 
-//export const selectUser = (state) => state.user.userData;
-
 export default branchesReducer;

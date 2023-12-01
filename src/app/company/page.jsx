@@ -5,9 +5,6 @@ import { Box, Container, Typography } from '@mui/material';
 import Lists from '@/commons/Lists';
 import EditIcon from '@mui/icons-material/Edit';
 
-
-
-
 const companiesData = [
   { id: 1, name: 'Franquitos Market', mail: 'casacentral@franquitos.com', phone: '08006978963', startTime: '8:00', closeTime: '20:00' },
   { id: 2, name: 'Belén Biomarket', mail: 'contacto@belenbiomarket.com', phone: '08001234567', startTime: '9:00', closeTime: '18:00' },
@@ -15,7 +12,6 @@ const companiesData = [
   { id: 4, name: 'Darío Designs', mail: 'support@dariodesigns.com', phone: '08006543210', startTime: '10:00', closeTime: '22:00' },
   { id: 5, name: 'Velasco Travels', mail: 'booking@velascotravels.com', phone: '08001231234', startTime: '7:00', closeTime: '21:00' }
 ];
-
 
 const formatHour = (hour) => {  
   const [hrs, mins] = hour.split(':');  

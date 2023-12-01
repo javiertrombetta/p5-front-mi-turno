@@ -19,8 +19,7 @@ export default function ReservationDetails({ reservation }) {
         <Typography variant="h6" component="div">
           Reserva #{reservation.id}
         </Typography>
-        <Typography variant="body1" component="div">
-          {/* Asumiendo que la fecha de creación es 'createdAt' */}
+        <Typography variant="body1" component="div">          
           Hecho el {formatDate(reservation.createdAt)} para el día {formatDate(reservation.date)} a las {formatTime(reservation.time)} hs.
         </Typography>
       </Box>    

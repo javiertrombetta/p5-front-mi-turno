@@ -28,8 +28,7 @@ export default function ReservationSuccess({ params }) {
           message: 'Cargando la información ...'
         });
         try {
-          const reservationData = await getReservationById(reservationId);
-          console.log(reservationData);
+          const reservationData = await getReservationById(reservationId);      
           setReservation(reservationData);
           setAlertInfo({ open: false });
         } catch (error) {
