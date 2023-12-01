@@ -1,71 +1,99 @@
 "use client";
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { InputLabel } from "@mui/material";
-import Input from "@mui/material/Input";
-
-// TODO remove, this demo shouldn't need to reset the theme.
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import InputEmail from '@/commons/InputEmail';
+import Alert from '@/commons/Alert';
+import { useRouter } from 'next/navigation';
+import { forgotPassword } from "@/services/dataForgotAndResetPassword";
 
 export default function ForgotPassword() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-    });
+  const [email, setEmail] = useState("");
+  const [alert, setAlert] = useState({ open: false, type: 'info', message: '' });
+  const router = useRouter();
+
+  const handleChange = (e) => {
+    setEmail(e.target.value);
   };
 
-  //password visibility
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setAlert({ open: true, type: 'info', message: 'Enviando correo de recuperación de contraseña...' });
+    try {
+      const response = await forgotPassword(email);
+      setAlert({ open: true, type: 'success', message: response.message });
+      setTimeout(() => router.push('/'), 2000);
+    } catch (error) {
+      setAlert({ open: true, type: 'error', message: error.response.data.message || "Ocurrió un error" });
+    }
+  };
+
+  const handleCloseAlert = () => {
+    setAlert({ ...alert, open: false });
+  };
 
   return (
     <Container component="main" maxWidth="xs" sx={{ marginTop: "5rem" }}>
       <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
+      <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <Avatar sx={{ mb: 2, p: 4, bgcolor: "primary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Reestablecer Contraseña{" "}
+          Restablecer Contraseña
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <InputLabel htmlFor="email">Correo Electrónico </InputLabel>
-              <Input fullWidth id="email" type="text" required />
-            </Grid>
-          </Grid>
-
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 4 }}>
+          <InputEmail
+            label="Correo Electrónico"
+            name="email"
+            value={email}
+            onChange={handleChange}
+            required
+          />          
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            sx={{
-              mt: "1rem",
-              textTransform: "capitalize",
-              color: "white",
-              ":hover": { bgcolor: "primary.dark", color: "white" },
+            sx={{ mt: 5, mb: 2, py: 2, textTransform: "capitalize" }}
+          >
+            Restablecer Contraseña
+          </Button>
+          <Link 
+            href="/" 
+            variant="body2" 
+            sx={{ 
+              textDecoration: "none", 
+              ':hover': {
+                color: 'var(--primary-dark)',
+              }
             }}
           >
-            Reestablecer Contraseña{" "}
-          </Button>
+            ¿Te acordás tu contraseña? Inicia sesión
+          </Link>
+          <Link 
+            href="/register" 
+            variant="body2" 
+            sx={{ 
+              textDecoration: "none", 
+              display: "block", 
+              mt: 2, 
+              ':hover': {
+                color: 'var(--primary-dark)',
+              }
+            }}
+          >
+            ¿No tenés cuenta? Registrate
+          </Link>
         </Box>
       </Box>
+      <Alert open={alert.open} type={alert.type} message={alert.message} onClose={handleCloseAlert} />
     </Container>
   );
 }

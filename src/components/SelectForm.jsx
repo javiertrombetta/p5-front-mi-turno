@@ -1,34 +1,22 @@
-"use client";
-import * as React from "react";
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
 
-export default function BasicSelect() {
-  const [sucursal, setSucursal] = React.useState("");
-
-  const handleChange = (event) => {
-    setSucursal(event.target.value);
-  };
-
+export default function BasicSelect({ branches, onChange, value, label, error, helperText }) {
   return (
-    <Box sx={{ minWidth: 120 }}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Sucursal</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={sucursal}
-          label="Sucursal"
-          onChange={handleChange}
-        >
-          <MenuItem value="sucursal1">sucursal 1</MenuItem>
-          <MenuItem value="sucursal2">sucursal 2</MenuItem>
-          <MenuItem value="sucursal3">sucursal 3</MenuItem>
-        </Select>
-      </FormControl>
-    </Box>
+    <FormControl fullWidth error={error}>
+      <InputLabel>{label}</InputLabel>
+      <Select value={value} onChange={onChange} label={label}>
+      {branches && branches.map((branch) => (
+        <MenuItem key={branch.id} value={branch.id}>
+          {branch.name}
+        </MenuItem>
+      ))}
+      </Select>
+      {error && <FormHelperText>{helperText}</FormHelperText>}
+    </FormControl>
   );
 }
+

@@ -11,13 +11,11 @@ const ChangePassword = () => {
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 2,
+          marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          margin: "auto",
-          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",    
-          padding: 6, 
+          margin: "auto",          
           borderRadius: 2,
           backgroundColor: "white",
         }}
