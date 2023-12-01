@@ -1,18 +1,25 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Grid from "@mui/material/Grid";
 import { InputLabel } from "@mui/material";
-import BasicSelect from "./SelectFormTimes";
-import InputEmail from "@/commons/InputEmail"; // Asegúrate de que la ruta de importación sea correcta
-import InputText from "@/commons/InputText"; // Asegúrate de que la ruta de importación sea correcta
+import BasicSelect from "@/components/SelectFormTimes";
+import InputEmail from "@/commons/InputEmail";
+import InputText from "@/commons/InputText";
 
-export default function AddressForm({ times, onChange, value, label, clientName, clientEmail, clientPhone, setClientName, setClientEmail, setClientPhone }) {
+export default function AddressReservationForm({
+  times, onChangeTime, valueTime, clientName, setClientName, clientEmail, setClientEmail, clientPhone, setClientPhone
+}) {
   const [selectError, setSelectError] = useState(false);
 
   const handleSelectChange = (e) => {
-    onChange(e);
-    setSelectError(e.target.value === "");
+    const timeValue = e.target.value;
+    if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(timeValue)) {
+      onChangeTime(e);
+      setSelectError(false);
+    } else {
+      setSelectError(true);
+    }
   };
-  
+
   return (
     <React.Fragment>
       <Grid container spacing={3}>
@@ -21,8 +28,7 @@ export default function AddressForm({ times, onChange, value, label, clientName,
           <BasicSelect 
             times={times} 
             onChange={handleSelectChange} 
-            value={value} 
-            label={label} 
+            value={valueTime} 
             error={selectError} 
             helperText={selectError ? "Este campo no puede estar vacío" : ""} 
           />
