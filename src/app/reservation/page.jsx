@@ -1,63 +1,72 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Box, Container, Typography } from "@mui/material";
-import BranchesList from "@/commons/Lists";
+
+import React, { useEffect, useState } from 'react';
+import { Container, Typography, Box, CircularProgress } from '@mui/material';
+import Lists from "@/commons/Lists";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
+import Alert from '@/commons/Alert';
 import { getReservationsData } from "@/services/dataReservation";
+import dayjs from 'dayjs';
 
-function formatDate(dateString) {
-  if (!dateString) return "No informado";
-
-  const date = new Date(dateString);
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const year = date.getFullYear();
-
-  return `${day}-${month}-${year}`;
-}
-
-function Reservations() {
-  const [reservationsData, setReservationsData] = useState([]);
+const Reservations = () => {
+  const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [alertInfo, setAlertInfo] = useState({
+    open: false,
+    type: 'info',
+    message: ''
+  });
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchReservations = async () => {
       try {
         const data = await getReservationsData();
-        if (data) {
-          setReservationsData(data);
-          console.log(data);
-        }
+        const formattedData = data.map(item => ({
+          ...item,
+          date: dayjs(item.date).format("DD/MM/YYYY") + " " + item.time.substring(0, 5),
+          branchName: item.branch.name,
+        }));
+        setReservations(formattedData);       
       } catch (error) {
-        console.error("Error al obtener las reservas del cliente:", error);
+        setAlertInfo({
+          open: true,
+          type: 'error',
+          message: 'Error al cargar las reservas.'
+        });
       } finally {
         setLoading(false);
       }
     };
-
-    fetchData();
+    fetchReservations();
   }, []);
 
-  const transformedData = reservationsData.map((reservation) => ({
-    id: reservation.id || "No informado",
-    clientName: reservation.clientName || "No informado",
-    date: formatDate(reservation.date),
-    branchName: reservation.branch?.name || "No informado",
-  }));
-
-  const handleEditClick = (reservation) => {
-    console.log("Editando reserva:", reservation);
+  const handleCloseAlert = () => {
+    setAlertInfo({ ...alertInfo, open: false });
   };
 
-  const handleCancelClick = (reservation) => {
-    console.log("Cancelando reserva:", reservation);
+  if (loading) {
+    return <CircularProgress />;
+  }
+
+  if (reservations.length === 0) {
+    return <Typography>No se encontraron reservas.</Typography>;
+  }
+
+
+
+  const columns = ["Nombre y Apellido", "Reserva", "Sucursal", "N° de la reserva"];
+  const columnMappings = {
+    "Nombre y Apellido": "clientName",
+    Reserva: "date",
+    Sucursal: "branchName",
+    "N° de la reserva": "id",
   };
 
   const dropdownOptions = (reservation) => [
     {
       label: "Editar",
-      action: () => handleEditClick(reservation),
+      action: () => console.log("Editando reserva:", reservation),
       icon: <EditIcon />,
       style: {
         ":hover": { bgcolor: "secondary.dark", color: "white" },
@@ -65,13 +74,17 @@ function Reservations() {
     },
     {
       label: "Cancelar",
-      action: () => handleCancelClick(reservation),
+      action: () => console.log("Cancelando reserva:", reservation),
       icon: <CancelIcon />,
       style: {
         ":hover": { bgcolor: "error.dark", color: "white" },
       },
     },
   ];
+
+  const onButtonClick = (data) => {
+    console.log("Button clicked with data:", data);
+  };
 
   return (
     <Container maxWidth="xl">
@@ -84,40 +97,25 @@ function Reservations() {
         >
           RESERVAS
         </Typography>
-        {loading ? (
-          <p>Cargando reservas...</p>
-        ) : (
-          <>
-            {transformedData.length > 0 ? (
-              <BranchesList
-                data={transformedData}
-                columns={[
-                  "Nombre y Apellido",
-                  "Reserva",
-                  "Sucursal",
-                  "N° de la reserva",
-                ]}
-                columnMappings={{
-                  "Nombre y Apellido": "clientName",
-                  Reserva: "date",
-                  Sucursal: "branchName",
-                  "N° de la reserva": "id",
-                }}
-                buttonLabel="Opciones"
-                buttonIcon={<EditIcon />}
-                buttonType="dropdown"
-                dropdownOptions={dropdownOptions}
-              />
-            ) : (
-              <Typography variant="body1" textAlign="center">
-                No tienes reservas.
-              </Typography>
-            )}
-          </>
-        )}
+        <Lists
+          data={reservations}
+          columns={columns}
+          columnMappings={columnMappings}
+          buttonLabel="Opciones"
+          onButtonClick={onButtonClick}
+          buttonIcon={<EditIcon />}
+          buttonType="dropdown"
+          dropdownOptions={dropdownOptions}
+        />
       </Box>
+      <Alert
+        open={alertInfo.open}
+        type={alertInfo.type}
+        message={alertInfo.message}
+        onClose={handleCloseAlert}
+      />
     </Container>
   );
-}
+};
 
 export default Reservations;
