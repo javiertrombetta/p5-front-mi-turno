@@ -7,11 +7,6 @@ import { inter } from "@/app/ui/fonts";
 import RoutesProtection from "./routesProtection";
 import { Provider } from "react-redux";
 
-// export const metadata = {
-//   title: "Mi turno web",
-//   description: "P5 | Proyecto de Mi turno web",
-// };
-
 export default function RootLayout({ children }) {
   return (
     <MUIThemeProvider theme={theme}>
