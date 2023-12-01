@@ -1,12 +1,9 @@
 'use client'
 import React, { useState } from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import InputText from "@/commons/InputText";
@@ -23,6 +20,7 @@ export default function SignUp() {
     dni: "",
     email: "",
     password: "",
+    phoneNumber: "",
     confirmPassword: "",
   });
 
@@ -107,6 +105,13 @@ export default function SignUp() {
             label="Correo Electrónico"
             name="email"
             value={formData.email}
+            onChange={handleChange}
+          />
+          <InputText
+            fullWidth
+            label="Número de Teléfono"
+            name="phoneNumber"
+            value={formData.phoneNumber}
             onChange={handleChange}
           />
           <InputPassword

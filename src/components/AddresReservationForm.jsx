@@ -1,83 +1,66 @@
-import * as React from "react";
+import React, {useState} from "react";
 import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
 import { InputLabel } from "@mui/material";
-import BasicSelect from "./SelectFormTimes";
+import BasicSelect from "@/components/SelectFormTimes";
+import InputEmail from "@/commons/InputEmail";
+import InputText from "@/commons/InputText";
 
-export default function AddressForm({ times, onChange, value, label }) {
+export default function AddressReservationForm({
+  times, onChangeTime, valueTime, clientName, setClientName, clientEmail, setClientEmail, clientPhone, setClientPhone
+}) {
+  const [selectError, setSelectError] = useState(false);
+
+  const handleSelectChange = (e) => {
+    const timeValue = e.target.value;
+    if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(timeValue)) {
+      onChangeTime(e);
+      setSelectError(false);
+    } else {
+      setSelectError(true);
+    }
+  };
+
   return (
     <React.Fragment>
-      <Grid item xs={12} sm={6}>
-        <InputLabel id="demo-select-small-label">
-          Seleccione un horario
-        </InputLabel>
-        <br />
-        <BasicSelect
-          times={times}
-          onChange={onChange}
-          value={value}
-          label={label}
-        />
-        <br />
-      </Grid>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="fullName"
-            name="fullName"
-            label="Nombre y apellido"
-            fullWidth
-            autoComplete="given-name"
-            variant="standard"
+        <Grid item xs={12}>
+          <InputLabel id="demo-select-small-label">Seleccione un horario</InputLabel>
+          <BasicSelect 
+            times={times} 
+            onChange={handleSelectChange} 
+            value={valueTime} 
+            error={selectError} 
+            helperText={selectError ? "Este campo no puede estar vacío" : ""} 
           />
         </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextField
+        <Grid item xs={12}>
+          <InputText
+            label="Nombre y Apellido"
+            name="clientName"
+            value={clientName}
+            onChange={(e) => setClientName(e.target.value)}
             required
-            id="address1"
-            name="address1"
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <InputEmail
             label="Correo Electrónico"
-            fullWidth
-            autoComplete="shipping address-line1"
-            variant="standard"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="address2"
-            name="address2"
-            label="Contraseña"
-            fullWidth
-            autoComplete="shipping address-line2"
-            variant="standard"
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextField
+            name="clientEmail"
+            value={clientEmail}
+            onChange={(e) => setClientEmail(e.target.value)}
             required
-            id="zip"
-            name="zip"
-            label="Telefono"
-            fullWidth
-            autoComplete="shipping postal-code"
-            variant="standard"
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
+        <Grid item xs={12}>
+          <InputText
+            label="Teléfono"
+            name="clientPhone"
+            value={clientPhone}
+            onChange={(e) => setClientPhone(e.target.value)}
+            type="tel"
             required
-            id="country"
-            name="country"
-            label="DNI"
-            fullWidth
-            autoComplete="shipping country"
-            variant="standard"
           />
         </Grid>
-        <Grid item xs={12}></Grid>
       </Grid>
     </React.Fragment>
   );

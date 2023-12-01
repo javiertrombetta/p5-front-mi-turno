@@ -14,7 +14,7 @@ const InputEmail = ({
 
   const handleBlur = () => {
     if (showHelperOnBlur) {
-      setError(value.trim() === "");
+      setError((value ?? "").trim() === "");
     }
   };
 
