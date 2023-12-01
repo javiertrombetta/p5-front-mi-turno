@@ -29,6 +29,7 @@ export default function ReservationSuccess({ params }) {
         });
         try {
           const reservationData = await getReservationById(reservationId);
+          console.log(reservationData);
           setReservation(reservationData);
           setAlertInfo({ open: false });
         } catch (error) {
@@ -52,11 +53,11 @@ export default function ReservationSuccess({ params }) {
   return (
     <Container maxWidth="lg">
       <Card variant="none">
-        <Box sx={{ my: 10 }}>
+        <Box sx={{ my: 2 }}>
           <Thanks email={reservation.clientEmail} onPrint={handlePrint} />
         </Box>
         <Divider />
-        <Box sx={{ my: 10 }}>
+        <Box sx={{ my: 7 }}>
           <ReservationDetails ref={printRef} reservation={reservation} />
         </Box>
       </Card>
