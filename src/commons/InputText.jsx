@@ -4,8 +4,9 @@ import { useState } from "react";
 const InputText = ({ label, name, value, onChange, disabled = false, margin = "normal", type = "text" }) => {
   const [error, setError] = useState(false);
 
-  const handleBlur = () => {
-    setError((value ?? "").trim() === "");
+  const handleBlur = () => {    
+    const trimmedValue = typeof value === 'string' ? value.trim() : "";
+    setError(trimmedValue === "");
   };
 
   const handleChange = (e) => {
@@ -42,8 +43,8 @@ const InputText = ({ label, name, value, onChange, disabled = false, margin = "n
       sx={{
         transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
         "&:hover, &:focus-within": {
-          transform: disabled ? "none" : "scale(1.02)", // Solo aplica el zoom a los campos habilitados
-          boxShadow: disabled ? "none" : "0px 4px 12px rgba(0, 0, 0, 0.1)", // Sombra leve al hacer zoom          
+          transform: disabled ? "none" : "scale(1.02)",
+          boxShadow: disabled ? "none" : "0px 4px 12px rgba(0, 0, 0, 0.1)",        
         },
       }}
     />
