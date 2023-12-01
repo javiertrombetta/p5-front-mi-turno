@@ -109,8 +109,8 @@ const transformData = (data) => {
   }));
 };
 
-const dataUserReservation = getUserReservations();
-console.log(dataUserReservation);
+// const dataUserReservation = getUserReservations();
+// console.log(dataUserReservation);
 
 const columns = [
   "Nombre y Apellido",
