@@ -22,3 +22,22 @@ body {
   background-color: var(--background-color);
   color: var(--text-color);
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+    margin: 0;
+    font-size: 12px;
+  }
+  .print-section, .print-section * {
+    visibility: visible;
+  }
+  .print-section {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  .MuiContainer-root {
+    padding: 0;
+  } 
+}
