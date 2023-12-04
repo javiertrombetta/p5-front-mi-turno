@@ -12,7 +12,7 @@ import Container from "@mui/material/Container";
 import InputText from "@/commons/InputText";
 import InputEmail from "@/commons/InputEmail";
 import InputPassword from "@/commons/InputPassword";
-import dataNewBusiness from "@/services/dataNewBusiness";
+import dataBusiness from "@/services/dataBusiness";
 import { useRouter } from "next/navigation";
 import Alert from "@/commons/Alert";
 
