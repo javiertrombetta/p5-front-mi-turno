@@ -31,12 +31,10 @@ export default function ReservationSuccess({ params }) {
           const reservationData = await getReservationById(reservationId);      
           setReservation(reservationData);
           setAlertInfo({ open: false });
-        } catch (error) {
-          setAlertInfo({
-            open: true,
-            type: 'error',
-            message: 'Error al obtener los detalles de la reserva.'
-          });
+        } 
+        catch (error) {
+          const errorMessage = error.response?.data?.message || `Error al obtener los detalles de la reserva.`;
+          setAlertInfo({ open: true, type: 'error', message: errorMessage });            
         }
       }
     };
