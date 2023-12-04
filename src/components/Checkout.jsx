@@ -73,13 +73,30 @@ export default function Checkout() {
   
   const handleDateChange = async (newValue) => {
     setDateSelected(newValue);
-    setIsNextButtonDisabled(newValue.isBefore(dayjs(), 'day'));
+    setIsNextButtonDisabled(newValue.isBefore(dayjs(), 'day'));  
     if (selectedBranch) {
-      const schedules = await getAvailableBranchSchedules(selectedBranch, newValue.format("YYYY-MM-DD"));
-      console.log("Schedules:", schedules);
-      setAvailableTimes(schedules.availableSchedules);
+      const checkAvailability = async (date) => {
+        const schedules = await getAvailableBranchSchedules(selectedBranch, date.format("YYYY-MM-DD"));
+        return schedules.availableSchedules.length > 0;
+      };  
+      let availableDate = newValue;
+      while (!(await checkAvailability(availableDate)) && availableDate.isBefore(dayjs().add(30, 'day'))) {
+        availableDate = availableDate.add(1, 'day');
+      }  
+      if (await checkAvailability(availableDate)) {
+        setDateSelected(availableDate);
+        const schedules = await getAvailableBranchSchedules(selectedBranch, availableDate.format("YYYY-MM-DD"));
+        setAvailableTimes(schedules.availableSchedules);
+      } else {
+        setAlertInfo({
+          open: true,
+          type: 'error',
+          message: 'No hay disponibilidad en los próximos 30 días.'
+        });
+      }
     }
   };
+  
 
   const handleSelectChangeTime = (event) => {
     setTimeSelected(event.target.value);
@@ -110,7 +127,7 @@ export default function Checkout() {
       const response = await createReservation(reservationData); 
       setIsProcessing(false);
       setAlertInfo({ open: true, type: 'success', message: 'Reserva creada con éxito' });
-      router.push(`/reservation/details/${response.id}`);
+      router.push(`/reservations/success-reservation/${response.id}`);
     } 
     catch (error) {
       console.error("Error al crear la reserva:", error);
