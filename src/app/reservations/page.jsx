@@ -58,11 +58,8 @@ const Reservations = () => {
             };
           });
       } catch (error) {
-        setAlertInfo({
-          open: true,
-          type: 'error',
-          message: 'Error al cargar las reservas.'
-        });
+        const errorMessage = error.response?.data?.message || `Error al cargar las reservas.`;
+        setAlertInfo({ open: true, type: 'error', message: errorMessage });       
         return [];
       }
     };    
