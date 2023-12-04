@@ -38,13 +38,12 @@ const Branches = () => {
       const data = await getBranchesData();
       setBranches(data);
       setFilteredBranches(data);
-    } catch (error) {
-      setAlertInfo({
-        open: true,
-        type: 'error',
-        message: 'Error al cargar las sucursales.'
-      });
-    } finally {
+    } 
+    catch (error) {
+      const errorMessage = error.response?.data?.message || 'Error al cargar las sucursales.';
+      setAlertInfo({ open: true, type: 'error', message: errorMessage });
+    } 
+    finally {
       setLoading(false);
     }
   };
@@ -76,12 +75,8 @@ const Branches = () => {
         await updateBranchEnableStatus(branchId, enableStatus === 'Habilitar');       
         updatedBranches = updatedBranches.map(branch => branch.id === branchId ? { ...branch, isEnable: enableStatus === 'Habilitar' } : branch);
       } catch (error) {
-        console.error('Error al cambiar el estado:', error);
-        setAlertInfo({
-          open: true,
-          type: 'error',
-          message: `Error al cambiar el estado de la sucursal con ID: ${branchId}`
-        });
+        const errorMessage = error.response?.data?.message || `Error al cambiar el estado de la sucursal con ID: ${branchId}`;
+        setAlertInfo({ open: true, type: 'error', message: errorMessage });        
         errorOccurred = true; 
       }
     }  

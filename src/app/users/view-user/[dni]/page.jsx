@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 
 const ViewUser = ({ params }) => {
   const { user } = useSelector((state) => state.auth);
-  const isSuperUser = user.role === 'super';
+  const isSuperUser = user?.role === 'super';
   const [showChangeLabel, setShowChangeLabel] = useState(false);
   const [userRow, setUserRow] = useState(null);
   const [loading, setLoading] = useState(true);
