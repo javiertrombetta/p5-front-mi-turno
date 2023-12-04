@@ -11,9 +11,9 @@ import Image from "next/image";
 import LogoutIcon from "@mui/icons-material/Logout";
 import dataLogout from "@/services/dataLogout";
 import { useRouter } from "next/navigation";
-import { logoutSuccess } from '@/hooks/slices/authSlice';
-import { useDispatch } from 'react-redux';
-import { persistor } from '@/hooks/store';
+import { logoutSuccess } from "@/utils/authSlice";
+import { useDispatch } from "react-redux";
+import { persistor } from "@/utils/store";
 
 const navItems = ["Reservas", "Mi Cuenta", "Cerrar Sesión"];
 
@@ -24,10 +24,10 @@ function NavbarOp() {
     try {
       await dataLogout();
       dispatch(logoutSuccess());
-      persistor.purge(); 
+      persistor.purge();
       router.push("/");
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      console.error("Error al cerrar sesión:", error);
     }
   };
   return (

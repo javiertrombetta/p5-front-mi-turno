@@ -1,13 +1,15 @@
-'use client';
+"use client";
 import { useState } from "react";
 import { Grid, Button } from "@mui/material";
-import InputPassword from '@/commons/InputPassword';
-import { useRouter } from 'next/navigation';
-import { persistor } from "@/hooks/store";
+import InputPassword from "@/commons/InputPassword";
+import { useRouter } from "next/navigation";
 import { changeUserPassword } from "@/services/dataUser";
-import Alert from '@/commons/Alert';
+import Alert from "@/commons/Alert";
+import { logoutSuccess } from "@/hooks/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 const ChangePasswordForm = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const [formData, setFormData] = useState({
     currentPassword: "",
@@ -17,9 +19,9 @@ const ChangePasswordForm = () => {
   const [errors, setErrors] = useState({});
   const [alert, setAlert] = useState({
     open: false,
-    type: 'info',
-    message: '',
-  }); 
+    type: "info",
+    message: "",
+  });
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -27,19 +29,19 @@ const ChangePasswordForm = () => {
   };
 
   const handleLogoutAndRedirect = () => {
-    setTimeout(() => {     
-      persistor.purge().then(() => {
-       
-        router.push('/');
-      });
-    }, 2000);
-  };  
+    setTimeout(() => {
+      dispatch(logoutSuccess());
+      router.push("/");
+     }, 2000);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newErrors = {};
-    if (!formData.currentPassword.trim()) newErrors.currentPassword = "Este campo no puede estar vacío";
-    if (!formData.newPassword.trim()) newErrors.newPassword = "Este campo no puede estar vacío";
+    if (!formData.currentPassword.trim())
+      newErrors.currentPassword = "Este campo no puede estar vacío";
+    if (!formData.newPassword.trim())
+      newErrors.newPassword = "Este campo no puede estar vacío";
     if (formData.newPassword !== formData.confirmPassword) {
       newErrors.confirmPassword = "Las contraseñas no coinciden";
     }
@@ -49,20 +51,27 @@ const ChangePasswordForm = () => {
     }
 
     try {
-      setAlert({ open: true, type: 'info', message: 'Cambiando contraseña...' });
-      const response = await changeUserPassword(formData.currentPassword, formData.newPassword);
       setAlert({
         open: true,
-        type: 'success',
+        type: "info",
+        message: "Cambiando contraseña...",
+      });
+      const response = await changeUserPassword(
+        formData.currentPassword,
+        formData.newPassword
+      );
+      setAlert({
+        open: true,
+        type: "success",
         message: response.message,
       });
-      handleLogoutAndRedirect();    
-    } 
-    catch (error) {
+      handleLogoutAndRedirect();
+    } catch (error) {
       setAlert({
         open: true,
-        type: 'error',
-        message: error.response?.data?.message || 'Error al cambiar la contraseña',
+        type: "error",
+        message:
+          error.response?.data?.message || "Error al cambiar la contraseña",
       });
     }
   };
@@ -128,17 +137,16 @@ const ChangePasswordForm = () => {
           >
             Volver
           </Button>
-        </Grid>        
+        </Grid>
       </Grid>
-      <Alert 
-        open={alert.open} 
-        type={alert.type} 
-        message={alert.message} 
-        onClose={handleCloseAlert} 
+      <Alert
+        open={alert.open}
+        type={alert.type}
+        message={alert.message}
+        onClose={handleCloseAlert}
       />
     </form>
   );
 };
 
 export default ChangePasswordForm;
-

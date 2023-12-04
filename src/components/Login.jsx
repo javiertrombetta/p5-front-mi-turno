@@ -16,8 +16,8 @@ import { loginSuccess } from "@/hooks/slices/authSlice";
 import { useRouter } from "next/navigation";
 
 export default function SignIn() {
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const user = useSelector((state) => state.auth.user);
+  const { user } = useSelector((state) => state.auth);
+  const { isLogged } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [alert, setAlert] = useState({
     open: false,
@@ -31,22 +31,24 @@ export default function SignIn() {
     if (user) {
       switch (user.role) {
         case "super":
-          router.push("/user/super");
+          router.push("/dashboard");
           break;
         case "admin":
-          router.push("/user/admin");
+          router.push("/dashboard");
           break;
         case "oper":
-          router.push("/");
+          router.push("/reservations");
           break;
         case "user":
-          router.push("/reservation");
+          router.push("/reservations");
           break;
         default:
-          console.error("Rol desconocido");
+          console.error(
+            "Rol desconocido. Por favor, ingresá con tus credenciales al sistema."
+          );
       }
     }
-  }, [isLoggedIn, router, user]);
+  }, [router, user]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -54,7 +56,7 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isLoggedIn) return;
+    if (isLogged) return;
     setAlert({ open: true, type: "info", message: "Accediendo..." });
     try {
       const response = await loginUser(formData.email, formData.password);
