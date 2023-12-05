@@ -6,7 +6,19 @@ import IconButton from "@mui/material/IconButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBriefcase } from "@fortawesome/free-solid-svg-icons";
 
-const CardTotalReservation = () => {
+const CardTotalReservation = ({ metrics, selectedBranch }) => {
+  // Obtener el id de la sucursal seleccionada
+  const selectedBranchId = selectedBranch.id;
+  console.log("Selected branch id:", selectedBranchId);
+
+  // Obtener la cantidad de reservas para la sucursal seleccionada
+  const totalReservations = selectedBranchId
+    ? metrics?.totalReservations?.[selectedBranchId] || 0
+    : 0;
+  console.log("Total reservations:", totalReservations);
+
+  console.log("Metrics", metrics);
+
   return (
     <Card
       style={{
@@ -18,7 +30,7 @@ const CardTotalReservation = () => {
       <CardContent style={{ display: "flex", alignItems: "center" }}>
         <div style={{ flex: 1, color: "white" }}>
           <Typography variant="h3" component="div">
-            100
+            {totalReservations}
           </Typography>
           <Typography
             variant="h6"
@@ -27,7 +39,7 @@ const CardTotalReservation = () => {
           >
             Total de reservas
           </Typography>
-        </div>  
+        </div>
         <div>
           <IconButton
             style={{
