@@ -86,3 +86,15 @@ export const deleteBranch = async (branchId) => {
     throw error;
   }
 };
+
+export const getBranchByBusiness = async (branchId) => {
+  try {
+    const response = await axios.get(`${API_URL}/branches/${branchId}/business`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener las sucursales:", error.response?.data?.message || error.message);
+    throw error;
+  }
+};
