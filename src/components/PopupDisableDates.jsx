@@ -7,10 +7,16 @@ const initialBranchState = {
 };
 
 const ScheduleAndDateDialog = ({ open, onClose, branch, setBranch, generateTimeSlots }) => {
-  const [localBranch, setLocalBranch] = useState(branch || initialBranchState);
+  const [localBranch, setLocalBranch] = useState({
+    schedule: branch?.schedule || [],
+    specificDates: branch?.specificDates || []
+  });
 
-  useEffect(() => {
-    setLocalBranch(branch || initialBranchState);
+  useEffect(() => {    
+    setLocalBranch({
+      schedule: branch?.schedule || [],
+      specificDates: branch?.specificDates || []
+    });
   }, [branch]);
 
   const updateBranchState = (updatedBranch) => {
