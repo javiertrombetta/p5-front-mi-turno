@@ -61,7 +61,7 @@ const Businesses = () => {
   };
 
   const handleCreateBusiness = () => {
-    console.log('Crear nueva empresa');
+    router.push("/companies/manage");
   };
 
   const handleRowClick = (businessId) => {
@@ -103,16 +103,14 @@ const Businesses = () => {
             value={filter}
             onChange={handleFilterChange}
             sx={{ width: '50%' }}
-          />
-          <Box sx={{ display: 'flex', gap: 1 }}>  </Box>
+          />         
         </Box>
         <Lists
           data={filteredBusinesses}
           columns={columns}
           columnMappings={columnMappings}
           onRowClick={handleRowClick}
-          selectedBusinesses={selectedBusinesses}
-          showCheckboxAndControls={isAdminOrSuper}          
+          showCheckboxAndControls={false}
         />
       </Box>
       <Alert

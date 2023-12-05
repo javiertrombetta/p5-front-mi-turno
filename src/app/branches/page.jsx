@@ -125,9 +125,8 @@ const Branches = () => {
     router.push(`/branches/manage/${branchId}`);
   };
 
-  const columns = ["Nro", "Sucursal", "Email", "Teléfono", "¿Sucursal activa?"];
-  const columnMappings = {
-    "Nro": "id",
+  const columns = ["Sucursal", "Email", "Teléfono", "¿Sucursal activa?"];
+  const columnMappings = {   
     "Sucursal": "name",
     "Email": "email",
     "Teléfono": "phoneNumber",

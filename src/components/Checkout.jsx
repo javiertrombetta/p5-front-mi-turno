@@ -50,8 +50,14 @@ export default function Checkout() {
       setClientPhone(user.phoneNumber || "");
     }
     const fetchBranches = async () => {
-      const branchesData = await getBranchesData();      
-      setBranches(branchesData || []);      
+      const branchesData = await getBranchesData();
+      if (branchesData) {        
+        const enabledBranches = branchesData.filter(branch => branch.isEnable);
+        const sortedBranches = enabledBranches.sort((a, b) => a.name.localeCompare(b.name));
+        setBranches(sortedBranches);
+      } else {
+        setBranches([]);
+      }
     };
   
     fetchBranches();
@@ -77,6 +83,7 @@ export default function Checkout() {
     if (selectedBranch) {
       const checkAvailability = async (date) => {
         const schedules = await getAvailableBranchSchedules(selectedBranch, date.format("YYYY-MM-DD"));
+        setAvailableTimes(schedules.availableSchedules);
         return schedules.availableSchedules.length > 0;
       };  
       let availableDate = newValue;
