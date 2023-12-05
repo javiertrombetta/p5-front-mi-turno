@@ -172,7 +172,6 @@ const ViewUser = ({ params }) => {
   };
 
   const handleAcceptChanges = async () => {
-    console.log("Sending updated data", userRow);
     try {
       if (!userRow.dni) {
         throw new Error("DNI no está definido");

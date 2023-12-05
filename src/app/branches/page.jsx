@@ -36,8 +36,13 @@ const Branches = () => {
     setLoading(true);
     try {
       const data = await getBranchesData();
-      setBranches(data);
-      setFilteredBranches(data);
+      const formattedData = data.map(branch => ({
+        ...branch,
+        isEnableFormatted: branch.isEnable ? 'Sí' : 'No'
+      }))
+      .sort((a, b) => a.id - b.id);
+      setBranches(formattedData);
+      setFilteredBranches(formattedData);
     } 
     catch (error) {
       const errorMessage = error.response?.data?.message || 'Error al cargar las sucursales.';
@@ -58,8 +63,10 @@ const Branches = () => {
     setFilteredBranches(filtered);
   }, [filter, branches]);
   
-  const handleCheckboxChange = (id) => {
-    setSelectedBranches(prev => prev.includes(id) ? prev.filter(branchId => branchId !== id) : [...prev, id]);
+  const handleCheckboxChange = (branchId) => {
+    setSelectedBranches(prev => 
+      prev.includes(branchId) ? prev.filter(id => id !== branchId) : [...prev, branchId]
+    );
   };
 
   const handleEnableStatusChange = (event) => {
@@ -67,49 +74,63 @@ const Branches = () => {
   };
 
   const handleChangeEnableStatus = async () => {
+    setAlertInfo({
+      open: true,
+      type: 'info',
+      message: 'Cambiando estado...'
+    });  
     let updatedBranches = [...branches];
     let errorOccurred = false;  
+  
     for (const branchId of selectedBranches) {
       if (errorOccurred) break;  
       try {
-        await updateBranchEnableStatus(branchId, enableStatus === 'Habilitar');       
-        updatedBranches = updatedBranches.map(branch => branch.id === branchId ? { ...branch, isEnable: enableStatus === 'Habilitar' } : branch);
-      } catch (error) {
+        const isBranchEnabled = enableStatus === 'Habilitar';
+        await updateBranchEnableStatus(branchId, isBranchEnabled);       
+        updatedBranches = updatedBranches.map(branch => 
+          branch.id === branchId ? { ...branch, isEnable: isBranchEnabled ? 'Sí' : 'No' } : branch
+        );
+      } 
+      catch (error) {
         const errorMessage = error.response?.data?.message || `Error al cambiar el estado de la sucursal con ID: ${branchId}`;
         setAlertInfo({ open: true, type: 'error', message: errorMessage });        
         errorOccurred = true; 
       }
     }  
+  
     if (!errorOccurred) {
       setBranches(updatedBranches);
+      setFilteredBranches(updatedBranches);
+      setFilteredBranches([]);
+      fetchBranches();
       setAlertInfo({
         open: true,
         type: 'success',
         message: 'Estado(s) actualizado(s) correctamente.'
       });
     }  
+  
     setSelectedBranches([]);
-  };
+  }; 
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
 
   const handleCreateBranch = () => {
-    console.log('Crear nueva sucursal');
+    router.push('/branches/manage');
   };
 
   const handleRowClick = (branchId) => {
     router.push(`/branches/manage/${branchId}`);
   };
 
-  const columns = ["Número de sucursal", "Nombre", "Email", "Dirección", "Habilitada"];
-  const columnMappings = {
-    "Número de sucursal": "id",
-    "Nombre": "name",
+  const columns = ["Sucursal", "Email", "Teléfono", "¿Sucursal activa?"];
+  const columnMappings = {   
+    "Sucursal": "name",
     "Email": "email",
-    "Dirección": "address",
-    "Habilitada": "isEnable",
+    "Teléfono": "phoneNumber",
+    "¿Sucursal activa?": "isEnableFormatted",
   };
 
   if (loading) {
@@ -145,7 +166,7 @@ const Branches = () => {
               value={enableStatus}
               onChange={handleEnableStatusChange}
               displayEmpty
-              sx={{ minWidth: 160 }}
+              sx={{ minWidth: 180 }}
             >
               <MenuItem value=""><em>Seleccionar Acción</em></MenuItem>
               <MenuItem value="Habilitar">Habilitar</MenuItem>
@@ -165,7 +186,7 @@ const Branches = () => {
           columns={columns}
           columnMappings={columnMappings}
           onRowClick={handleRowClick}
-          selectedBranches={selectedBranches}
+          selectedItems={selectedBranches}
           onCheckboxChange={handleCheckboxChange}
           showCheckboxAndControls={isAdminOrSuper}          
         />

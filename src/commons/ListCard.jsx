@@ -51,7 +51,3 @@ function ListCard({ data, columns, columnMappings, onRowClick, isSelected, onChe
 }
 
 export default ListCard;
-
-
-
-

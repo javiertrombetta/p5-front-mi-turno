@@ -62,7 +62,7 @@ function Navbar() {
           { href: "/dashboard", icon: <DashboardIcon />, text: "Dashboard" },
           { href: "/users", icon: <PeopleIcon />, text: "Usuarios" },
           { href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservaciones" },
-          { href: "/businesses", icon: <BusinessIcon />, text: "Empresas" },
+          { href: "/companies", icon: <BusinessIcon />, text: "Empresas" },
           { href: "/branches", icon: <StoreMallDirectoryIcon />, text: "Sucursales" },
           { href: "/profile", icon: <AccountCircleIcon />, text: "Mi Perfil" },
         ];
@@ -116,9 +116,11 @@ function Navbar() {
   return (
     <AppBar position="static" sx={{ backgroundColor: "primary.main" }}>
       <Toolbar sx={{ justifyContent: "space-between" }}>
-        <Link href={logoLink}>
-          <Image src="/img/logo2.png" alt="Logo" height="50" width="40" />
-        </Link>
+        <Box sx={{ marginLeft: 4, marginY: 1 }}>
+          <Link href={logoLink}>
+            <Image src="/img/logo2.png" alt="Logo" height="60" width="48" />
+          </Link>
+        </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {renderNavItems()}
         </Box>

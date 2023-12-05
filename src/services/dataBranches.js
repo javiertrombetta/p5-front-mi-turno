@@ -65,7 +65,7 @@ export const updateBranch = async (branchId, branchData) => {
 
 export const updateBranchEnableStatus = async (branchId, isEnable) => {
   try {
-    const response = await axios.put(`${API_URL}/branches/${branchId}/enable-status`, { isEnable }, {
+    const response = await axios.put(`${API_URL}/branches/${branchId}/status`, { isEnable }, {
       withCredentials: true,
     });
     return response.data;

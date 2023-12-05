@@ -5,6 +5,7 @@ import { loginSuccess, logoutSuccess, isLoggedIn } from "@/hooks/slices/authSlic
 import Navbar from "@/commons/Navbar";
 import Footer from "@/commons/Footer";
 import Alert from "@/commons/Alert";
+import MailButton from '@/components/MailButton';
 import CircularProgress from "@mui/material/CircularProgress";
 
 const RoutesProtection = ({ children }) => {
@@ -45,6 +46,11 @@ const RoutesProtection = ({ children }) => {
           justifyContent: "center",
           alignItems: "center",
           height: "100vh",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0
         }}
       >
         <CircularProgress />
@@ -59,6 +65,7 @@ const RoutesProtection = ({ children }) => {
         {children}
       </main>
       {isLogged && <Footer />}
+      {isLogged && user.role != 'super' && <MailButton />}
       {alert.open && (
         <Alert message={alert.message} onClose={() => setAlert({ ...alert, open: false })} />
       )}
