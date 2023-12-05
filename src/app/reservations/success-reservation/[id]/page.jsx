@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Thanks from "@/components/ReservationThanks";
 import ReservationDetails from "@/components/ReservationDetails";
 import Alert from "@/commons/Alert";
@@ -7,10 +7,6 @@ import { Box, Card, Container, Divider } from "@mui/material";
 import { getReservationById } from '@/services/dataReservation';
 
 export default function ReservationSuccess({ params }) {
-  const printRef = useRef();
-  const handlePrint = () => {
-    window.print();
-  };
   const [reservation, setReservation] = useState(null);
   const [alertInfo, setAlertInfo] = useState({
     open: false,
@@ -31,8 +27,7 @@ export default function ReservationSuccess({ params }) {
           const reservationData = await getReservationById(reservationId);      
           setReservation(reservationData);
           setAlertInfo({ open: false });
-        } 
-        catch (error) {
+        } catch (error) {
           const errorMessage = error.response?.data?.message || `Error al obtener los detalles de la reserva.`;
           setAlertInfo({ open: true, type: 'error', message: errorMessage });            
         }
@@ -44,18 +39,20 @@ export default function ReservationSuccess({ params }) {
   const handleCloseAlert = () => {
     setAlertInfo({ ...alertInfo, open: false });
   };
+
   if (!reservation) {
     return <div>Cargando...</div>;
   }
+
   return (
     <Container maxWidth="lg">
       <Card variant="none">
-        <Box sx={{ my: 2 }}>
-          <Thanks email={reservation.clientEmail} onPrint={handlePrint} />
+        <Box sx={{ mb: 5 }}>
+          <Thanks email={reservation.clientEmail} reservationId={reservation.id} />
         </Box>
         <Divider />
-        <Box sx={{ my: 7 }}>
-          <ReservationDetails ref={printRef} reservation={reservation} />
+        <Box sx={{ mt: 6 }}>
+          <ReservationDetails reservation={reservation} />
         </Box>
       </Card>
       <Alert
