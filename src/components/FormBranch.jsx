@@ -28,7 +28,6 @@ export default function FormBranch({ initialData = defaultInitialData }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(formData);
   };
 
   return (
