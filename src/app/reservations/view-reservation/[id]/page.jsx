@@ -42,6 +42,7 @@ const ViewReservation = ({ params }) => {
         setReservation({
           ...fetchedReservation,
           state: fetchedReservation.state.toUpperCase(),
+          qrToken: fetchedReservation.qrToken,
         });
       } catch (err) {
         setError(err.message);
@@ -147,7 +148,7 @@ const ViewReservation = ({ params }) => {
             <InputText label="Email de la persona que asiste" value={reservation.clientEmail} disabled />            
           </Box>
           <Box sx={{ mt: 2, flexShrink: 0 }}>
-            <QRCode value="Información de la reserva para el QR" size={295} />
+            <QRCode value={reservation.qrToken} size={295} />
           </Box>
         </Box>
         <Box>

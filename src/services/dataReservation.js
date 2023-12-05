@@ -91,5 +91,23 @@ export const deleteReservation = async (id) => {
     throw error;
   }
 };
-
-
+export const getReservationByQrToken = async (qrToken) => {
+  try {
+    const response = await axios.get(`${API_URL}/reservations/qr/${qrToken}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener la reserva por QR token:", error.response?.data?.message || error.message);
+    throw error;
+  }
+};
+export const updateReservationStatusByQrToken = async (qrToken, newState) => {
+  try {
+    const response = await axios.put(`${API_URL}/reservations/qr/${qrToken}/status`, { state: newState }, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.error("Error al actualizar el estado de la reserva por QR token:", error.response?.data?.message || error.message);
+    throw error;
+  }
+};
