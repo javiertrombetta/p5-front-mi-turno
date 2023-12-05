@@ -62,7 +62,7 @@ function Navbar() {
           { href: "/dashboard", icon: <DashboardIcon />, text: "Dashboard" },
           { href: "/users", icon: <PeopleIcon />, text: "Usuarios" },
           { href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservaciones" },
-          { href: "/businesses", icon: <BusinessIcon />, text: "Empresas" },
+          { href: "/companies", icon: <BusinessIcon />, text: "Empresas" },
           { href: "/branches", icon: <StoreMallDirectoryIcon />, text: "Sucursales" },
           { href: "/profile", icon: <AccountCircleIcon />, text: "Mi Perfil" },
         ];
