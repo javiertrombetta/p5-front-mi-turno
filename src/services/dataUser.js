@@ -107,3 +107,14 @@ export const assignUserRole = async (dni, newRole) => {
     throw error;
   }
 };
+export const sendMessage = async (message) => {
+  try {
+    const response = await axios.post(`${API_URL}/users/send-message`, { message }, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al enviar el mensaje:", error);
+    throw error;
+  }
+};
