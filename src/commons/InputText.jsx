@@ -2,11 +2,16 @@ import { TextField } from "@mui/material";
 import { useState } from "react";
 
 const InputText = ({ label, name, value, onChange, disabled = false, margin = "normal", type = "text" }) => {
-  const [error, setError] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isBlurred, setIsBlurred] = useState(false);
 
-  const handleBlur = () => {    
-    const trimmedValue = typeof value === 'string' ? value.trim() : "";
-    setError(trimmedValue === "");
+  const handleBlur = () => {
+    setIsFocused(false);
+    setIsBlurred(true); 
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
   };
 
   const handleChange = (e) => {
@@ -18,7 +23,17 @@ const InputText = ({ label, name, value, onChange, disabled = false, margin = "n
     } else {
       onChange(e);
     }
-    setError(false);
+  };
+
+  const showError = () => {
+    return isFocused && isBlurred && value.trim() === "";
+  };
+
+  const showHelperText = () => {
+    if (showError()) {
+      return "Este campo puede estar vacío";
+    }
+    return "";
   };
 
   return (
@@ -31,9 +46,10 @@ const InputText = ({ label, name, value, onChange, disabled = false, margin = "n
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
+      onFocus={handleFocus}
       disabled={disabled}
-      error={error}
-      helperText={error ? "Este campo no puede estar vacío" : ""}
+      error={showError()} 
+      helperText={showHelperText()}
       FormHelperTextProps={{
         sx: {
           position: 'absolute',

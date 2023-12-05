@@ -1,17 +1,27 @@
-import { useEffect } from 'react';
-import { Typography, Avatar } from "@mui/material";
+import { useEffect, useState } from 'react';
+import { Typography, Avatar, Snackbar, Alert } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 const UserInfo = ({ user }) => {
   const router = useRouter();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
     if (!user) {
-      console.log("No hay usuario. Redirigiendo a login...");
-      router.push("/login");
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
     }
   }, [user, router]);
-  
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
   if (!user) {
     return null;
   }
@@ -35,10 +45,17 @@ const UserInfo = ({ user }) => {
       <Typography color="text.secondary">D.N.I.: {user.dni}</Typography>
       <Typography color="text.secondary" gutterBottom>
         {user.email}
-      </Typography>   
+      </Typography>
+
+      <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="warning" sx={{ width: '100%' }}>
+          No hay un usuario. Redirigiendo a login...
+        </Alert>
+      </Snackbar>
     </>
   );
 };
 
 export default UserInfo;
+
 
