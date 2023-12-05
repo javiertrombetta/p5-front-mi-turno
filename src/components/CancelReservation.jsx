@@ -25,7 +25,6 @@ const CancelReservation = ({ usuario, onBackButtonClick }) => {
   };
 
   const handleCancelClick = () => {
-    console.log("Reserva cancelada con razones:", reasons);
   };
 
   return (

@@ -230,7 +230,7 @@ const Reservations = () => {
           columns={columns}
           columnMappings={columnMappings}
           onRowClick={handleRowClick}
-          selectedUsers={selectedReservations}
+          selectedItems={selectedReservations}
           onCheckboxChange={handleCheckboxChange}
           showCheckboxAndControls={!isUserRole}
         />
