@@ -88,6 +88,7 @@ const ManageBusiness = ({ params }) => {
     <Container>
       <Typography variant="h4" sx={{ mb: 4 }}>Gestión de Empresa</Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ mb: 4 }}>
+        <InputText label="Número de Empresa" name="id" value={business.id} onChange={handleInputChange} disabled={true}/>
         <InputText label="Nombre" name="name" value={business.name} onChange={handleInputChange} />
         <InputText label="Email" name="email" value={business.email} onChange={handleInputChange} />
         <InputText label="Teléfono" name="phoneNumber" value={business.phoneNumber} onChange={handleInputChange} />
