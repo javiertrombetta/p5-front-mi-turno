@@ -21,8 +21,8 @@ export const generateTimeSlots = (openingTime, closingTime, turnDuration) => {
   return slots;
 };
 
-export const formatTime = (timeString) => {
-  if (!timeString) return '';
-  const time = new Date(`1970-01-01T${timeString}Z`);
-  return time.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false });
+export const formatTimeHHMMSS = (timeString) => {
+  if (!timeString) return '';  
+  const [hours, minutes] = timeString.split(':');
+  return `${hours}:${minutes}`;
 };
