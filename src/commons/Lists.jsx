@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Pagination, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import ListCard from '@/commons/ListCard';
 
-function Lists({ data, columns, columnMappings, onRowClick, selectedUsers, onCheckboxChange, showCheckboxAndControls }) {
+function Lists({ data, columns, columnMappings, onRowClick, selectedItems, onCheckboxChange, showCheckboxAndControls }) {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const handleChangePage = (event, newPage) => {
@@ -17,7 +17,6 @@ function Lists({ data, columns, columnMappings, onRowClick, selectedUsers, onChe
   const paginatedData = data.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
   const handleItemClick = (item) => {
-    console.log('Item clicked:', item);
     const identifier = item.dni || item.id;
     if (onRowClick && identifier) {
       onRowClick(identifier);
@@ -25,7 +24,7 @@ function Lists({ data, columns, columnMappings, onRowClick, selectedUsers, onChe
   };
   const isItemSelected = (item) => {
     const identifier = item.dni || item.id;
-    return selectedUsers ? selectedUsers.includes(identifier) : false;
+    return selectedItems ? selectedItems.includes(identifier) : false;
   };
   return (
     <Box>

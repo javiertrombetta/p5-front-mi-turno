@@ -31,8 +31,7 @@ const Users = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user) return;
-  
+      if (!user) return;  
       setLoading(true);
       try {
         let data;
@@ -47,11 +46,13 @@ const Users = () => {
           lastLogin: formatLastLogin(user.lastLogin)
         }));
         setUsers(formattedData);
-      } catch (error) {
+      } 
+      catch (error) {
+        const errorMessage = error.response?.data?.message || 'Error al cargar las sucursales.';
         setAlertInfo({
           open: true,
           type: 'error',
-          message: 'Error al cargar los usuarios.'
+          message: errorMessage
         });
       } finally {
         setLoading(false);
@@ -83,15 +84,22 @@ const Users = () => {
     setSelectedUsers([]);
   };  
   const handleChangeRole = async () => {
+    setAlertInfo({
+      open: true,
+      type: 'info',
+      message: 'Cambiando rol...'
+    });  
     let updatedUsers = [...users];
-    let errorOccurred = false;  
+    let errorOccurred = false;
+
     for (const dni of selectedUsers) {
       if (errorOccurred) break;  
       try {
         await assignUserRole(dni, selectedRole);       
         updatedUsers = updatedUsers.map(user => user.dni === dni ? { ...user, role: selectedRole } : user);
-      } catch (error) {
-        console.error('Error al cambiar el rol:', error);
+      } 
+      catch (error) {
+        const errorMessage = error.response?.data?.message || `Error al cambiar el rol de la sucursal con ID: ${branchId}`;
         setAlertInfo({
           open: true,
           type: 'error',
@@ -116,7 +124,6 @@ const Users = () => {
   };
 
   const handleRowClick = (rowData) => {
-    console.log('Row clicked:', rowData);
     router.push(`/users/view-user/${rowData}`);
   };
 
@@ -182,7 +189,7 @@ const Users = () => {
           columns={columns}
           columnMappings={columnMappings}
           onRowClick={handleRowClick}
-          selectedUsers={selectedUsers}
+          selectedItems={selectedUsers}
           onCheckboxChange={handleCheckboxChange}
           showCheckboxAndControls={!isUserRole}
         />
@@ -198,5 +205,3 @@ const Users = () => {
 };
 
 export default Users;
-
-
