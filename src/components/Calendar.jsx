@@ -7,7 +7,6 @@ import dayjs from "dayjs";
 
 import "dayjs/locale/es-mx";
 
-
 dayjs.locale("es-mx");
 
 export default function BasicDateCalendar({ setDateSelected, dateSelected }) {

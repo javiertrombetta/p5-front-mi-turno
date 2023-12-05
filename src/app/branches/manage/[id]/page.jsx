@@ -150,7 +150,7 @@ const ManageBranches = ({ params }) => {
     <Container>
       <Typography variant="h4" sx={{ mb: 4 }}>Gestión de Sucursal</Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ mb: 4 }}>
-        <InputText label="Número de sucursal" name="id" value={branch.id} onChange={handleInputChange} />
+        <InputText label="Número de sucursal" name="id" value={branch.id} onChange={handleInputChange} disabled={true}/>
         <InputText label="Nombre" name="name" value={branch.name} onChange={handleInputChange} />
         <InputText label="Email" name="email" value={branch.email} onChange={handleInputChange} />
         <InputText label="Teléfono" name="phoneNumber" value={branch.phoneNumber} onChange={handleInputChange} />
