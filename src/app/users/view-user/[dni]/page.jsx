@@ -59,7 +59,6 @@ const ViewUser = ({ params }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log("Updating field", name, "to", value);
     setUserRow(prevUserRow => ({
       ...prevUserRow,
       [name]: value
@@ -96,7 +95,6 @@ const ViewUser = ({ params }) => {
   };
 
   const handleAcceptChanges = async () => {
-    console.log("Sending updated data", userRow);
     try {
       if (!userRow.dni) {
         throw new Error("DNI no está definido");

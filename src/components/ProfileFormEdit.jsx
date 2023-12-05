@@ -59,7 +59,6 @@ const ProfileFormEdit = ({ user, onUserUpdate }) => {
         photo: formData.photo     
       };
       const response = await updateMyInfo(updatedUserData);
-      console.log("Respuesta del servidor:", response);
   
       onUserUpdate({ ...user, ...updatedUserData });
       setAlert({
