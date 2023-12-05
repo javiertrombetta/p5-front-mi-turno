@@ -5,16 +5,27 @@ import CardTotalAssists from "@/components/CardTotalAssists";
 import CardTotalCancelations from "@/components/CardTotalCancelations";
 import CardTotalReservation from "@/components/CardTotalReservation";
 import ChartWithTitle from "@/components/ChartWithTitle";
+import { getBranchesData } from "@/services/dataBranches";
 import { Container, Grid, MenuItem, Select, Typography } from "@mui/material";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const page = () => {
-  const sucursales = [
-    { sucursal: "Ciudad 1" },
-    { sucursal: "Ciudad 2" },
-    { sucursal: "Ciudad 3" },
-  ];
+  const [branches, setBranches] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState(-1);
+
+  useEffect(() => {
+    const fetchBranches = async () => {
+      const branchesData = await getBranchesData();
+      setBranches(branchesData || []);
+    };
+    fetchBranches();
+  }, []);
+
+  const handleChange = (event) => {
+    setSelectedBranch(event.target.value);
+  };
+  console.log(branches);
 
   return (
     <Container>
@@ -25,12 +36,14 @@ const page = () => {
         <div>
           <Select
             label="Seleccionar sucursal"
+            value={selectedBranch}
+            onChange={handleChange}
             sx={{ minWidth: "32.5%", marginBottom: 2 }}
           >
             <MenuItem value={-1}>--Elige sucursal--</MenuItem>
-            {sucursales.map((sucursal, index) => (
+            {branches.map((branch, index) => (
               <MenuItem key={index} value={index}>
-                {sucursal.sucursal}
+                {branch.name}
               </MenuItem>
             ))}
           </Select>
@@ -66,13 +79,3 @@ const page = () => {
 };
 
 export default page;
-/* 
-
-
-
-
-
-
-
-
-*/
