@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   TextField,
   Container,
@@ -12,18 +12,18 @@ import {
   MenuItem,
   Paper,
   Typography,
-} from "@mui/material";
-import { useRouter } from "next/navigation";
-import Lists from "@/commons/Lists";
-import Alert from "@/commons/Alert";
+} from '@mui/material';
+import { useRouter } from 'next/navigation';
+import Lists from '@/commons/Lists';
+import Alert from '@/commons/Alert';
 import {
   getReservationsData,
   getBranchReservations,
   getAllReservations,
   updateReservationState,
-} from "@/services/dataReservation";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
+} from '@/services/dataReservation';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 
@@ -32,42 +32,42 @@ const Reservations = () => {
   const { user } = useSelector((state) => state.auth);
   const [reservations, setReservations] = useState([]);
   const [selectedReservations, setSelectedReservations] = useState([]);
-  const [selectedState, setSelectedState] = useState("");
+  const [selectedState, setSelectedState] = useState('');
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState('');
   const [alertInfo, setAlertInfo] = useState({
     open: false,
-    type: "info",
-    message: "",
+    type: 'info',
+    message: '',
   });
 
-  const isUserRole = user?.role === "user";
+  const isUserRole = user?.role === 'user';
 
   useEffect(() => {
     const fetchAndFormatReservations = async (role) => {
       try {
         let data;
-        if (user.role === "super") {
+        if (user.role === 'super') {
           data = await getAllReservations();
-        } else if (user.role === "oper") {
+        } else if (user.role === 'oper') {
           data = await getBranchReservations();
         } else {
           data = await getReservationsData();
         }
         return data
-          .filter((item) => item.state.toLowerCase() !== "cancelado")
+          .filter((item) => item.state.toLowerCase() !== 'cancelado')
           .map((item) => {
             const formatDate = (date) => {
-              return dayjs(date).format("DD/MM/YYYY");
+              return dayjs(date).format('DD/MM/YYYY');
             };
 
             const formatTime = (time) => {
-              return time.replace("::", ":").substring(0, 5);
+              return time.replace('::', ':').substring(0, 5);
             };
 
             return {
               ...item,
-              dateTime: formatDate(item.date) + " " + formatTime(item.time),
+              dateTime: formatDate(item.date) + ' ' + formatTime(item.time),
               branchName: item.branch.name,
               state: item.state.toUpperCase(),
             };
@@ -75,7 +75,7 @@ const Reservations = () => {
       } catch (error) {
         const errorMessage =
           error.response?.data?.message || `Error al cargar las reservas.`;
-        setAlertInfo({ open: true, type: "error", message: errorMessage });
+        setAlertInfo({ open: true, type: 'error', message: errorMessage });
         return [];
       }
     };
@@ -126,7 +126,7 @@ const Reservations = () => {
           `Error al actualizar el estado de la reserva con ID: ${reservationId}`;
         setAlertInfo({
           open: true,
-          type: "error",
+          type: 'error',
           message: errorMessage,
         });
         errorOccurred = true;
@@ -137,11 +137,11 @@ const Reservations = () => {
       setReservations(updatedReservations);
       setAlertInfo({
         open: true,
-        type: "success",
-        message: "Estado(s) de la(s) reserva(s) actualizado(s) con éxito.",
+        type: 'success',
+        message: 'Estado(s) de la(s) reserva(s) actualizado(s) con éxito.',
       });
       setSelectedReservations([]);
-      setSelectedState("");
+      setSelectedState('');
     }
   };
 
@@ -154,7 +154,7 @@ const Reservations = () => {
   };
 
   const handleCreateReservation = () => {
-    router.push("/reservations/new-reservation");
+    router.push('/reservations/new-reservation');
   };
 
   const handleFilterChange = (event) => {
@@ -179,27 +179,27 @@ const Reservations = () => {
   if (reservations.length === 0) {
     return (
       <Container
-        maxWidth="xl"
+        maxWidth='xl'
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "20em",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '20em',
         }}
       >
-        {user.role !== "oper" ? (
-          <Paper elevation={5} sx={{ textAlign: "center" }}>
+        {user.role !== 'admin' || user.role !== 'super' ? (
+          <Paper elevation={5} sx={{ textAlign: 'center' }}>
             <Button
-              variant="contained"
+              variant='contained'
               onClick={handleCreateReservation}
-              sx={{ padding: "2rem", fontSize: "1em" }}
+              sx={{ padding: '2rem', fontSize: '1em' }}
             >
               Empezar creando una nueva reserva
             </Button>
           </Paper>
         ) : (
-          <Typography variant="h6" sx={{ textAlign: "center" }}>
+          <Typography variant='h6' sx={{ textAlign: 'center' }}>
             No hay reservas disponibles en este momento.
           </Typography>
         )}
@@ -208,47 +208,47 @@ const Reservations = () => {
   }
 
   const columns = [
-    "N° de la reserva",
-    "¿Quién asiste?",
-    "¿Cuándo?",
-    "Sucursal",
-    "Estado",
+    'N° de la reserva',
+    '¿Quién asiste?',
+    '¿Cuándo?',
+    'Sucursal',
+    'Estado',
   ];
   const columnMappings = {
-    "N° de la reserva": "id",
-    "¿Quién asiste?": "clientName",
-    "¿Cuándo?": "dateTime",
-    Sucursal: "branchName",
-    Estado: "state",
+    'N° de la reserva': 'id',
+    '¿Quién asiste?': 'clientName',
+    '¿Cuándo?': 'dateTime',
+    Sucursal: 'branchName',
+    Estado: 'state',
   };
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth='xl'>
       <Box sx={{ mx: 10 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
           {isUserRole && (
             <Button
-              variant="outlined"
+              variant='outlined'
               onClick={handleCreateReservation}
-              sx={{ padding: "1rem", fontSize: "0.9em" }}
+              sx={{ padding: '1rem', fontSize: '0.9em' }}
             >
               Nueva Reserva
             </Button>
           )}
           <TextField
-            label="Filtrar Reservas"
-            variant="outlined"
+            label='Filtrar Reservas'
+            variant='outlined'
             value={filter}
             onChange={handleFilterChange}
-            sx={{ width: "50%" }}
+            sx={{ width: '50%' }}
           />
 
           {!isUserRole && (
-            <Box sx={{ display: "flex", gap: 1 }}>
+            <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
-                variant="outlined"
+                variant='outlined'
                 onClick={handleClearSelection}
-                sx={{ padding: "1rem", fontSize: "0.9em" }}
+                sx={{ padding: '1rem', fontSize: '0.9em' }}
               >
                 Limpiar seleccionados
               </Button>
@@ -258,17 +258,17 @@ const Reservations = () => {
                 displayEmpty
                 sx={{ minWidth: 185 }}
               >
-                <MenuItem value="">
+                <MenuItem value=''>
                   <em>Seleccionar Estado</em>
                 </MenuItem>
-                <MenuItem value="Pendiente">Pendiente</MenuItem>
-                <MenuItem value="Confirmado">Confirmado</MenuItem>
-                <MenuItem value="Cancelado">Cancelado</MenuItem>
-                <MenuItem value="Finalizado">Finalizado</MenuItem>
-                <MenuItem value="Ausente">Ausente</MenuItem>
+                <MenuItem value='Pendiente'>Pendiente</MenuItem>
+                <MenuItem value='Confirmado'>Confirmado</MenuItem>
+                <MenuItem value='Cancelado'>Cancelado</MenuItem>
+                <MenuItem value='Finalizado'>Finalizado</MenuItem>
+                <MenuItem value='Ausente'>Ausente</MenuItem>
               </Select>
               <Button
-                variant="contained"
+                variant='contained'
                 onClick={handleChangeReservationState}
                 disabled={selectedReservations.length === 0 || !selectedState}
               >
