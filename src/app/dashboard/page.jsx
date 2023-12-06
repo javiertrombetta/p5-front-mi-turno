@@ -1,109 +1,123 @@
 "use client";
+import { useSelector } from 'react-redux';
 import ChartLinesCard from "@/commons/ChartLinesCard";
 import ChartPiesCard from "@/commons/ChartPiesCard";
 import CardTotalAssists from "@/components/CardTotalAssists";
-import CardTotalCancelations from "@/components/CardTotalCancelations";
+import CardAverageCancelations from "@/components/CardAverageCancelations";
 import CardTotalReservation from "@/components/CardTotalReservation";
 import ChartWithTitle from "@/components/ChartWithTitle";
 import { getBranchesData } from "@/services/dataBranches";
 import { getMetricsData } from "@/services/dataMetrics";
 
 import { Container, Grid, MenuItem, Select, Typography } from "@mui/material";
-
 import React, { useEffect, useState } from "react";
 
-const page = () => {
+const Dashboard = () => {
+  const userRole = useSelector(state => state.auth.user.role);
   const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState({
-    index: 0,
-    id: branches.length > 0 ? branches[0]?.id : null,
-  });
+  const [selectedBranchIndex, setSelectedBranchIndex] = useState(0);
   const [metrics, setMetrics] = useState({});
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchBranches = async () => {
-      const branchesData = await getBranchesData();
-      const sortedBranches = branchesData.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
-      setBranches(sortedBranches || []);
-
-      // Setear la sucursal por defecto después de cargar las sucursales
-      setSelectedBranch({
-        index: 0,
-        id: sortedBranches.length > 0 ? sortedBranches[0]?.id : null,
-      });
+      try {
+        const branchesData = await getBranchesData();
+        setBranches(branchesData.sort((a, b) => a.name.localeCompare(b.name)));
+      } catch (error) {
+        setError('Error al obtener las sucursales: ' + error.message);
+      }
     };
     fetchBranches();
-  }, []); // Agregamos un array vacío para que este efecto se ejecute solo una vez al montar el componente
-
-  useEffect(() => {
-    const fetchMetrics = async () => {
-      const metricsData = await getMetricsData();
-      // console.log("Metrics data structure:", metricsData);
-      setMetrics(metricsData || []);
-    };
-    fetchMetrics();
   }, []);
 
+  useEffect(() => {
+    if (branches.length > 0) {
+      const fetchMetrics = async () => {
+        try {
+          const branchId = branches[selectedBranchIndex]?.id;
+          if (branchId) {
+            const metricsData = await getMetricsData(branchId);
+            setMetrics(metricsData || {});
+          }
+        } catch (error) {
+          setError('Error al obtener métricas: ' + error.message);
+        }
+      };
+      fetchMetrics();
+    }
+  }, [branches, selectedBranchIndex]);
+
   const handleChange = (event) => {
-    const index = event.target.value;
-    const id = branches[index]?.id || null;
-    setSelectedBranch({ index, id });
+    setSelectedBranchIndex(event.target.value);
   };
+
+  if (error) {
+    return <Typography color="error">{error}</Typography>;
+  }
 
   return (
     <Container>
-      <div>
-        <Typography variant="h6" gutterBottom>
-          Filtro de sucursales
-        </Typography>
-        <div>
+      {userRole === "super" || userRole === "admin" ? (
+        <>
+          <Typography variant="h6" gutterBottom>
+            Filtro de sucursales
+          </Typography>
           <Select
             label="Seleccionar sucursal"
-            value={selectedBranch.index}
+            value={selectedBranchIndex}
             onChange={handleChange}
             sx={{ minWidth: "32.5%", marginBottom: 2 }}
           >
             {branches.map((branch, index) => (
-              <MenuItem key={index} value={index}>
+              <MenuItem key={branch.id} value={index}>
                 {branch.name}
               </MenuItem>
             ))}
           </Select>
-        </div>
-      </div>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={4}>
-          <CardTotalReservation
-            metrics={metrics}
-            branches={branches}
-            selectedBranch={selectedBranch}
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <CardTotalCancelations />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <CardTotalAssists />
-        </Grid>
-
-        <Grid item xs={12} sm={4}>
-          <ChartPiesCard />
-        </Grid>
-        <Grid item xs={12} sm={8}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={12}>
-              <ChartLinesCard />
+            <Grid item xs={12} sm={4}>
+              <CardTotalReservation
+                metrics={metrics}
+                selectedBranchId={branches[selectedBranchIndex]?.id}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <CardTotalAssists
+                metrics={metrics}
+                selectedBranchId={branches[selectedBranchIndex]?.id}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <CardAverageCancelations
+                metrics={metrics}
+                selectedBranchId={branches[selectedBranchIndex]?.id}
+              />
+            </Grid>            
+            <Grid item xs={12} sm={4}>
+              <ChartPiesCard 
+              metrics={metrics}
+              selectedBranchId={branches[selectedBranchIndex]?.id} 
+            />              
+            </Grid>
+            <Grid item xs={12} sm={8}>
+              <ChartLinesCard
+                metrics={metrics}
+                selectedBranchId={branches[selectedBranchIndex]?.id}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <ChartWithTitle metrics={metrics} />
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <ChartWithTitle />
-        </Grid>
-      </Grid>
+        </>
+      ) : (
+        <Typography variant="h6" gutterBottom>
+          Acceso restringido
+        </Typography>
+      )}
     </Container>
   );
 };
 
-export default page;
+export default Dashboard;
