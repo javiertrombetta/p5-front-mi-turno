@@ -13,7 +13,7 @@ const ChartPies = ({ data }) => {
     labels: ["Completadas", "No Completadas"],
     datasets: [
       {
-        label: "Estado de las Reservas",
+        label: "Cantidad",
         data: [data.finished, data.notCompleted],
         backgroundColor: ["#CC6AFF", "#A442F1"],
       },

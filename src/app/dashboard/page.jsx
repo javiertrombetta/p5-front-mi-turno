@@ -1,5 +1,10 @@
-"use client";
+'use client'
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Container, Grid, Button, MenuItem, Select, Typography, TextField } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import ChartLinesCard from "@/commons/ChartLinesCard";
 import ChartPiesCardFinished from "@/commons/ChartPiesCardFinished";
 import ChartPiesCardPending from "@/commons/ChartPiesCardPending";
@@ -9,13 +14,11 @@ import CardPeakTimes from "@/components/CardPeakTimes";
 import { getBranchesData } from "@/services/dataBranches";
 import { getMetricsData } from "@/services/dataMetrics";
 
-import { Container, Grid, MenuItem, Select, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-
 const Dashboard = () => {
   const userRole = useSelector(state => state.auth.user?.role);
   const [branches, setBranches] = useState([]);
   const [selectedBranchIndex, setSelectedBranchIndex] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [metrics, setMetrics] = useState({});
   const [error, setError] = useState('');
 
@@ -37,7 +40,7 @@ const Dashboard = () => {
         try {
           const branchId = branches[selectedBranchIndex]?.id;
           if (branchId) {
-            const metricsData = await getMetricsData(branchId);
+            const metricsData = await getMetricsData(branchId, selectedDate);
             setMetrics(metricsData || {});
           }
         } catch (error) {
@@ -46,10 +49,18 @@ const Dashboard = () => {
       };
       fetchMetrics();
     }
-  }, [branches, selectedBranchIndex]);
+  }, [branches, selectedBranchIndex, selectedDate]);
 
-  const handleChange = (event) => {
+  const handleBranchChange = (event) => {
     setSelectedBranchIndex(event.target.value);
+  };
+  
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const clearDateSelection = () => {
+    setSelectedDate(null);
   };
 
   if (error) {
@@ -61,12 +72,12 @@ const Dashboard = () => {
       {userRole === "super" || userRole === "admin" ? (
         <>
           <Typography variant="h6" gutterBottom>
-            Filtro de sucursales
+            Filtro de reservas por sucursales y fechas
           </Typography>
           <Select
             label="Seleccionar sucursal"
             value={selectedBranchIndex}
-            onChange={handleChange}
+            onChange={handleBranchChange}
             sx={{ minWidth: "32.5%", marginBottom: 5 }}
           >
             {branches.map((branch, index) => (
@@ -75,6 +86,22 @@ const Dashboard = () => {
               </MenuItem>
             ))}
           </Select>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Seleccionar fecha"
+              value={selectedDate}
+              onChange={handleDateChange}
+              renderInput={(params) => <TextField {...params} readOnly />}
+              sx={{ minWidth: "32.5%", marginBottom: 5 }}
+            />
+          </LocalizationProvider>
+          <Button 
+            variant="outlined" 
+            onClick={clearDateSelection}
+            sx={{ml: 1, mb: 0.2, py: 1.8 }}
+          >
+            Limpiar Fecha
+          </Button>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
               <CardTotalReservation
@@ -94,7 +121,7 @@ const Dashboard = () => {
                 selectedBranchId={branches[selectedBranchIndex]?.id}
               />
             </Grid>
-            <Grid item xs={12} sm={6} >
+            <Grid item xs={12} sm={6}>
               <ChartPiesCardFinished 
                 metrics={metrics}
                 selectedBranchId={branches[selectedBranchIndex]?.id}
@@ -121,7 +148,6 @@ const Dashboard = () => {
       )}
     </Container>
   );
-  
 };
 
 export default Dashboard;

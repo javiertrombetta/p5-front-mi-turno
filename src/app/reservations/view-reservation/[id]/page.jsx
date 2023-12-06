@@ -15,6 +15,7 @@ const ViewReservation = ({ params }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedState, setSelectedState] = useState('');
+  const [canCancel, setCanCancel] = useState(true);
   const router = useRouter();
 
   const [alertInfo, setAlertInfo] = useState({
@@ -44,14 +45,25 @@ const ViewReservation = ({ params }) => {
           state: fetchedReservation.state.toUpperCase(),
           qrToken: fetchedReservation.qrToken,
         });
-      } catch (err) {
+        checkIfCanCancel(fetchedReservation);
+      } 
+      catch (err) {
         setError(err.message);
-      } finally {
+      } 
+      finally {
         setLoading(false);
       }
     };
     fetchReservation();
   }, [params.id]);
+  
+
+  const checkIfCanCancel = (fetchedReservation) => {
+    const reservationTime = dayjs(fetchedReservation.date + ' ' + fetchedReservation.time);
+    const now = dayjs();
+    const differenceInHours = reservationTime.diff(now, 'hour', true);
+    setCanCancel(differenceInHours >= 2);
+  };
 
   const handleSelectStateChange = (event) => {
     setSelectedState(event.target.value);
@@ -80,6 +92,14 @@ const ViewReservation = ({ params }) => {
   };
   
   const handleCancelClick = () => {
+    if (!canCancel) {
+      setAlertInfo({ 
+        open: true, 
+        type: 'error', 
+        message: 'No se puede cancelar la reserva dentro de las 2 horas previas a la misma.' 
+      });
+      return;
+    }
     setShowConfirmPopup(true);
   };
 
@@ -198,6 +218,7 @@ const ViewReservation = ({ params }) => {
             variant="contained"
             color="error"
             onClick={handleCancelClick}
+            disabled={!canCancel}
             sx={{ px: 3, py: 1.5, fontSize: '1rem' }}
           >
             Cancelar Reserva
