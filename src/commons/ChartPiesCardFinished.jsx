@@ -2,7 +2,7 @@ import React from "react";
 import ChartPies from "@/components/ChartPies";
 import { Box } from "@mui/material";
 
-const ChartPiesCard = ({ metrics, selectedBranchId }) => {
+const ChartPiesCardFinished = ({ metrics, selectedBranchId }) => {
   // Verificar si los datos necesarios están disponibles
   if (!metrics || typeof selectedBranchId === 'undefined') {
     return <Box>No hay datos disponibles.</Box>;
@@ -20,11 +20,11 @@ const ChartPiesCard = ({ metrics, selectedBranchId }) => {
   };
 
   return (
-    <Box border={1} borderRadius={5} borderColor="grey.300" p={2} boxShadow={3}>
+    <Box border={1} borderRadius={5} borderColor="grey.300" p={2} boxShadow={3} style={{ height: '15em' }}>
       <ChartPies data={chartData} />
     </Box>
   );
 };
 
-export default ChartPiesCard;
+export default ChartPiesCardFinished;
 
