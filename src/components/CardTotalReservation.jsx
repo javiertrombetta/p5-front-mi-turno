@@ -6,18 +6,11 @@ import IconButton from "@mui/material/IconButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBriefcase } from "@fortawesome/free-solid-svg-icons";
 
-const CardTotalReservation = ({ metrics, selectedBranch }) => {
-  // Obtener el id de la sucursal seleccionada
-  const selectedBranchId = selectedBranch.id;
-  console.log("Selected branch id:", selectedBranchId);
-
-  // Obtener la cantidad de reservas para la sucursal seleccionada
+const CardTotalReservation = ({ metrics, selectedBranchId }) => {
+  // Obtener el total de reservas para la sucursal seleccionada
   const totalReservations = selectedBranchId
     ? metrics?.totalReservations?.[selectedBranchId] || 0
     : 0;
-  console.log("Total reservations:", totalReservations);
-
-  console.log("Metrics", metrics);
 
   return (
     <Card
@@ -57,3 +50,4 @@ const CardTotalReservation = ({ metrics, selectedBranch }) => {
 };
 
 export default CardTotalReservation;
+
