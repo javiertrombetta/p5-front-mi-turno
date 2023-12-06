@@ -6,7 +6,15 @@ import IconButton from "@mui/material/IconButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-const CardTotalCancelations = () => {
+const CardAverageCancelations = ({ metrics, selectedBranchId }) => {
+  // Obtener el promedio de cancelaciones para la sucursal seleccionada
+  const averageCancelations = selectedBranchId
+    ? metrics?.averageCancellations?.[selectedBranchId] || 0
+    : 0;
+
+  // Convertir a porcentaje y redondear a dos decimales
+  const averageCancelationsPercentage = (averageCancelations * 100).toFixed(2);
+
   return (
     <Card
       style={{
@@ -18,10 +26,10 @@ const CardTotalCancelations = () => {
       <CardContent style={{ display: "flex", alignItems: "center" }}>
         <div style={{ flex: 1, color: "white" }}>
           <Typography variant="h3" component="div">
-            12
+            {averageCancelationsPercentage}%
           </Typography>
           <Typography variant="h6" style={{ color: "white", fontSize: "1rem" }}>
-            Total de cancelaciones
+            Promedio de cancelaciones
           </Typography>
         </div>
         <div>
@@ -40,4 +48,6 @@ const CardTotalCancelations = () => {
   );
 };
 
-export default CardTotalCancelations;
+export default CardAverageCancelations;
+
+

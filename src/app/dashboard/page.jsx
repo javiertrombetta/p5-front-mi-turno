@@ -1,109 +1,153 @@
-"use client";
+'use client'
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Container, Grid, Button, MenuItem, Select, Typography, TextField } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import ChartLinesCard from "@/commons/ChartLinesCard";
-import ChartPiesCard from "@/commons/ChartPiesCard";
+import ChartPiesCardFinished from "@/commons/ChartPiesCardFinished";
+import ChartPiesCardPending from "@/commons/ChartPiesCardPending";
 import CardTotalAssists from "@/components/CardTotalAssists";
-import CardTotalCancelations from "@/components/CardTotalCancelations";
 import CardTotalReservation from "@/components/CardTotalReservation";
-import ChartWithTitle from "@/components/ChartWithTitle";
+import CardPeakTimes from "@/components/CardPeakTimes";
 import { getBranchesData } from "@/services/dataBranches";
 import { getMetricsData } from "@/services/dataMetrics";
 
-import { Container, Grid, MenuItem, Select, Typography } from "@mui/material";
-
-import React, { useEffect, useState } from "react";
-
-const page = () => {
+const Dashboard = () => {
+  const userRole = useSelector(state => state.auth.user?.role);
   const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState({
-    index: 0,
-    id: branches.length > 0 ? branches[0]?.id : null,
-  });
+  const [selectedBranchIndex, setSelectedBranchIndex] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [metrics, setMetrics] = useState({});
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchBranches = async () => {
-      const branchesData = await getBranchesData();
-      const sortedBranches = branchesData.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
-      setBranches(sortedBranches || []);
-
-      // Setear la sucursal por defecto después de cargar las sucursales
-      setSelectedBranch({
-        index: 0,
-        id: sortedBranches.length > 0 ? sortedBranches[0]?.id : null,
-      });
+      try {
+        const branchesData = await getBranchesData();
+        setBranches(branchesData.sort((a, b) => a.name.localeCompare(b.name)));
+      } catch (error) {
+        setError('Error al obtener las sucursales: ' + error.message);
+      }
     };
     fetchBranches();
-  }, []); // Agregamos un array vacío para que este efecto se ejecute solo una vez al montar el componente
-
-  useEffect(() => {
-    const fetchMetrics = async () => {
-      const metricsData = await getMetricsData();
-      // console.log("Metrics data structure:", metricsData);
-      setMetrics(metricsData || []);
-    };
-    fetchMetrics();
   }, []);
 
-  const handleChange = (event) => {
-    const index = event.target.value;
-    const id = branches[index]?.id || null;
-    setSelectedBranch({ index, id });
+  useEffect(() => {
+    if (branches.length > 0) {
+      const fetchMetrics = async () => {
+        try {
+          const branchId = branches[selectedBranchIndex]?.id;
+          if (branchId) {
+            const metricsData = await getMetricsData(branchId, selectedDate);
+            setMetrics(metricsData || {});
+          }
+        } catch (error) {
+          setError('Error al obtener métricas: ' + error.message);
+        }
+      };
+      fetchMetrics();
+    }
+  }, [branches, selectedBranchIndex, selectedDate]);
+
+  const handleBranchChange = (event) => {
+    setSelectedBranchIndex(event.target.value);
   };
+  
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const clearDateSelection = () => {
+    setSelectedDate(null);
+  };
+
+  if (error) {
+    return <Typography color="error">{error}</Typography>;
+  }
 
   return (
     <Container>
-      <div>
-        <Typography variant="h6" gutterBottom>
-          Filtro de sucursales
-        </Typography>
-        <div>
+      {userRole === "super" || userRole === "admin" ? (
+        <>
+          <Typography variant="h6" gutterBottom>
+            Filtro de reservas por sucursales y fechas
+          </Typography>
           <Select
             label="Seleccionar sucursal"
-            value={selectedBranch.index}
-            onChange={handleChange}
-            sx={{ minWidth: "32.5%", marginBottom: 2 }}
+            value={selectedBranchIndex}
+            onChange={handleBranchChange}
+            sx={{ minWidth: "32.5%", marginBottom: 5 }}
           >
             {branches.map((branch, index) => (
-              <MenuItem key={index} value={index}>
+              <MenuItem key={branch.id} value={index}>
                 {branch.name}
               </MenuItem>
             ))}
           </Select>
-        </div>
-      </div>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={4}>
-          <CardTotalReservation
-            metrics={metrics}
-            branches={branches}
-            selectedBranch={selectedBranch}
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <CardTotalCancelations />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <CardTotalAssists />
-        </Grid>
-
-        <Grid item xs={12} sm={4}>
-          <ChartPiesCard />
-        </Grid>
-        <Grid item xs={12} sm={8}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Seleccionar fecha"
+              value={selectedDate}
+              onChange={handleDateChange}
+              renderInput={(params) => <TextField {...params} readOnly />}
+              sx={{ minWidth: "32.5%", marginBottom: 5 }}
+            />
+          </LocalizationProvider>
+          <Button 
+            variant="outlined" 
+            onClick={clearDateSelection}
+            sx={{ml: 1, mb: 0.2, py: 1.8 }}
+          >
+            Limpiar Fecha
+          </Button>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={12}>
-              <ChartLinesCard />
+            <Grid item xs={12} sm={4}>
+              <CardTotalReservation
+                metrics={metrics}
+                selectedBranchId={branches[selectedBranchIndex]?.id}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <CardTotalAssists
+                metrics={metrics}
+                selectedBranchId={branches[selectedBranchIndex]?.id}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <CardPeakTimes
+                metrics={metrics}
+                selectedBranchId={branches[selectedBranchIndex]?.id}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <ChartPiesCardFinished 
+                metrics={metrics}
+                selectedBranchId={branches[selectedBranchIndex]?.id}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <ChartPiesCardPending
+                metrics={metrics}
+                selectedBranchId={branches[selectedBranchIndex]?.id}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <ChartLinesCard
+                metrics={metrics}
+                selectedBranchId={branches[selectedBranchIndex]?.id}
+              />
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <ChartWithTitle />
-        </Grid>
-      </Grid>
+        </>
+      ) : (
+        <Typography variant="h6" gutterBottom>
+          Acceso restringido
+        </Typography>
+      )}
     </Container>
   );
 };
 
-export default page;
+export default Dashboard;

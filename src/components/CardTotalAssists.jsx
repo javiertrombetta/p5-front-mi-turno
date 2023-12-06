@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
-const CardTotalAssists = () => {
+const CardTotalAssists = ({ metrics, selectedBranchId }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalAssists, setTotalAssists] = useState(0);
+
+  useEffect(() => {
+    if (selectedBranchId && metrics?.totalAttendances?.[selectedBranchId] !== undefined) {
+      setTotalAssists(metrics.totalAttendances[selectedBranchId]);
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+  }, [metrics, selectedBranchId]);
+
+  const displayValue = isLoading ? "Cargando..." : totalAssists;
+
   return (
     <Card
       style={{
@@ -18,14 +31,14 @@ const CardTotalAssists = () => {
       <CardContent style={{ display: "flex", alignItems: "center" }}>
         <div style={{ flex: 1, color: "white" }}>
           <Typography variant="h3" component="div">
-            69
+            {totalAssists}
           </Typography>
           <Typography
             variant="h6"
             component="p"
             style={{ color: "white", fontSize: "1rem" }}
           >
-            Total de asistencias
+            Reservas completadas
           </Typography>
         </div>
 
@@ -37,7 +50,7 @@ const CardTotalAssists = () => {
             }}
             sx={{ color: "primary.main" }}
           >
-            <FontAwesomeIcon icon={faCheck} />
+            <CheckCircleOutlineIcon style={{ fontSize: "4rem" }} />
           </IconButton>
         </div>
       </CardContent>
@@ -46,3 +59,4 @@ const CardTotalAssists = () => {
 };
 
 export default CardTotalAssists;
+

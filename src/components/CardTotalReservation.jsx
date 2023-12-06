@@ -1,23 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBriefcase } from "@fortawesome/free-solid-svg-icons";
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 
-const CardTotalReservation = ({ metrics, selectedBranch }) => {
-  // Obtener el id de la sucursal seleccionada
-  const selectedBranchId = selectedBranch.id;
-  console.log("Selected branch id:", selectedBranchId);
+const CardTotalReservation = ({ metrics, selectedBranchId }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalReservations, setTotalReservations] = useState(0);
 
-  // Obtener la cantidad de reservas para la sucursal seleccionada
-  const totalReservations = selectedBranchId
-    ? metrics?.totalReservations?.[selectedBranchId] || 0
-    : 0;
-  console.log("Total reservations:", totalReservations);
+  useEffect(() => {
+    if (selectedBranchId && metrics?.totalReservations?.[selectedBranchId] !== undefined) {
+      setTotalReservations(metrics.totalReservations[selectedBranchId]);
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+  }, [metrics, selectedBranchId]);
 
-  console.log("Metrics", metrics);
+  const displayValue = isLoading ? "Cargando..." : totalReservations;
 
   return (
     <Card
@@ -37,9 +38,10 @@ const CardTotalReservation = ({ metrics, selectedBranch }) => {
             component="p"
             style={{ color: "white", fontSize: "1rem" }}
           >
-            Total de reservas
+            Reservas totales
           </Typography>
         </div>
+
         <div>
           <IconButton
             style={{
@@ -48,7 +50,7 @@ const CardTotalReservation = ({ metrics, selectedBranch }) => {
             }}
             sx={{ color: "primary.main" }}
           >
-            <FontAwesomeIcon icon={faBriefcase} />
+            <EditCalendarIcon style={{ fontSize: "4rem" }} />
           </IconButton>
         </div>
       </CardContent>
@@ -57,3 +59,4 @@ const CardTotalReservation = ({ metrics, selectedBranch }) => {
 };
 
 export default CardTotalReservation;
+
