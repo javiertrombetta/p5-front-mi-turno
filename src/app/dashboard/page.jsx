@@ -1,11 +1,11 @@
 "use client";
 import { useSelector } from 'react-redux';
 import ChartLinesCard from "@/commons/ChartLinesCard";
-import ChartPiesCard from "@/commons/ChartPiesCard";
+import ChartPiesCardFinished from "@/commons/ChartPiesCardFinished";
+import ChartPiesCardPending from "@/commons/ChartPiesCardPending";
 import CardTotalAssists from "@/components/CardTotalAssists";
-import CardAverageCancelations from "@/components/CardAverageCancelations";
 import CardTotalReservation from "@/components/CardTotalReservation";
-import ChartWithTitle from "@/components/ChartWithTitle";
+import CardPeakTimes from "@/components/CardPeakTimes";
 import { getBranchesData } from "@/services/dataBranches";
 import { getMetricsData } from "@/services/dataMetrics";
 
@@ -13,7 +13,7 @@ import { Container, Grid, MenuItem, Select, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 const Dashboard = () => {
-  const userRole = useSelector(state => state.auth.user.role);
+  const userRole = useSelector(state => state.auth.user?.role);
   const [branches, setBranches] = useState([]);
   const [selectedBranchIndex, setSelectedBranchIndex] = useState(0);
   const [metrics, setMetrics] = useState({});
@@ -67,7 +67,7 @@ const Dashboard = () => {
             label="Seleccionar sucursal"
             value={selectedBranchIndex}
             onChange={handleChange}
-            sx={{ minWidth: "32.5%", marginBottom: 2 }}
+            sx={{ minWidth: "32.5%", marginBottom: 5 }}
           >
             {branches.map((branch, index) => (
               <MenuItem key={branch.id} value={index}>
@@ -89,25 +89,28 @@ const Dashboard = () => {
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <CardAverageCancelations
+              <CardPeakTimes
                 metrics={metrics}
                 selectedBranchId={branches[selectedBranchIndex]?.id}
               />
-            </Grid>            
-            <Grid item xs={12} sm={4}>
-              <ChartPiesCard 
-              metrics={metrics}
-              selectedBranchId={branches[selectedBranchIndex]?.id} 
-            />              
             </Grid>
-            <Grid item xs={12} sm={8}>
-              <ChartLinesCard
+            <Grid item xs={12} sm={6} >
+              <ChartPiesCardFinished 
+                metrics={metrics}
+                selectedBranchId={branches[selectedBranchIndex]?.id}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <ChartPiesCardPending
                 metrics={metrics}
                 selectedBranchId={branches[selectedBranchIndex]?.id}
               />
             </Grid>
             <Grid item xs={12}>
-              <ChartWithTitle metrics={metrics} />
+              <ChartLinesCard
+                metrics={metrics}
+                selectedBranchId={branches[selectedBranchIndex]?.id}
+              />
             </Grid>
           </Grid>
         </>
@@ -118,6 +121,7 @@ const Dashboard = () => {
       )}
     </Container>
   );
+  
 };
 
 export default Dashboard;

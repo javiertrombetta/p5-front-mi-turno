@@ -1,24 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import PendingIcon from '@mui/icons-material/Pending';
 
-const CardTotalAssists = ({ metrics, selectedBranchId }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [totalAssists, setTotalAssists] = useState(0);
-
-  useEffect(() => {
-    if (selectedBranchId && metrics?.totalAttendances?.[selectedBranchId] !== undefined) {
-      setTotalAssists(metrics.totalAttendances[selectedBranchId]);
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
-    }
-  }, [metrics, selectedBranchId]);
-
-  const displayValue = isLoading ? "Cargando..." : totalAssists;
+const CardTotalPending = ({ metrics, selectedBranchId }) => {
+  const totalPending = selectedBranchId
+    ? metrics?.totalPending?.[selectedBranchId] || 0
+    : 0;
 
   return (
     <Card
@@ -31,17 +21,16 @@ const CardTotalAssists = ({ metrics, selectedBranchId }) => {
       <CardContent style={{ display: "flex", alignItems: "center" }}>
         <div style={{ flex: 1, color: "white" }}>
           <Typography variant="h3" component="div">
-            {totalAssists}
+            {totalPending}
           </Typography>
           <Typography
             variant="h6"
             component="p"
             style={{ color: "white", fontSize: "1rem" }}
           >
-            Reservas completadas
+            Reservas pendientes
           </Typography>
         </div>
-
         <div>
           <IconButton
             style={{
@@ -50,7 +39,7 @@ const CardTotalAssists = ({ metrics, selectedBranchId }) => {
             }}
             sx={{ color: "primary.main" }}
           >
-            <CheckCircleOutlineIcon style={{ fontSize: "4rem" }} />
+            <PendingIcon style={{ fontSize: "4rem" }} />
           </IconButton>
         </div>
       </CardContent>
@@ -58,5 +47,4 @@ const CardTotalAssists = ({ metrics, selectedBranchId }) => {
   );
 };
 
-export default CardTotalAssists;
-
+export default CardTotalPending;
