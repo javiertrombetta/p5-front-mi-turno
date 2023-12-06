@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
 import { useState } from "react";
 
-const InputText = ({ label, name, value, onChange, disabled = false, margin = "normal", type = "text" }) => {
+const InputText = ({ label, name, value = "", onChange, disabled = false, margin = "normal", type = "text" }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isBlurred, setIsBlurred] = useState(false);
 

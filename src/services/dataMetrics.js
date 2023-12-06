@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000";
+const API_URL = process.env.API_URL;
 
 export const getMetricsData = async (branchId = null, selectedDate = null) => {
   try {
@@ -9,7 +9,7 @@ export const getMetricsData = async (branchId = null, selectedDate = null) => {
     if (branchId) {
       url += `/${branchId}`;    }
     if (selectedDate) {
-      params.date = selectedDate.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+      params.date = selectedDate.toISOString().split('T')[0];
     }    
     const response = await axios.get(url, { params, withCredentials: true });
     return response.data.metrics;
