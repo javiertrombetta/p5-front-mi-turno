@@ -92,6 +92,7 @@ const Dashboard = () => {
               value={selectedDate}
               onChange={handleDateChange}
               renderInput={(params) => <TextField {...params} readOnly />}
+              format='dd/MM/yyyy'
               sx={{ minWidth: "32.5%", marginBottom: 5 }}
             />
           </LocalizationProvider>
@@ -119,6 +120,7 @@ const Dashboard = () => {
               <CardPeakTimes
                 metrics={metrics}
                 selectedBranchId={branches[selectedBranchIndex]?.id}
+                selectedDate={selectedDate} // agregado x fran
               />
             </Grid>
             <Grid item xs={12} sm={6}>
