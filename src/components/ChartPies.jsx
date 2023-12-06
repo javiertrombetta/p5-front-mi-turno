@@ -5,13 +5,10 @@ import { Pie } from "react-chartjs-2";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ChartPies = ({ data }) => {
-  // Configuración de opciones del gráfico
   const options = {
     responsive: true,
     maintainAspectRatio: false,
   };
-
-  // Preparar los datos para el gráfico de torta
   const chartData = {
     labels: ["Completadas", "No Completadas"],
     datasets: [

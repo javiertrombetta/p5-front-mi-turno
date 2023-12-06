@@ -29,15 +29,15 @@ const ChartLinesCard = ({ metrics, selectedBranchId }) => {
   if (!metrics || typeof selectedBranchId === 'undefined') {
     return <Box>No hay datos disponibles.</Box>;
   }
-  const totalPending = metrics.totalPending && metrics.totalPending[selectedBranchId] ? metrics.totalPending[selectedBranchId] : 0;
+  const totalNoShow = metrics.totalNoShow && metrics.totalNoShow[selectedBranchId] ? metrics.totalNoShow[selectedBranchId] : 0;
   const totalCancelled = metrics.totalCancellations && metrics.totalCancellations[selectedBranchId] ? metrics.totalCancellations[selectedBranchId] : 0;
   const totalFinished = metrics.totalFinished && metrics.totalFinished[selectedBranchId] ? metrics.totalFinished[selectedBranchId] : 0;
   const data = {
-    labels: ["PENDIENTES", "CANCELADAS", "FINALIZADAS"],
+    labels: ["AUSENTES", "CANCELADAS", "FINALIZADAS"],
     datasets: [
       {
-        label: "Estado de Reservas",
-        data: [totalPending, totalCancelled, totalFinished],
+        label: "Cantidad",
+        data: [totalNoShow, totalCancelled, totalFinished],
         tension: 0.5,
         fill: true,
         borderColor: "#CC6AFF",
@@ -56,12 +56,12 @@ const ChartLinesCard = ({ metrics, selectedBranchId }) => {
         min: 0,
       },
       x: {
-        ticks: { color: "rgb(255, 99, 132)" },
+        ticks: { color: "rgb(1, 1, 1)" },
       },
     },
   };
   return (
-    <Box border={1} borderRadius={5} borderColor="grey.300" p={2} boxShadow={3}>
+    <Box border={1} borderRadius={5} borderColor="grey.300" p={2} boxShadow={3} style={{ height: '30em' }}>
       <Line data={data} options={options} />
     </Box>
   );
