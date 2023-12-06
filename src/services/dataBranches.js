@@ -4,8 +4,11 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getBranchesData = async () => {
   try {
-    const response = await axios.get(`${API_URL}/branches/`, {
+    const response = await axios.get(`${API_URL}/branches`, 
+    {
+      headers: { "Content-Type": "application/json" },
       withCredentials: true,
+      credentials: "include",
     });
     return response.data;
   } catch (error) {
@@ -16,8 +19,11 @@ export const getBranchesData = async () => {
 
 export const getBranchById = async (branchId) => {
   try {
-    const response = await axios.get(`${API_URL}/branches/${branchId}`, {
+    const response = await axios.get(`${API_URL}/branches/${branchId}`, 
+    {
+      headers: { "Content-Type": "application/json" },
       withCredentials: true,
+      credentials: "include",
     });
     return response.data;
   } catch (error) {

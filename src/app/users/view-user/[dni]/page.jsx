@@ -221,38 +221,27 @@ const ViewUser = ({ params }) => {
       return;
     }
     try {
-      // Preparar los datos a actualizar
       const userDataToUpdate = {
         ...userRow,
         businessId: (userRow.role === "oper" || userRow.role === "admin") ? selectedBusiness : userRow.businessId,
         branchId: userRow.role === "oper" ? selectedBranch : userRow.branchId,
-      };
-  
+      };     
       const updatedUser = await updateUserInfoByDni(userDataToUpdate);
-  
-      if (updatedUser) {
-        // Actualizar el estado con la información recibida
+      console.log('USUARIO ACTUALIZADO:', updatedUser);      
+      if (updatedUser.data) {
         setUserRow(prevState => ({
           ...prevState,
-          ...updatedUser,
-          businessId: updatedUser.businessId || prevState.businessId,
-          branchId: updatedUser.branchId || prevState.branchId
-        }));
-  
-        // Actualizar los estados de negocio y sucursal si es necesario
-        if (updatedUser.businessId) {
-          setSelectedBusiness(updatedUser.businessId);
-        }
-        if (updatedUser.branchId) {
-          setSelectedBranch(updatedUser.branchId);
-        }
-  
+          ...updatedUser.data,
+        })); 
+        setSelectedBusiness(updatedUser.data.businessId || selectedBusiness);
+        setSelectedBranch(updatedUser.data.branchId || selectedBranch);
         setAlertInfo({
           open: true,
           type: "success",
-          message: "Información actualizada con éxito.",
+          message: "Usuario actualizado con éxito.",
         });
-      } else {
+      } 
+      else {
         throw new Error("No se recibieron datos actualizados del servidor");
       }
     } catch (error) {
@@ -260,10 +249,11 @@ const ViewUser = ({ params }) => {
       setAlertInfo({
         open: true,
         type: "error",
-        message: "Error al actualizar la información.",
+        message: error.message || "Error al actualizar la información.",
       });
     }
   };
+  
   
   
 
