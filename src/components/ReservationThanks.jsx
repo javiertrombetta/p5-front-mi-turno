@@ -1,12 +1,18 @@
 import React, { useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { Box, Typography, Button } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
-export default function Thanks({ email, onPrint }) {
+export default function Thanks({ email, reservationId }) {
+  const router = useRouter();
+  const handleViewReservation = () => {
+    router.push(`/reservations/view-reservation/${reservationId}`);
+  };
+
   return (
     <Box sx={{ textAlign: 'center' }}>
-      <CheckCircleOutlineIcon color="success" sx={{ fontSize: 100 }} />
-      <Typography variant="h3" gutterBottom sx={{ my: 1 }}>
+      <CheckCircleOutlineIcon color="primary" sx={{ fontSize: 100 }} />
+      <Typography variant="h3" gutterBottom >
         ¡Gracias por tu reserva!
       </Typography>
       <Typography variant="subtitle1" gutterBottom sx={{ mt: 3 }}>
@@ -16,12 +22,12 @@ export default function Thanks({ email, onPrint }) {
         Recordá revisar tu casilla de correo no deseado.
       </Typography>
       <Button 
-        onClick={onPrint}
+        onClick={handleViewReservation}
         variant="contained" 
         color="primary" 
-        sx={{ my: 5, fontSize: "1.1em", textTransform: "initial", py: 2, px: 10 }}
+        sx={{ my: 2, fontSize: "1.1em", textTransform: "initial", py: 2, px: 10 }}
       >
-        ¿Querés imprimir tu comprobante?
+        VER DETALLE COMPLETO DE LA RESERVA
       </Button>      
     </Box>
   );
