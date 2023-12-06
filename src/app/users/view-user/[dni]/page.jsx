@@ -22,7 +22,8 @@ import InputText from "@/commons/InputText";
 import { useRouter } from "next/navigation";
 import Alert from "@/commons/Alert";
 import dayjs from "dayjs";
-import { getBranchesData } from "@/services/dataBranches";
+import { getBranchesByBusiness } from "@/services/dataBranches";
+import { getBusinessData } from "@/services/dataBusiness";
 
 const ViewUser = ({ params }) => {
   const { user } = useSelector((state) => state.auth);
@@ -33,12 +34,16 @@ const ViewUser = ({ params }) => {
     email: "",
     phoneNumber: "",
     role: "",
+    businessId: "",
+    branchId: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-
-  const [branches, setBranches] = useState([]); // -> Agregado x fran
+  const [business, setBusiness] = useState([]); // -> agregado x fran
+  const [branchesByBusiness, setBranchesByBusiness] = useState([]); // -> Agregado x fran
+  const [selectedBusiness, setSelectedBusiness] = useState("");
+  const [selectedBranch, setSelectedBranch] = useState("");
 
   const fileInputRef = useRef();
   const router = useRouter();
@@ -52,6 +57,7 @@ const ViewUser = ({ params }) => {
     const fetchUser = async () => {
       try {
         const fetchedUser = await getUserInfoById(params.dni);
+        console.log(fetchedUser);
         setUserRow({ ...fetchedUser, role: fetchedUser.role || "user" });
       } catch (err) {
         setError(err.message);
@@ -107,15 +113,15 @@ const ViewUser = ({ params }) => {
       setUserRow((prevUserRow) => ({ ...prevUserRow, role: selectedRole }));
       setAlertInfo({
         open: true,
-        type: 'success',
-        message: 'Rol actualizado correctamente.',
+        type: "success",
+        message: "Rol actualizado correctamente.",
       });
     } catch (error) {
-      console.error('Error al cambiar el rol:', error);
+      console.error("Error al cambiar el rol:", error);
       setAlertInfo({
         open: true,
-        type: 'error',
-        message: 'Error al cambiar el rol del usuario.',
+        type: "error",
+        message: "Error al cambiar el rol del usuario.",
       });
     }
   };
@@ -171,13 +177,81 @@ const ViewUser = ({ params }) => {
     }
   };
 
+  //obtener empresas
+  useEffect(() => {
+    const fetchBusiness = async () => {
+      try {
+        const branchesData = await getBusinessData();
+        setBusiness(branchesData); // Establece el estado con los datos de las sucursales
+      } catch (error) {
+        console.error("Error al obtener datos de sucursales:", error);
+      }
+    };
+
+    fetchBusiness();
+  }, []);
+
+  //obtener sucursales, a partir de una empresa
+  useEffect(() => {
+    const fetchBranchesByBusiness = async () => {
+      try {
+        if (selectedBusiness) {
+          const branchesData = await getBranchesByBusiness(selectedBusiness);
+          setBranchesByBusiness(branchesData);
+        } else {
+          // Manejar el caso donde selectedBusiness es una cadena vacía
+          setBranchesByBusiness([]); // o puedes dejar el estado sin cambios o hacer otras acciones necesarias
+        }
+      } catch (error) {
+        console.error("Error al obtener datos de sucursales:", error);
+      }
+    };
+
+    fetchBranchesByBusiness();
+  }, [selectedBusiness]);
+
+  const handleBusinessChange = (event) => {
+    const selectedValue = event.target.value;
+    console.log(selectedValue);
+    setSelectedBusiness(selectedValue);
+  };
+  const handleBranchChange = (event) => {
+    const selectedValue = event.target.value;
+    console.log(selectedValue);
+    setSelectedBranch(selectedValue);
+  };
+
   const handleAcceptChanges = async () => {
     try {
       if (!userRow.dni) {
         throw new Error("DNI no está definido");
       }
-      const updatedUser = await updateUserInfoByDni({ ...userRow });
-      setUserRow(updatedUser);
+
+      let updatedUser;
+      console.log(userRow);
+      if (userRow.role == "oper") {
+        updatedUser = await updateUserInfoByDni({
+          ...userRow,
+          businessId: selectedBusiness,
+          branchId: selectedBranch,
+        });
+        setUserRow(updatedUser);
+      } else if (userRow.role == "admin") {
+        updatedUser = await updateUserInfoByDni({
+          ...userRow,
+          businessId: selectedBusiness,
+          branchId: null,
+        });
+        setUserRow(updatedUser);
+      } else if (userRow.role == "super" || userRow.role == "user") {
+        updatedUser = await updateUserInfoByDni({
+          ...userRow,
+          businessId: null,
+          branchId: null,
+        });
+        setUserRow(updatedUser);
+      }
+
       setAlertInfo({
         open: true,
         type: "success",
@@ -192,19 +266,6 @@ const ViewUser = ({ params }) => {
       });
     }
   };
-
-  useEffect(() => {
-    const fetchBranches = async () => {
-      try {
-        const branchesData = await getBranchesData();
-        setBranches(branchesData); // Establece el estado con los datos de las sucursales
-      } catch (error) {
-        console.error("Error al obtener datos de sucursales:", error);
-      }
-    };
-
-    fetchBranches();
-  }, []);
 
   if (loading) {
     return <CircularProgress />;
@@ -322,20 +383,42 @@ const ViewUser = ({ params }) => {
         )}
       </Box>
 
-      {userRow.role === "oper" && (
+      {userRow.role === "admin" || userRow.role === "oper" ? (
         <Box sx={{ marginTop: "8px" }}>
-          <InputLabel id="sucursalId">Selecciona una sucursal</InputLabel>
+          <InputLabel id="businessId">Selecciona una empresa</InputLabel>
           <Select
-            labelId="sucurdalId"
-            value={userRow.branch || ""}
-            onChange={(e) => setUserRow({ ...userRow, branch: e.target.value })}
-            name="branch"
+            labelId="businessId"
+            value={selectedBusiness || userRow.businessId}
+            onChange={handleBusinessChange}
+            name="business"
           >
             <MenuItem value="null">
               <b>Ninguna</b>
             </MenuItem>
-            {branches.map((branch) => (
-              <MenuItem key={branch.id} value={branch.name}>
+            {business.map((business) => (
+              <MenuItem key={business.id} value={business.id}>
+                {business.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
+      ) : (
+        ""
+      )}
+      {userRow.role === "oper" && (
+        <Box sx={{ marginTop: "8px" }}>
+          <InputLabel id="branchesId">Selecciona una sucursal</InputLabel>
+          <Select
+            labelId="branchesId"
+            value={selectedBranch || userRow.branchId}
+            onChange={handleBranchChange}
+            name="branchesByBusiness"
+          >
+            <MenuItem value="null">
+              <b>Ninguna</b>
+            </MenuItem>
+            {branchesByBusiness.map((branch) => (
+              <MenuItem key={branch.id} value={branch.id}>
                 {branch.name}
               </MenuItem>
             ))}

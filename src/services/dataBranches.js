@@ -87,9 +87,9 @@ export const deleteBranch = async (branchId) => {
   }
 };
 
-export const getBranchByBusiness = async (branchId) => {
+export const getBranchesByBusiness = async (businessId) => {
   try {
-    const response = await axios.get(`${API_URL}/branches/${branchId}/business`, {
+    const response = await axios.get(`${API_URL}/branches/${businessId}/business`, {
       withCredentials: true,
     });
     return response.data;
