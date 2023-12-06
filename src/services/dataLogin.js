@@ -1,8 +1,10 @@
 import axios from "axios";
 
+const API_URL = process.env.API_URL;
+
 export const checkAuth = async (user, router, dispatch) => {
   try {
-    const response = await axios.get("http://localhost:3000/users/me", {
+    const response = await axios.get(`${API_URL}/users/me`, {
       withCredentials: true,
     });
     const userData = response.data;
@@ -15,7 +17,7 @@ export const checkAuth = async (user, router, dispatch) => {
 export const loginUser = async (email, password) => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/users/login",
+      `${API_URL}/users/login`,
       { email, password },
       { withCredentials: true }
     );

@@ -1,23 +1,8 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
-import {
-  getUserInfoById,
-  updateUserInfoByDni,
-  deleteUser,
-  assignUserRole,
-} from "@/services/dataUser";
-import {
-  Typography,
-  Container,
-  CircularProgress,
-  Box,
-  Button,
-  Avatar,
-  Select,
-  MenuItem,
-  InputLabel,
-} from "@mui/material";
+import { getUserInfoById, updateUserInfoByDni, deleteUser, assignUserRole } from "@/services/dataUser";
+import { Typography, Container, CircularProgress, Box, Button, Avatar, Select, MenuItem, InputLabel } from "@mui/material";
 import InputText from "@/commons/InputText";
 import { useRouter } from "next/navigation";
 import Alert from "@/commons/Alert";
@@ -55,14 +40,19 @@ const ViewUser = ({ params }) => {
   });
   useEffect(() => {
     const fetchUser = async () => {
-      try {
-        const fetchedUser = await getUserInfoById(params.dni);
-        console.log(fetchedUser);
-        setUserRow({ ...fetchedUser, role: fetchedUser.role || "user" });
-      } catch (err) {
-        setError(err.message);
-      } finally {
+      if (params.dni) {
+        try {
+          const fetchedUser = await getUserInfoById(params.dni);
+          console.log('USUARIO DEL BACK:', fetchedUser);
+          setUserRow({ ...fetchedUser, role: fetchedUser.role || "user" });
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      } else {
         setLoading(false);
+        setError('DNI no está disponible.');
       }
     };
 
@@ -212,51 +202,59 @@ const ViewUser = ({ params }) => {
 
   const handleBusinessChange = (event) => {
     const selectedValue = event.target.value;
-    console.log(selectedValue);
+    console.log('EMPRESA ELEGIDA:', selectedValue);
     setSelectedBusiness(selectedValue);
   };
   const handleBranchChange = (event) => {
     const selectedValue = event.target.value;
-    console.log(selectedValue);
+    console.log('SUCURSAL ELEGIDA:',selectedValue);
     setSelectedBranch(selectedValue);
   };
 
   const handleAcceptChanges = async () => {
-    try {
-      if (!userRow.dni) {
-        throw new Error("DNI no está definido");
-      }
-
-      let updatedUser;
-      console.log(userRow);
-      if (userRow.role == "oper") {
-        updatedUser = await updateUserInfoByDni({
-          ...userRow,
-          businessId: selectedBusiness,
-          branchId: selectedBranch,
-        });
-        setUserRow(updatedUser);
-      } else if (userRow.role == "admin") {
-        updatedUser = await updateUserInfoByDni({
-          ...userRow,
-          businessId: selectedBusiness,
-          branchId: null,
-        });
-        setUserRow(updatedUser);
-      } else if (userRow.role == "super" || userRow.role == "user") {
-        updatedUser = await updateUserInfoByDni({
-          ...userRow,
-          businessId: null,
-          branchId: null,
-        });
-        setUserRow(updatedUser);
-      }
-
+    if (!userRow.dni) {
       setAlertInfo({
         open: true,
-        type: "success",
-        message: "Información actualizada con éxito.",
+        type: "error",
+        message: "DNI no está definido",
       });
+      return;
+    }
+    try {
+      // Preparar los datos a actualizar
+      const userDataToUpdate = {
+        ...userRow,
+        businessId: (userRow.role === "oper" || userRow.role === "admin") ? selectedBusiness : userRow.businessId,
+        branchId: userRow.role === "oper" ? selectedBranch : userRow.branchId,
+      };
+  
+      const updatedUser = await updateUserInfoByDni(userDataToUpdate);
+  
+      if (updatedUser) {
+        // Actualizar el estado con la información recibida
+        setUserRow(prevState => ({
+          ...prevState,
+          ...updatedUser,
+          businessId: updatedUser.businessId || prevState.businessId,
+          branchId: updatedUser.branchId || prevState.branchId
+        }));
+  
+        // Actualizar los estados de negocio y sucursal si es necesario
+        if (updatedUser.businessId) {
+          setSelectedBusiness(updatedUser.businessId);
+        }
+        if (updatedUser.branchId) {
+          setSelectedBranch(updatedUser.branchId);
+        }
+  
+        setAlertInfo({
+          open: true,
+          type: "success",
+          message: "Información actualizada con éxito.",
+        });
+      } else {
+        throw new Error("No se recibieron datos actualizados del servidor");
+      }
     } catch (error) {
       console.error("Error al actualizar la información del usuario:", error);
       setAlertInfo({
@@ -266,6 +264,8 @@ const ViewUser = ({ params }) => {
       });
     }
   };
+  
+  
 
   if (loading) {
     return <CircularProgress />;
@@ -392,7 +392,7 @@ const ViewUser = ({ params }) => {
             onChange={handleBusinessChange}
             name="business"
           >
-            <MenuItem value="null">
+            <MenuItem value=''>
               <b>Ninguna</b>
             </MenuItem>
             {business.map((business) => (
@@ -414,7 +414,7 @@ const ViewUser = ({ params }) => {
             onChange={handleBranchChange}
             name="branchesByBusiness"
           >
-            <MenuItem value="null">
+            <MenuItem value=''>
               <b>Ninguna</b>
             </MenuItem>
             {branchesByBusiness.map((branch) => (
