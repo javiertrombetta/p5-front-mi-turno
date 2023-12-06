@@ -1,9 +1,11 @@
 import axios from "axios";
 
+const API_URL = process.env.API_URL;
+
 export const forgotPassword = async (email) => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/users/forgot-password",
+      `${API_URL}/users/forgot-password`,
       { email }
     );
     return response.data;
@@ -14,7 +16,7 @@ export const forgotPassword = async (email) => {
 
 export const resetPassword = async (token, newPassword) => {
   try {
-    const response = await axios.post('http://localhost:3000/users/reset-password', {
+    const response = await axios.post(`${API_URL}/users/reset-password`, {
       token,
       newPassword,
     });

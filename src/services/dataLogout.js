@@ -1,9 +1,11 @@
 import axios from "axios";
 
+const API_URL = process.env.API_URL;
+
 const dataLogout = async () => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/users/logout",
+      `${API_URL}/users/logout`,
       {},
       { withCredentials: true }
     );
