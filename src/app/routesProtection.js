@@ -1,84 +1,78 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuth } from "@/services/dataLogin";
-import { loginSuccess, logoutSuccess } from "@/hooks/slices/authSlice";
+import { loginSuccess, logoutSuccess, isLoggedIn } from "@/hooks/slices/authSlice";
 import Navbar from "@/commons/Navbar";
-import NavbarAdmin from "@/commons/NavbarAdmin";
-import NavbarOp from "@/commons/NavbarOp";
 import Footer from "@/commons/Footer";
-import { useRouter } from "next/navigation";
 import Alert from "@/commons/Alert";
-import { PersistGate } from "redux-persist/integration/react";
-import { persistor } from "@/hooks/store";
+import MailButton from '@/components/MailButton';
 import CircularProgress from "@mui/material/CircularProgress";
 
 const RoutesProtection = ({ children }) => {
   const dispatch = useDispatch();
-  const router = useRouter();
-  const { isLoggedIn } = useSelector((state) => state.auth);
   const { user } = useSelector((state) => state.auth);
+  const { isLogged } = useSelector((state) => state.auth);
   const [isLoading, setIsLoading] = useState(true);
   const [alert, setAlert] = useState({ open: false, message: "" });
 
   useEffect(() => {
-    const authenticateUser = async () => {
-      try {
-        const axiosUser = await checkAuth();
-        if (axiosUser) {
-          dispatch(loginSuccess({ user: axiosUser }));
-        } else {
+    const checkUser = async () => {
+      if (user) {
+        dispatch(isLoggedIn());
+      } else {
+        try {
+          const axiosUser = await checkAuth();
+          if (axiosUser) {
+            dispatch(loginSuccess({ user: axiosUser }));
+          } else {
+            dispatch(logoutSuccess());
+          }
+        } catch (error) {
+          console.error("Error en autenticación:", error);
           dispatch(logoutSuccess());
-          persistor.purge();
+        } finally {
+          setIsLoading(false);
         }
-      } catch (error) {
-        console.error("Error en autenticación:", error);
-        dispatch(logoutSuccess());
-        persistor.purge();
-      } finally {
-        setIsLoading(false);
       }
     };
+    checkUser();
+  }, [dispatch, user, isLogged]);
 
-    authenticateUser();
-  }, [dispatch]);
-
-  
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
-    <PersistGate loading={null} persistor={persistor}>
-      {isLoggedIn && (
-        <>
-          {user.role === "super" && <NavbarAdmin />}
-          {user.role === "user" && <Navbar />}
-          {user.role === "admin" && <NavbarOp />}
-        </>
-      )}
-      <div style={{ marginTop: "3em", minHeight: "calc(100vh - 128px)" }}>
-        {isLoading ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-            }}
-          >
-            <CircularProgress />
-          </div>
-        ) : (
-          children
-        )}
-      </div>
-      {isLoggedIn && <Footer />}
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      {isLogged && <Navbar />}
+      <main style={{ flex: 1, marginTop: '3em' }}>
+        {children}
+      </main>
+      {isLogged && <Footer />}
+      {isLogged && user.role != 'super' && <MailButton />}
       {alert.open && (
-        <Alert
-          message={alert.message}
-          onClose={() => setAlert({ ...alert, open: false })}
-        />
+        <Alert message={alert.message} onClose={() => setAlert({ ...alert, open: false })} />
       )}
-    </PersistGate>
+    </div>
   );
 };
 
 export default RoutesProtection;
+
+

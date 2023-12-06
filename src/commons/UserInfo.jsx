@@ -1,11 +1,36 @@
-import { Typography, Avatar } from "@mui/material";
+import { useEffect, useState } from 'react';
+import { Typography, Avatar, Snackbar, Alert } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 const UserInfo = ({ user }) => {
+  const router = useRouter();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+    }
+  }, [user, router]);
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
+  if (!user) {
+    return null;
+  }
+
   const getInitials = (name) => {
     return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : '';
   };
-   
-  const avatarUrl =  `https://via.placeholder.com/300?text=${getInitials(user.fullName)}`; // user.photo ||
+  
+  const avatarUrl = user.photo || `https://via.placeholder.com/300?text=${getInitials(user.fullName)}`;
   
   return (
     <>
@@ -20,9 +45,17 @@ const UserInfo = ({ user }) => {
       <Typography color="text.secondary">D.N.I.: {user.dni}</Typography>
       <Typography color="text.secondary" gutterBottom>
         {user.email}
-      </Typography>   
+      </Typography>
+
+      <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="warning" sx={{ width: '100%' }}>
+          No hay un usuario. Redirigiendo a login...
+        </Alert>
+      </Snackbar>
     </>
   );
 };
 
 export default UserInfo;
+
+

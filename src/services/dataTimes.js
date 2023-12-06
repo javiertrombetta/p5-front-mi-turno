@@ -1,13 +1,13 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000"; // Asegúrate de que la URL es correcta
+const API_URL = process.env.API_URL;
 
 export const getTimesData = async () => {
   try {
     const response = await axios.get(
       `${API_URL}/ruta-a-tu-api-de-horarios-por-sucursal`,
       {
-        withCredentials: true, // si estás usando cookies
+        withCredentials: true,
       }
     );
     return response.data;
