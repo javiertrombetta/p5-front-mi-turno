@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = process.env.API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const checkAuth = async (user, router, dispatch) => {
   try {
@@ -15,7 +15,7 @@ export const checkAuth = async (user, router, dispatch) => {
 };
 
 export const loginUser = async (email, password) => {
-  try {
+  try {  
     const response = await axios.post(
       `${API_URL}/users/login`,
       { email, password },
