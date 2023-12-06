@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuth } from "@/services/dataLogin";
@@ -12,7 +13,7 @@ const RoutesProtection = ({ children }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { isLogged } = useSelector((state) => state.auth);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState();
   const [alert, setAlert] = useState({ open: false, message: "" });
 
   useEffect(() => {
