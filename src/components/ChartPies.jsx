@@ -4,22 +4,23 @@ import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-var options = {
-  responsive: true,
-  maintainAspectRatio: false,
+const ChartPies = ({ data }) => {
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+  const chartData = {
+    labels: ["Completadas", "No Completadas"],
+    datasets: [
+      {
+        label: "Cantidad",
+        data: [data.finished, data.notCompleted],
+        backgroundColor: ["#CC6AFF", "#A442F1"],
+      },
+    ],
+  };
+
+  return <Pie data={chartData} options={options} className="h-full" />;
 };
 
-var data = {
-  labels: ["Asistencia", "Reservas"],
-  datasets: [
-    {
-      label: "Reservas",
-      data: [69, 31],
-      backgroundColor: ["#CC6AFF", "#A442F1"],
-    },
-  ],
-};
-
-export default function ChartPies() {
-  return <Pie data={data} options={options} className="h-full" />;
-}
+export default ChartPies;

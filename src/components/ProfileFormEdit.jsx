@@ -1,22 +1,37 @@
 'use client';
 
 import { Card, CardContent, Typography, Button, Stack } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import { useRouter } from 'next/navigation';
 import InputText from '@/commons/InputText';
 import InputEmail from '@/commons/InputEmail';
-import { updateUserInfo } from "@/services/dataUser";
+import { updateMyInfo } from "@/services/dataUser";
 import Alert from '@/commons/Alert';
 
 const ProfileFormEdit = ({ user, onUserUpdate }) => {
   const router = useRouter();
+
   const [formData, setFormData] = useState({
-    fullName: user.fullName,
-    dni: user.dni,
-    email: user.email,
-    phoneNumber: user.phoneNumber,
+    fullName: '',
+    dni: '',
+    email: '',
+    phoneNumber: '',
     photo: null
   });
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/");
+    } else {
+      setFormData({
+        fullName: user.fullName,
+        dni: user.dni,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        photo: user.photo
+      });
+    }
+  }, [user, router]);
 
   const [alert, setAlert] = useState({
     open: false,
@@ -43,36 +58,27 @@ const ProfileFormEdit = ({ user, onUserUpdate }) => {
         phoneNumber: formData.phoneNumber,
         photo: formData.photo     
       };
-      const response = await updateUserInfo(updatedUserData);
-      console.log("Respuesta del servidor:", response);
+      const response = await updateMyInfo(updatedUserData);
   
       onUserUpdate({ ...user, ...updatedUserData });
-      setAlert({ open: false });
-
-      setTimeout(() => {
-        setAlert({
-          open: true,
-          type: "success",
-          message: "Perfil actualizado correctamente."
-        });
-      }, 500);
+      setAlert({
+        open: true,
+        type: "success",
+        message: "Perfil actualizado correctamente."
+      });
   
     } catch (error) {
       console.error('Error al actualizar los datos:', error);
-      setAlert({ open: false });
-  
-      setTimeout(() => {
-        setAlert({
-          open: true,
-          type: "error",
-          message: "Error al actualizar el perfil. Por favor, inténtelo de nuevo."
-        });
-      }, 500);
+      setAlert({
+        open: true,
+        type: "error",
+        message: "Error al actualizar el perfil. Por favor, inténtelo de nuevo."
+      });
     }
-  };  
+  };
 
   const handleChangePassword = () => {
-    router.push('/user/profile/changePassword');
+    router.push('/profile/changePassword');
   };
 
   return (

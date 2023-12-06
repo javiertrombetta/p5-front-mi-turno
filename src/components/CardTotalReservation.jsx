@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBriefcase } from "@fortawesome/free-solid-svg-icons";
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 
-const CardTotalReservation = () => {
+const CardTotalReservation = ({ metrics, selectedBranchId }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalReservations, setTotalReservations] = useState(0);
+
+  useEffect(() => {
+    if (selectedBranchId && metrics?.totalReservations?.[selectedBranchId] !== undefined) {
+      setTotalReservations(metrics.totalReservations[selectedBranchId]);
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+  }, [metrics, selectedBranchId]);
+
+  const displayValue = isLoading ? "Cargando..." : totalReservations;
+
   return (
     <Card
       style={{
@@ -18,16 +31,17 @@ const CardTotalReservation = () => {
       <CardContent style={{ display: "flex", alignItems: "center" }}>
         <div style={{ flex: 1, color: "white" }}>
           <Typography variant="h3" component="div">
-            100
+            {totalReservations}
           </Typography>
           <Typography
             variant="h6"
             component="p"
             style={{ color: "white", fontSize: "1rem" }}
           >
-            Total de reservas
+            Reservas totales
           </Typography>
-        </div>  
+        </div>
+
         <div>
           <IconButton
             style={{
@@ -36,7 +50,7 @@ const CardTotalReservation = () => {
             }}
             sx={{ color: "primary.main" }}
           >
-            <FontAwesomeIcon icon={faBriefcase} />
+            <EditCalendarIcon style={{ fontSize: "4rem" }} />
           </IconButton>
         </div>
       </CardContent>
@@ -45,3 +59,4 @@ const CardTotalReservation = () => {
 };
 
 export default CardTotalReservation;
+

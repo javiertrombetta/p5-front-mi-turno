@@ -1,40 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { PURGE } from "redux-persist";
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: null,
-    isLoggedIn: false,
+    isLogged: false,
   },
   reducers: {
     loginSuccess: (state, action) => {
-      state.user = action.payload.user;
-      state.isLoggedIn = true;
+      if (action.payload && action.payload.user) {
+        state.user = action.payload.user;
+        state.isLogged = true;
+      } else {
+        console.error("Datos de usuario no proporcionados en loginSuccess.");
+      }
     },
     logoutSuccess: (state) => {
       state.user = null;
-      state.isLoggedIn = false;
+      state.isLogged = false;
     },
-    inSuccess: (state) => {
-      state.isLoggedIn = true;
+    isLoggedIn: (state) => {
+      state.isLogged = true;
     },
-    outSuccess: (state) => {
-      state.isLoggedIn = false;
+    isLoggedOut: (state) => {
+      state.isLogged = false;
     }
-  },
-  extraReducers: (builder) => {
-    builder.addCase(PURGE, () => {
-      return {
-        user: null,
-        isLoggedIn: false,
-        isCookieAlive: false,
-      };
-    });
-  }
+  },  
 });
 
-export const { loginSuccess, logoutSuccess, inSuccess, outSuccess} = authSlice.actions;
+export const { loginSuccess, logoutSuccess, isLoggedIn, isLoggedOut} = authSlice.actions;
 
 export default authSlice.reducer;
-
