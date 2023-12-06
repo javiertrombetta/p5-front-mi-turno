@@ -1,16 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const CardTotalAssists = ({ metrics, selectedBranchId }) => {
-  // Obtener el total de asistencias para la sucursal seleccionada
-  const totalAssists = selectedBranchId
-    ? metrics?.totalAttendances?.[selectedBranchId] || 0
-    : 0;
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalAssists, setTotalAssists] = useState(0);
+
+  useEffect(() => {
+    if (selectedBranchId && metrics?.totalAttendances?.[selectedBranchId] !== undefined) {
+      setTotalAssists(metrics.totalAttendances[selectedBranchId]);
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+  }, [metrics, selectedBranchId]);
+
+  const displayValue = isLoading ? "Cargando..." : totalAssists;
 
   return (
     <Card
@@ -30,7 +38,7 @@ const CardTotalAssists = ({ metrics, selectedBranchId }) => {
             component="p"
             style={{ color: "white", fontSize: "1rem" }}
           >
-            Total de asistencias
+            Reservas completadas
           </Typography>
         </div>
 
@@ -42,7 +50,7 @@ const CardTotalAssists = ({ metrics, selectedBranchId }) => {
             }}
             sx={{ color: "primary.main" }}
           >
-            <FontAwesomeIcon icon={faCheck} />
+            <CheckCircleOutlineIcon style={{ fontSize: "4rem" }} />
           </IconButton>
         </div>
       </CardContent>
