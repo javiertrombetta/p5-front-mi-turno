@@ -1,3 +1,4 @@
+// ChartPies.js
 import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
@@ -10,11 +11,11 @@ const ChartPies = ({ data }) => {
     maintainAspectRatio: false,
   };
   const chartData = {
-    labels: ["Completadas", "No Completadas"],
+    labels: ["Pendientes", "Confirmadas"],
     datasets: [
       {
         label: "Cantidad",
-        data: [data.finished, data.notCompleted],
+        data: [data.pending, data.confirmed],
         backgroundColor: ["#CC6AFF", "#A442F1"],
       },
     ],
