@@ -6,7 +6,12 @@ import IconButton from "@mui/material/IconButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
-const CardTotalAssists = () => {
+const CardTotalAssists = ({ metrics, selectedBranchId }) => {
+  // Obtener el total de asistencias para la sucursal seleccionada
+  const totalAssists = selectedBranchId
+    ? metrics?.totalAttendances?.[selectedBranchId] || 0
+    : 0;
+
   return (
     <Card
       style={{
@@ -18,7 +23,7 @@ const CardTotalAssists = () => {
       <CardContent style={{ display: "flex", alignItems: "center" }}>
         <div style={{ flex: 1, color: "white" }}>
           <Typography variant="h3" component="div">
-            69
+            {totalAssists}
           </Typography>
           <Typography
             variant="h6"
@@ -46,3 +51,4 @@ const CardTotalAssists = () => {
 };
 
 export default CardTotalAssists;
+
