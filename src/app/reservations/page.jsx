@@ -6,7 +6,6 @@ import {
   TextField,
   Container,
   Box,
-  CircularProgress,
   Button,
   Select,
   MenuItem,
@@ -24,6 +23,7 @@ import {
 } from '@/services/dataReservation';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import Loader from '@/components/Loader';
 
 dayjs.extend(utc);
 
@@ -170,10 +170,10 @@ const Reservations = () => {
   };
 
   if (!user) {
-    return <CircularProgress />;
+    return <Loader/>;
   }
   if (loading) {
-    return <CircularProgress />;
+    return <Loader/>;
   }
 
   if (reservations.length === 0) {
@@ -188,7 +188,7 @@ const Reservations = () => {
           height: '20em',
         }}
       >
-        {user.role !== 'admin' || user.role !== 'super' ? (
+        {isUserRole ? (
           <Paper elevation={5} sx={{ textAlign: 'center' }}>
             <Button
               variant='contained'
@@ -242,7 +242,7 @@ const Reservations = () => {
             onChange={handleFilterChange}
             sx={{ width: '50%' }}
           />
-
+  
           {!isUserRole && (
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
@@ -277,7 +277,7 @@ const Reservations = () => {
             </Box>
           )}
         </Box>
-
+  
         <Lists
           data={filteredReservations}
           columns={columns}
@@ -295,7 +295,7 @@ const Reservations = () => {
         onClose={() => setAlertInfo({ ...alertInfo, open: false })}
       />
     </Container>
-  );
+  );  
 };
 
 export default Reservations;

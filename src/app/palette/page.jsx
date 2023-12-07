@@ -1,16 +1,11 @@
 'use client';
 
 import React from 'react';
-import Head from 'next/head';
 import { Typography, Button, Box} from '@mui/material';
 
 const Palette = () => {  
   return (
-    <div>
-      <Head>
-        <title>Palette</title>
-        <meta name="description" content="Paleta de trabajo" />
-      </Head>
+    <div>     
       <main>
         <Typography variant="h1">Encabezado H1</Typography>
         <Typography variant="h2">Encabezado H2</Typography>

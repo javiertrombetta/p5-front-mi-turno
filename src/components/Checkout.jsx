@@ -11,7 +11,9 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+
 import Alert from "@/commons/Alert"
+
 import AddressReservationForm from "@/components/AddresReservationForm";
 import BasicSelect from "@/components/SelectForm";
 import BasicDateCalendar from "@/components/Calendar";
@@ -39,6 +41,7 @@ export default function Checkout() {
     type: 'info',
     message: ''
   });
+  const [criticalTimes, setCriticalTimes] = useState([]);
   const router = useRouter();
   
   
@@ -63,6 +66,35 @@ export default function Checkout() {
     fetchBranches();
   }, [availableTimes, user]);
 
+  useEffect(() => {
+    const fetchAvailableTimes = async () => {
+      if (selectedBranch && dateSelected.isValid()) {
+        try {
+          const schedules = await getAvailableBranchSchedules(selectedBranch, dateSelected.format("YYYY-MM-DD"));
+          setAvailableTimes(schedules.availableSchedules);
+        } catch (error) {
+          console.error("Error al obtener horarios disponibles:", error);
+        }
+      }
+    };
+
+    fetchAvailableTimes();
+  }, [selectedBranch, dateSelected]);
+
+  useEffect(() => {
+    const fetchCriticalTimes = async () => {
+      if (selectedBranch && dateSelected.isValid()) {
+        try {
+          const criticalSchedules = await getCriticalBranchSchedules(selectedBranch, dateSelected.format("YYYY-MM-DD"));
+          setCriticalTimes(criticalSchedules.criticalSchedules);
+        } catch (error) {
+          console.error("Error al obtener horarios críticos:", error);
+        }
+      }
+    };
+
+    fetchCriticalTimes();
+  }, [selectedBranch, dateSelected]);
 
   const handleCloseAlert = () => {
     setAlertInfo({ ...alertInfo, open: false });
@@ -184,6 +216,7 @@ export default function Checkout() {
         return (
           <AddressReservationForm
             times={availableTimes}
+            criticalTimes={criticalTimes}
             onChangeTime={handleSelectChangeTime}
             valueTime={timeSelected}
             clientName={clientName}
