@@ -17,22 +17,18 @@ const RoutesProtection = ({ children }) => {
 
   useEffect(() => {
     const checkUser = async () => {
-      if (user) {
-        dispatch(isLoggedIn());
-      } else {
-        try {
-          const axiosUser = await checkAuth();
-          if (axiosUser) {
-            dispatch(loginSuccess({ user: axiosUser }));
-          } else {
-            dispatch(logoutSuccess());
-          }
-        } catch (error) {
-          console.error("Error en autenticación:", error);
+      try {
+        const axiosUser = await checkAuth();
+        if (axiosUser) {
+          dispatch(loginSuccess({ user: axiosUser }));
+        } else {
           dispatch(logoutSuccess());
-        } finally {
-          setIsLoading(false);
         }
+      } catch (error) {
+        console.error("Error en autenticación:", error);
+        dispatch(logoutSuccess());
+      } finally {
+        setIsLoading(false);
       }
     };
     checkUser();
