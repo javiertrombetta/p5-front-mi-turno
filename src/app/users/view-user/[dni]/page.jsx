@@ -58,7 +58,7 @@ const ViewUser = ({ params }) => {
 
     fetchUser();
   }, [params.dni]);
-
+  console.log("USERROW", userRow);
   const formatLastAccess = (lastLogin) => {
     return lastLogin
       ? dayjs(lastLogin).format("DD/MM/YYYY HH:mm")
@@ -223,8 +223,8 @@ const ViewUser = ({ params }) => {
     try {
       const userDataToUpdate = {
         ...userRow,
-        businessId: (userRow.role === "oper" || userRow.role === "admin") ? selectedBusiness : userRow.businessId,
-        branchId: userRow.role === "oper" ? selectedBranch : userRow.branchId,
+        businessId: (userRow.role === "oper" || userRow.role === "admin") ? selectedBusiness : null,
+        branchId: userRow.role === "oper" ? selectedBranch : null,
       };     
       const updatedUser = await updateUserInfoByDni(userDataToUpdate);
       console.log('USUARIO ACTUALIZADO:', updatedUser);      
