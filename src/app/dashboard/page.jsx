@@ -1,5 +1,5 @@
-'use client';
-import React, { useEffect, useState } from 'react';
+'use client'
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Container,
@@ -43,37 +43,38 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    if (branches.length > 0) {
-      const fetchMetrics = async () => {
-        try {
-          const branchId = branches[selectedBranchIndex]?.id;
-          if (branchId) {
-            const metricsData = await getMetricsData(branchId, selectedDate);
-            setMetrics(metricsData || {});
-          }
-        } catch (error) {
-          setError('Error al obtener métricas: ' + error.message);
+    const fetchMetrics = async () => {
+      try {
+        const branchId = branches[selectedBranchIndex]?.id;
+        if (branchId) {
+          const metricsData = await getMetricsData(branchId, selectedDate);
+          setMetrics(metricsData || {});
         }
-      };
+      } catch (error) {
+        setError('Error al obtener métricas: ' + error.message);
+      }
+    };
+    if (branches.length > 0) {
       fetchMetrics();
     }
   }, [branches, selectedBranchIndex, selectedDate]);
 
-  const handleBranchChange = (event) => {
+  const handleBranchChange = useCallback((event) => {
     setSelectedBranchIndex(event.target.value);
-  };
+  }, []);
 
-  const handleDateChange = (date) => {
+  const handleDateChange = useCallback((date) => {
     setSelectedDate(date);
-  };
+  }, []);
 
-  const clearDateSelection = () => {
+  const clearDateSelection = useCallback(() => {
     setSelectedDate(null);
-  };
+  }, []);
 
   if (error) {
     return <Typography color='error'>{error}</Typography>;
   }
+
 
   return (
     <Container>
@@ -164,15 +165,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-/* 
-<Container>
-      {userRole === 'super' || userRole === 'admin' ? (
-        
-      ) : (
-        <Typography variant='h6' gutterBottom>
-          Acceso restringido
-        </Typography>
-      )}
-    </Container>
-
-*/
