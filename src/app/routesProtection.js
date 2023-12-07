@@ -32,7 +32,7 @@ const RoutesProtection = ({ children }) => {
       }
     };
     checkUser();
-  }, [dispatch, user, isLogged]);
+  }, [dispatch]);
 
   if (isLoading) {
     return (
