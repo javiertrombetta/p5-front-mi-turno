@@ -38,13 +38,16 @@ const ViewUser = ({ params }) => {
     type: "info",
     message: "",
   });
+  /////
   useEffect(() => {
     const fetchUser = async () => {
       if (params.dni) {
         try {
           const fetchedUser = await getUserInfoById(params.dni);
-          console.log('USUARIO DEL BACK:', fetchedUser);
           setUserRow({ ...fetchedUser, role: fetchedUser.role || "user" });
+          // Establecer valores iniciales para la empresa y sucursal
+          setSelectedBusiness(fetchedUser.businessId);
+          setSelectedBranch(fetchedUser.branchId);
         } catch (err) {
           setError(err.message);
         } finally {
@@ -58,7 +61,7 @@ const ViewUser = ({ params }) => {
 
     fetchUser();
   }, [params.dni]);
-  console.log("USERROW", userRow);
+  
   const formatLastAccess = (lastLogin) => {
     return lastLogin
       ? dayjs(lastLogin).format("DD/MM/YYYY HH:mm")
@@ -184,21 +187,28 @@ const ViewUser = ({ params }) => {
   //obtener sucursales, a partir de una empresa
   useEffect(() => {
     const fetchBranchesByBusiness = async () => {
-      try {
-        if (selectedBusiness) {
-          const branchesData = await getBranchesByBusiness(selectedBusiness);
-          setBranchesByBusiness(branchesData);
-        } else {
-          // Manejar el caso donde selectedBusiness es una cadena vacía
-          setBranchesByBusiness([]); // o puedes dejar el estado sin cambios o hacer otras acciones necesarias
-        }
-      } catch (error) {
-        console.error("Error al obtener datos de sucursales:", error);
+      if (selectedBusiness) {
+        const branchesData = await getBranchesByBusiness(selectedBusiness);
+        setBranchesByBusiness(branchesData);
+        setSelectedBranch(''); // Restablecer a un valor por defecto
+      } else {
+        setBranchesByBusiness([]);
+        setSelectedBranch(''); // Restablecer si no hay empresa seleccionada
       }
     };
-
+  
     fetchBranchesByBusiness();
   }, [selectedBusiness]);
+
+  useEffect(() => {
+    if (userRow.branchId && branchesByBusiness.some(branch => branch.id === userRow.branchId)) {
+      setSelectedBranch(userRow.branchId);
+    } else {
+      setSelectedBranch(''); // O establecer un valor por defecto
+    }
+  }, [userRow.branchId, branchesByBusiness]);
+  
+  
 
   const handleBusinessChange = (event) => {
     const selectedValue = event.target.value;
@@ -221,6 +231,11 @@ const ViewUser = ({ params }) => {
       return;
     }
     try {
+      setAlertInfo({
+        open: true,
+        type: "info",
+        message: "Procesando...",
+      });
       const userDataToUpdate = {
         ...userRow,
         businessId: (userRow.role === "oper" || userRow.role === "admin") ? selectedBusiness : null,
