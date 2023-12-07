@@ -31,8 +31,7 @@ function Navbar() {
 
   const clickLogout = async () => {
     try {
-      await dataLogout();
-      dispatch(logoutSuccess());
+      await dataLogout();      
       store.dispatch({ type: 'RESET_APP' });
       router.push("/");
     } catch (error) {
