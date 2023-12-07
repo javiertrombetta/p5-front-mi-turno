@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, Box, FormControl, InputLabel, Select, MenuItem, TextField, Checkbox, ListItemText } from '@mui/material';
-/*
-const initialBranchState = {
-  schedule: [],
-  specificDates: [],
-};
-*/
-const ScheduleAndDateDialog = ({ open, onClose, branch, setBranch, generateTimeSlots }) => {
+
+const ScheduleAndDateDialog = ({ open, onClose, branch, generateTimeSlots }) => {
   const [localBranch, setLocalBranch] = useState({
     schedule: branch?.schedule || [],
     specificDates: branch?.specificDates || []
@@ -19,11 +14,6 @@ const ScheduleAndDateDialog = ({ open, onClose, branch, setBranch, generateTimeS
     });
   }, [branch]);
 
-  const updateBranchState = (updatedBranch) => {
-    setLocalBranch(updatedBranch);
-    setBranch(updatedBranch);
-  };
-
   const handleScheduleItemChange = (index, key, value) => {
     const updatedSchedule = localBranch.schedule.map((item, i) => {
       if (i === index) {
@@ -31,17 +21,17 @@ const ScheduleAndDateDialog = ({ open, onClose, branch, setBranch, generateTimeS
       }
       return item;
     });
-    updateBranchState({ ...localBranch, schedule: updatedSchedule });
+    setLocalBranch({ ...localBranch, schedule: updatedSchedule });
   };
 
   const handleRemoveScheduleItem = (index) => {
     const updatedSchedule = localBranch.schedule.filter((_, i) => i !== index);
-    updateBranchState({ ...localBranch, schedule: updatedSchedule });
+    setLocalBranch({ ...localBranch, schedule: updatedSchedule });
   };
 
   const handleAddScheduleItem = () => {
     const newScheduleItem = { day: 'Lunes', disabledHours: [] };
-    updateBranchState({ ...localBranch, schedule: [...localBranch.schedule, newScheduleItem] });
+    setLocalBranch({ ...localBranch, schedule: [...localBranch.schedule, newScheduleItem] });
   };
 
   const handleSelectAllHours = (index) => {
@@ -52,7 +42,7 @@ const ScheduleAndDateDialog = ({ open, onClose, branch, setBranch, generateTimeS
       }
       return item;
     });
-    updateBranchState({ ...localBranch, schedule: updatedSchedule });
+    setLocalBranch({ ...localBranch, schedule: updatedSchedule });
   };
 
   const handleSpecificDateChange = (index, key, value) => {
@@ -62,22 +52,21 @@ const ScheduleAndDateDialog = ({ open, onClose, branch, setBranch, generateTimeS
       }
       return item;
     });
-    updateBranchState({ ...localBranch, specificDates: updatedSpecificDates });
+    setLocalBranch({ ...localBranch, specificDates: updatedSpecificDates });
   };
 
   const handleRemoveSpecificDate = (index) => {
     const updatedSpecificDates = localBranch.specificDates.filter((_, i) => i !== index);
-    updateBranchState({ ...localBranch, specificDates: updatedSpecificDates });
+    setLocalBranch({ ...localBranch, specificDates: updatedSpecificDates });
   };
 
   const handleAddSpecificDate = () => {
     const newSpecificDate = { date: new Date().toISOString().slice(0, 10), isDisabled: true };
-    updateBranchState({ ...localBranch, specificDates: [...localBranch.specificDates, newSpecificDate] });
+    setLocalBranch({ ...localBranch, specificDates: [...localBranch.specificDates, newSpecificDate] });
   };
 
   const handleCloseDialog = () => {
-    onUpdateBranch(localBranch);
-    onClose();
+    onClose(localBranch);
   };
 
   return (
@@ -143,7 +132,7 @@ const ScheduleAndDateDialog = ({ open, onClose, branch, setBranch, generateTimeS
         <Button onClick={handleAddSpecificDate}>Agregar Fecha Específica</Button>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cerrar</Button>
+        <Button onClick={handleCloseDialog}>Cerrar</Button>
       </DialogActions>
     </Dialog>
   );
