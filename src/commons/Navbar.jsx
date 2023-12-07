@@ -17,6 +17,7 @@ import dataLogout from "@/services/dataLogout";
 import { useRouter } from "next/navigation";
 import { logoutSuccess } from "@/hooks/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { store } from '@/hooks/store';
 
 function Navbar() {
   const router = useRouter();
@@ -32,6 +33,7 @@ function Navbar() {
     try {
       await dataLogout();
       dispatch(logoutSuccess());
+      store.dispatch({ type: 'RESET_APP' });
       router.push("/");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
