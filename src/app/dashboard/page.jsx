@@ -31,16 +31,20 @@ const Dashboard = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchBranches = async () => {
-      try {
-        const branchesData = await getBranchesData();
+  const fetchBranches = async () => {
+    try {
+      const branchesData = await getBranchesData();
+      if (branchesData) {       
         setBranches(branchesData.sort((a, b) => a.name.localeCompare(b.name)));
-      } catch (error) {
-        setError('Error al obtener las sucursales: ' + error.message);
+      } else {
+        setBranches([]);
       }
-    };
-    fetchBranches();
-  }, []);
+    } catch (error) {
+      setError('Error al obtener las sucursales: ' + error.message);
+    }
+  };
+  fetchBranches();
+}, []);
 
   useEffect(() => {
     const fetchMetrics = async () => {

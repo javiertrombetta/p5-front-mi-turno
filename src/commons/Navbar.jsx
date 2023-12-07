@@ -35,15 +35,15 @@ function Navbar() {
       case "admin":
         items = [
           { href: "/dashboard", icon: <DashboardIcon />, text: "Dashboard" },
+          { href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservations" },
           { href: "/users", icon: <PeopleIcon />, text: "Operadores" },
-          { href: "/branches", icon: <StoreMallDirectoryIcon />, text: "Sucursales" },
-          { href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservaciones" }
+          { href: "/branches", icon: <StoreMallDirectoryIcon />, text: "Sucursales" }
         ];
         break;
       case "super":
         items = [
           { href: "/dashboard", icon: <DashboardIcon />, text: "Dashboard" },
-          { href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservaciones" },
+          { href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservations" },
           { href: "/users", icon: <PeopleIcon />, text: "Usuarios" },
           { href: "/companies", icon: <BusinessIcon />, text: "Empresas" },
           { href: "/branches", icon: <StoreMallDirectoryIcon />, text: "Sucursales" }
@@ -51,8 +51,10 @@ function Navbar() {
         break;
       default:
         break;
-    }   
+    }
+
     items.push({ href: "/profile", icon: <AccountCircleIcon />, text: "Mi Perfil" });
+
     return items;
   }, [userRole]);
 
@@ -103,3 +105,4 @@ function Navbar() {
 }
 
 export default Navbar;
+
