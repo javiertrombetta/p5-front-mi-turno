@@ -25,33 +25,35 @@ function Navbar() {
   const { role: userRole } = useSelector((state) => state.auth.user) || {};
 
   const navItems = useMemo(() => {
-    const commonItems = [
-      { href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservaciones" },
-      { href: "/profile", icon: <AccountCircleIcon />, text: "Mi Perfil" }
-    ];
+    let items = [];
 
     switch (userRole) {
       case "user":
       case "oper":
-        return commonItems;
+        items = [{ href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservaciones" }];
+        break;
       case "admin":
-        return [
+        items = [
           { href: "/dashboard", icon: <DashboardIcon />, text: "Dashboard" },
           { href: "/users", icon: <PeopleIcon />, text: "Operadores" },
-          ...commonItems,
-          { href: "/branches", icon: <StoreMallDirectoryIcon />, text: "Sucursales" }
+          { href: "/branches", icon: <StoreMallDirectoryIcon />, text: "Sucursales" },
+          { href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservaciones" }
         ];
+        break;
       case "super":
-        return [
+        items = [
           { href: "/dashboard", icon: <DashboardIcon />, text: "Dashboard" },
+          { href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservaciones" },
           { href: "/users", icon: <PeopleIcon />, text: "Usuarios" },
-          ...commonItems,
           { href: "/companies", icon: <BusinessIcon />, text: "Empresas" },
           { href: "/branches", icon: <StoreMallDirectoryIcon />, text: "Sucursales" }
         ];
+        break;
       default:
-        return [];
-    }
+        break;
+    }   
+    items.push({ href: "/profile", icon: <AccountCircleIcon />, text: "Mi Perfil" });
+    return items;
   }, [userRole]);
 
   const clickLogout = async () => {
