@@ -6,7 +6,7 @@ import InputEmail from "@/commons/InputEmail";
 import InputText from "@/commons/InputText";
 
 export default function AddressReservationForm({
-  times, onChangeTime, valueTime, clientName, setClientName, clientEmail, setClientEmail, clientPhone, setClientPhone
+  times, criticalTimes, onChangeTime, valueTime, clientName, setClientName, clientEmail, setClientEmail, clientPhone, setClientPhone
 }) {
   const [selectError, setSelectError] = useState(false);
 
@@ -26,7 +26,8 @@ export default function AddressReservationForm({
         <Grid item xs={12}>
           <InputLabel id="demo-select-small-label">Seleccione un horario</InputLabel>
           <BasicSelect 
-            times={times} 
+            times={times}
+            criticalTimes={criticalTimes} 
             onChange={handleSelectChange} 
             value={valueTime} 
             error={selectError} 

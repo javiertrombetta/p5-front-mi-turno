@@ -1,12 +1,25 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Container, Box, CircularProgress, Typography, TextField, Button, Select, MenuItem } from '@mui/material';
-import Lists from "@/commons/Lists";
+import {
+  Container,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+} from '@mui/material';
+import Lists from '@/commons/Lists';
 import Alert from '@/commons/Alert';
-import { getBranchesData, updateBranchEnableStatus, createBranch } from "@/services/dataBranches";
+import {
+  getBranchesData,
+  updateBranchEnableStatus,
+  createBranch,
+} from '@/services/dataBranches';
 
 import { useRouter } from 'next/navigation';
+import Loader from '@/components/Loader';
 
 const Branches = () => {
   const { user } = useSelector((state) => state.auth);
@@ -17,55 +30,56 @@ const Branches = () => {
   const [selectedBranches, setSelectedBranches] = useState([]);
   const [enableStatus, setEnableStatus] = useState('');
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState('');
   const [alertInfo, setAlertInfo] = useState({
     open: false,
     type: 'info',
-    message: ''
+    message: '',
   });
 
   useEffect(() => {
     if (isAdminOrSuper) {
       fetchBranches();
-    } else {
-      router.push('/');
     }
-  }, [user, isAdminOrSuper, router]);
+  }, [isAdminOrSuper]);
 
   const fetchBranches = async () => {
     setLoading(true);
     try {
       const data = await getBranchesData();
-      const formattedData = data.map(branch => ({
-        ...branch,
-        isEnableFormatted: branch.isEnable ? 'Sí' : 'No'
-      }))
-      .sort((a, b) => a.id - b.id);
+      const formattedData = data
+        .map((branch) => ({
+          ...branch,
+          isEnableFormatted: branch.isEnable ? 'Sí' : 'No',
+        }))
+        .sort((a, b) => a.id - b.id);
       setBranches(formattedData);
       setFilteredBranches(formattedData);
-    } 
-    catch (error) {
-      const errorMessage = error.response?.data?.message || 'Error al cargar las sucursales.';
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || 'Error al cargar las sucursales.';
       setAlertInfo({ open: true, type: 'error', message: errorMessage });
-    } 
-    finally {
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    const filtered = branches.filter(branch =>
-      Object.values(branch).some(value => {
-        const stringValue = value === null || value === undefined ? '' : value.toString();
+    const filtered = branches.filter((branch) =>
+      Object.values(branch).some((value) => {
+        const stringValue =
+          value === null || value === undefined ? '' : value.toString();
         return stringValue.toLowerCase().includes(filter.toLowerCase());
       })
     );
     setFilteredBranches(filtered);
   }, [filter, branches]);
-  
+
   const handleCheckboxChange = (branchId) => {
-    setSelectedBranches(prev => 
-      prev.includes(branchId) ? prev.filter(id => id !== branchId) : [...prev, branchId]
+    setSelectedBranches((prev) =>
+      prev.includes(branchId)
+        ? prev.filter((id) => id !== branchId)
+        : [...prev, branchId]
     );
   };
 
@@ -77,27 +91,30 @@ const Branches = () => {
     setAlertInfo({
       open: true,
       type: 'info',
-      message: 'Cambiando estado...'
-    });  
+      message: 'Cambiando estado...',
+    });
     let updatedBranches = [...branches];
-    let errorOccurred = false;  
-  
+    let errorOccurred = false;
+
     for (const branchId of selectedBranches) {
-      if (errorOccurred) break;  
+      if (errorOccurred) break;
       try {
         const isBranchEnabled = enableStatus === 'Habilitar';
-        await updateBranchEnableStatus(branchId, isBranchEnabled);       
-        updatedBranches = updatedBranches.map(branch => 
-          branch.id === branchId ? { ...branch, isEnable: isBranchEnabled ? 'Sí' : 'No' } : branch
+        await updateBranchEnableStatus(branchId, isBranchEnabled);
+        updatedBranches = updatedBranches.map((branch) =>
+          branch.id === branchId
+            ? { ...branch, isEnable: isBranchEnabled ? 'Sí' : 'No' }
+            : branch
         );
-      } 
-      catch (error) {
-        const errorMessage = error.response?.data?.message || `Error al cambiar el estado de la sucursal con ID: ${branchId}`;
-        setAlertInfo({ open: true, type: 'error', message: errorMessage });        
-        errorOccurred = true; 
+      } catch (error) {
+        const errorMessage =
+          error.response?.data?.message ||
+          `Error al cambiar el estado de la sucursal con ID: ${branchId}`;
+        setAlertInfo({ open: true, type: 'error', message: errorMessage });
+        errorOccurred = true;
       }
-    }  
-  
+    }
+
     if (!errorOccurred) {
       setBranches(updatedBranches);
       setFilteredBranches(updatedBranches);
@@ -106,12 +123,12 @@ const Branches = () => {
       setAlertInfo({
         open: true,
         type: 'success',
-        message: 'Estado(s) actualizado(s) correctamente.'
+        message: 'Estado(s) actualizado(s) correctamente.',
       });
-    }  
-  
+    }
+
     setSelectedBranches([]);
-  }; 
+  };
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
@@ -125,38 +142,49 @@ const Branches = () => {
     router.push(`/branches/manage/${branchId}`);
   };
 
-  const columns = ["Sucursal", "Email", "Teléfono", "¿Sucursal activa?"];
-  const columnMappings = {   
-    "Sucursal": "name",
-    "Email": "email",
-    "Teléfono": "phoneNumber",
-    "¿Sucursal activa?": "isEnableFormatted",
+  const columns = ['Sucursal', 'Email', 'Teléfono', '¿Sucursal activa?'];
+  const columnMappings = {
+    Sucursal: 'name',
+    Email: 'email',
+    Teléfono: 'phoneNumber',
+    '¿Sucursal activa?': 'isEnableFormatted',
   };
 
   if (loading) {
-    return <CircularProgress />;
+    return <Loader />;
   }
 
   if (branches.length === 0) {
     return (
-      <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '15em' }}>
-        <Typography variant="h6" sx={{ textAlign: 'center' }}>No se encontraron sucursales.</Typography>
+      <Container
+        maxWidth='xl'
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '15em',
+        }}
+      >
+        <Typography variant='h6' sx={{ textAlign: 'center' }}>
+          No se encontraron sucursales.
+        </Typography>
       </Container>
     );
   }
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth='xl'>
       <Box sx={{ mx: 10 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
           {user?.role === 'super' && (
-            <Button variant="contained" onClick={handleCreateBranch}>
+            <Button variant='contained' onClick={handleCreateBranch}>
               Crear Sucursal
             </Button>
           )}
           <TextField
-            label="Filtrar Sucursales"
-            variant="outlined"
+            label='Filtrar Sucursales'
+            variant='outlined'
             value={filter}
             onChange={handleFilterChange}
             sx={{ width: '50%' }}
@@ -168,17 +196,19 @@ const Branches = () => {
               displayEmpty
               sx={{ minWidth: 180 }}
             >
-              <MenuItem value=""><em>Seleccionar Acción</em></MenuItem>
-              <MenuItem value="Habilitar">Habilitar</MenuItem>
-              <MenuItem value="Deshabilitar">Deshabilitar</MenuItem>
+              <MenuItem value=''>
+                <em>Seleccionar Acción</em>
+              </MenuItem>
+              <MenuItem value='Habilitar'>Habilitar</MenuItem>
+              <MenuItem value='Deshabilitar'>Deshabilitar</MenuItem>
             </Select>
             <Button
-              variant="contained"
+              variant='contained'
               onClick={handleChangeEnableStatus}
               disabled={selectedBranches.length === 0 || !enableStatus}
             >
               Aplicar
-            </Button>          
+            </Button>
           </Box>
         </Box>
         <Lists
@@ -188,7 +218,7 @@ const Branches = () => {
           onRowClick={handleRowClick}
           selectedItems={selectedBranches}
           onCheckboxChange={handleCheckboxChange}
-          showCheckboxAndControls={isAdminOrSuper}          
+          showCheckboxAndControls={isAdminOrSuper}
         />
       </Box>
       <Alert
@@ -202,4 +232,3 @@ const Branches = () => {
 };
 
 export default Branches;
-

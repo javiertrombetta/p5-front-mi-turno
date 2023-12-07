@@ -27,7 +27,7 @@ export default function SignIn() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  useEffect(() => {
+ /* useEffect(() => {
     if (user) {
       switch (user.role) {
         case "super":
@@ -48,7 +48,7 @@ export default function SignIn() {
           );
       }
     }
-  }, [router, user]);
+  }, [router, user]);*/
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -68,16 +68,16 @@ export default function SignIn() {
         );
         switch (response.role) {
           case "super":
-            router.push("/user/super");
+            router.push("/dashboard");
             break;
           case "admin":
-            router.push("/user/admin");
+            router.push("/dashboard");
             break;
           case "oper":
-            router.push("/");
+            router.push("/reservations");
             break;
           case "user":
-            router.push("/reservation");
+            router.push("/reservations");
             break;
           default:
             console.error("Rol desconocido");
