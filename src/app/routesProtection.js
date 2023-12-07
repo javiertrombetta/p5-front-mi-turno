@@ -11,6 +11,7 @@ import Footer from '@/commons/Footer';
 import Alert from '@/commons/Alert';
 import MailButton from '@/components/MailButton';
 import Loader from '@/components/Loader';
+import { store } from '@/hooks/store';
 
 const RoutesProtection = ({ children }) => {
   const dispatch = useDispatch();
@@ -26,11 +27,11 @@ const RoutesProtection = ({ children }) => {
           if (axiosUser) {
             dispatch(loginSuccess({ user: axiosUser }));
           } else {
-            dispatch(logoutSuccess());
+            store.dispatch({ type: 'RESET_APP' });
           }
         } catch (error) {
           console.error('Error en autenticación:', error);
-          dispatch(logoutSuccess());
+          store.dispatch({ type: 'RESET_APP' });
           setAlert({ open: true, message: 'Error en autenticación' });
         } finally {
           setIsLoading(false);
