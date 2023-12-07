@@ -16,39 +16,11 @@ import { loginSuccess } from "@/hooks/slices/authSlice";
 import { useRouter } from "next/navigation";
 
 export default function SignIn() {
-  const { user } = useSelector((state) => state.auth);
-  const { isLogged } = useSelector((state) => state.auth);
+  const { user, isLogged } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [alert, setAlert] = useState({
-    open: false,
-    type: "info",
-    message: "",
-  });
+  const [alert, setAlert] = useState({ open: false, type: "info", message: "" });
   const router = useRouter();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (user) {
-      switch (user.role) {
-        case "super":
-          router.push("/dashboard");
-          break;
-        case "admin":
-          router.push("/dashboard");
-          break;
-        case "oper":
-          router.push("/reservations");
-          break;
-        case "user":
-          router.push("/reservations");
-          break;
-        default:
-          console.error(
-            "Rol desconocido. Por favor, ingresá con tus credenciales al sistema."
-          );
-      }
-    }
-  }, [router, user]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -57,49 +29,37 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLogged) return;
+    
     setAlert({ open: true, type: "info", message: "Accediendo..." });
+
     try {
       const response = await loginUser(formData.email, formData.password);
-      setTimeout(() => {
-        dispatch(
-          loginSuccess({
-            user: response,
-          })
-        );
-        switch (response.role) {
-          case "super":
-            router.push("/user/super");
-            break;
-          case "admin":
-            router.push("/user/admin");
-            break;
-          case "oper":
-            router.push("/");
-            break;
-          case "user":
-            router.push("/reservation");
-            break;
-          default:
-            console.error("Rol desconocido");
-        }
-      }, 500);
+      dispatch(loginSuccess({ user: response }));
+      redirectToDashboard(response.role);
     } catch (error) {
-      let message = "Error de servidor o conexión";
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message = error.response.data.message;
-      } else if (error.message) {
-        message = error.message;
-      }
-      setAlert({
-        open: true,
-        type: "error",
-        message: message,
-      });
+      handleLoginError(error);
     }
+  };
+
+  const redirectToDashboard = (role) => {
+    const roleBasedRoute = {
+      super: "/dashboard",
+      admin: "/dashboard",
+      oper: "/reservations",
+      user: "/reservations",
+    };
+    const route = roleBasedRoute[role] || "/";
+    router.push(route);
+  };
+
+  const handleLoginError = (error) => {
+    let message = "Error de servidor o conexión";
+    if (error.response?.data?.message) {
+      message = error.response.data.message;
+    } else if (error.message) {
+      message = error.message;
+    }
+    setAlert({ open: true, type: "error", message });
   };
 
   const handleCloseAlert = () => {

@@ -9,7 +9,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-  Select,
+  Select,  
 } from '@mui/material';
 import InputText from '@/commons/InputText';
 import InputNumberSelector from '@/commons/InputNumberSelector';
@@ -18,6 +18,7 @@ import Alert from '@/commons/Alert';
 import { createBranch } from '@/services/dataBranches';
 import ScheduleAndDateDialog from '@/components/PopupDisableDates';
 import { generateTimeSlots } from '@/utils/time';
+import Loader from '@/components/Loader';
 
 const CreateBranches = () => {
   const router = useRouter();
@@ -142,12 +143,12 @@ const CreateBranches = () => {
             labelId='isEnable-label'
             id='isEnable'
             name='isEnable'
-            value={branch.isEnable.toString()}
+            value={branch?.isEnable ?? false}
             label='¿Sucursal habilitada?'
             onChange={handleInputChange}
           >
-            <MenuItem value={'true'}>Sí</MenuItem>
-            <MenuItem value={'false'}>No</MenuItem>
+            <MenuItem value={true}>Sí</MenuItem>
+            <MenuItem value={false}>No</MenuItem>
           </Select>
         </FormControl>
         <Box display='flex' alignItems='center' gap={2} sx={{ mt: 4 }}>

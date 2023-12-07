@@ -27,7 +27,9 @@ import Loader from '@/components/Loader';
 const ManageBranches = ({ params }) => {
   const router = useRouter();
   const { id } = params;
-  const [branch, setBranch] = useState(null);
+  const [branch, setBranch] = useState({  
+    isEnable: false,
+  });
   const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -91,7 +93,10 @@ const ManageBranches = ({ params }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setBranch({ ...branch, [name]: value });
+    setBranch((prevBranch) => ({
+      ...prevBranch,
+      [name]: value !== undefined ? value : prevBranch[name]
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -160,6 +165,10 @@ const ManageBranches = ({ params }) => {
     setBranch({ ...branch, turnDuration: newTurnDuration });
   };
 
+  const handleUpdateBranchFromDialog = (updatedBranch) => {
+    setBranch(updatedBranch);
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -220,7 +229,7 @@ const ManageBranches = ({ params }) => {
             labelId='isEnable-label'
             id='isEnable'
             name='isEnable'
-            value={branch.isEnable}
+            value={branch.isEnable !== undefined ? branch.isEnable : true} // Usar un valor por defecto
             label='Habilitada'
             onChange={handleInputChange}
           >
@@ -311,7 +320,7 @@ const ManageBranches = ({ params }) => {
         open={scheduleDialogOpen}
         onClose={handleCloseScheduleDialog}
         branch={branch}
-        setBranch={setBranch}
+        setBranch={handleUpdateBranchFromDialog}
         generateTimeSlots={generateTimeSlots}
       />
       <Alert

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, Box, FormControl, InputLabel, Select, MenuItem, TextField, Checkbox, ListItemText } from '@mui/material';
-
+/*
 const initialBranchState = {
   schedule: [],
   specificDates: [],
 };
-
+*/
 const ScheduleAndDateDialog = ({ open, onClose, branch, setBranch, generateTimeSlots }) => {
   const [localBranch, setLocalBranch] = useState({
     schedule: branch?.schedule || [],
@@ -75,8 +75,13 @@ const ScheduleAndDateDialog = ({ open, onClose, branch, setBranch, generateTimeS
     updateBranchState({ ...localBranch, specificDates: [...localBranch.specificDates, newSpecificDate] });
   };
 
+  const handleCloseDialog = () => {
+    onUpdateBranch(localBranch);
+    onClose();
+  };
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={handleCloseDialog} maxWidth="md" fullWidth>
       <DialogTitle>
           Gestión de fechas y horas deshabilitadas   
       </DialogTitle>

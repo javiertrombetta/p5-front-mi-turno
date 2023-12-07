@@ -1,4 +1,3 @@
-'use client';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkAuth } from '@/services/dataLogin';
@@ -15,16 +14,13 @@ import Loader from '@/components/Loader';
 
 const RoutesProtection = ({ children }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-  const { isLogged } = useSelector((state) => state.auth);
-  const [isLoading, setIsLoading] = useState();
+  const { user, isLogged } = useSelector((state) => state.auth);
+  const [isLoading, setIsLoading] = useState(true);
   const [alert, setAlert] = useState({ open: false, message: '' });
 
   useEffect(() => {
     const checkUser = async () => {
-      if (user) {
-        dispatch(isLoggedIn());
-      } else {
+      if (!user) {
         try {
           const axiosUser = await checkAuth();
           if (axiosUser) {
@@ -35,26 +31,25 @@ const RoutesProtection = ({ children }) => {
         } catch (error) {
           console.error('Error en autenticación:', error);
           dispatch(logoutSuccess());
+          setAlert({ open: true, message: 'Error en autenticación' });
         } finally {
           setIsLoading(false);
         }
       }
     };
     checkUser();
-  }, [dispatch, user, isLogged]);
+  }, [dispatch, user]);
 
   if (isLoading) {
     return <Loader />;
   }
 
   return (
-    <div
-      style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
-    >
+    <div className="root-container">
       {isLogged && <Navbar />}
-      <main style={{ flex: 1, marginTop: '3em' }}>{children}</main>
+      <main className="main-content">{children}</main>
       {isLogged && <Footer />}
-      {isLogged && user.role != 'super' && <MailButton />}
+      {isLogged && user.role !== 'super' && <MailButton />}
       {alert.open && (
         <Alert
           message={alert.message}
@@ -66,3 +61,4 @@ const RoutesProtection = ({ children }) => {
 };
 
 export default RoutesProtection;
+
