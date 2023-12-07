@@ -6,7 +6,6 @@ import {
   TextField,
   Container,
   Box,
-  CircularProgress,
   Button,
   Select,
   MenuItem,
@@ -24,6 +23,7 @@ import {
 } from '@/services/dataReservation';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import Loader from '@/components/Loader';
 
 dayjs.extend(utc);
 
@@ -170,10 +170,10 @@ const Reservations = () => {
   };
 
   if (!user) {
-    return <CircularProgress />;
+    return <Loader/>;
   }
   if (loading) {
-    return <CircularProgress />;
+    return <Loader/>;
   }
 
   if (reservations.length === 0) {

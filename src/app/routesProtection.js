@@ -1,20 +1,24 @@
-'use client'
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { checkAuth } from "@/services/dataLogin";
-import { loginSuccess, logoutSuccess, isLoggedIn } from "@/hooks/slices/authSlice";
-import Navbar from "@/commons/Navbar";
-import Footer from "@/commons/Footer";
-import Alert from "@/commons/Alert";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { checkAuth } from '@/services/dataLogin';
+import {
+  loginSuccess,
+  logoutSuccess,
+  isLoggedIn,
+} from '@/hooks/slices/authSlice';
+import Navbar from '@/commons/Navbar';
+import Footer from '@/commons/Footer';
+import Alert from '@/commons/Alert';
 import MailButton from '@/components/MailButton';
-import CircularProgress from "@mui/material/CircularProgress";
+import Loader from '@/components/Loader';
 
 const RoutesProtection = ({ children }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { isLogged } = useSelector((state) => state.auth);
   const [isLoading, setIsLoading] = useState();
-  const [alert, setAlert] = useState({ open: false, message: "" });
+  const [alert, setAlert] = useState({ open: false, message: '' });
 
   useEffect(() => {
     const checkUser = async () => {
@@ -29,7 +33,7 @@ const RoutesProtection = ({ children }) => {
             dispatch(logoutSuccess());
           }
         } catch (error) {
-          console.error("Error en autenticación:", error);
+          console.error('Error en autenticación:', error);
           dispatch(logoutSuccess());
         } finally {
           setIsLoading(false);
@@ -40,44 +44,25 @@ const RoutesProtection = ({ children }) => {
   }, [dispatch, user, isLogged]);
 
   if (isLoading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0
-        }}
-      >
-        <CircularProgress />
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>      
-      <header>
+    <div
+      style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
+    >
       {isLogged && <Navbar />}
-      </header>      
-      <main style={{ flex: 1, marginTop: '3em' }}>
-        {children}
-      </main>
-      <footer>
-        {isLogged && <Footer />}
-      </footer>      
+      <main style={{ flex: 1, marginTop: '3em' }}>{children}</main>
+      {isLogged && <Footer />}
       {isLogged && user.role != 'super' && <MailButton />}
       {alert.open && (
-        <Alert message={alert.message} onClose={() => setAlert({ ...alert, open: false })} />
+        <Alert
+          message={alert.message}
+          onClose={() => setAlert({ ...alert, open: false })}
+        />
       )}
     </div>
   );
 };
 
 export default RoutesProtection;
-
-
