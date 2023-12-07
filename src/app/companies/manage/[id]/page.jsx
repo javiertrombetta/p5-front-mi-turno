@@ -1,10 +1,24 @@
-"use client";
+'use client';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Container, Box, Typography, Button, CircularProgress, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from '@mui/material';
 import InputText from '@/commons/InputText';
-import Alert from "@/commons/Alert";
-import { getDataBusinessById, deleteBusiness, updateBusiness } from '@/services/dataBusiness';
+import Alert from '@/commons/Alert';
+import {
+  getDataBusinessById,
+  deleteBusiness,
+  updateBusiness,
+} from '@/services/dataBusiness';
+import Loader from '@/components/Loader';
 
 const ManageBusiness = ({ params }) => {
   const router = useRouter();
@@ -12,7 +26,11 @@ const ManageBusiness = ({ params }) => {
   const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [alertInfo, setAlertInfo] = useState({ open: false, type: 'info', message: '' });
+  const [alertInfo, setAlertInfo] = useState({
+    open: false,
+    type: 'info',
+    message: '',
+  });
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -20,12 +38,12 @@ const ManageBusiness = ({ params }) => {
       try {
         const data = await getDataBusinessById(id);
         setBusiness(data);
-      } 
-      catch (error) {
-        const errorMessage = error.response?.data?.message || 'Error al obtener la información de la empresa.';
+      } catch (error) {
+        const errorMessage =
+          error.response?.data?.message ||
+          'Error al obtener la información de la empresa.';
         setAlertInfo({ open: true, type: 'error', message: errorMessage });
-      }
-      finally {
+      } finally {
         setLoading(false);
       }
     };
@@ -45,13 +63,16 @@ const ManageBusiness = ({ params }) => {
     setLoading(true);
     try {
       await updateBusiness(id, business);
-      setAlertInfo({ open: true, type: 'success', message: 'Empresa actualizada con éxito.' });
-    } 
-    catch (error) {
-      const errorMessage = error.response?.data?.message || 'Error al actualizar la empresa.';
+      setAlertInfo({
+        open: true,
+        type: 'success',
+        message: 'Empresa actualizada con éxito.',
+      });
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || 'Error al actualizar la empresa.';
       setAlertInfo({ open: true, type: 'error', message: errorMessage });
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -60,24 +81,27 @@ const ManageBusiness = ({ params }) => {
     setLoading(true);
     try {
       await deleteBusiness(id);
-      setAlertInfo({ open: true, type: 'success', message: 'Empresa eliminada con éxito.' });
+      setAlertInfo({
+        open: true,
+        type: 'success',
+        message: 'Empresa eliminada con éxito.',
+      });
       router.push('/companies');
-    } 
-    catch (error) {
-      const errorMessage = error.response?.data?.message || 'Error al eliminar la empresa.';
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || 'Error al eliminar la empresa.';
       setAlertInfo({ open: true, type: 'error', message: errorMessage });
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
 
   if (loading) {
-    return <CircularProgress />;
+    return <Loader />;
   }
 
   if (error) {
-    return <Typography color="error">{error}</Typography>;
+    return <Typography color='error'>{error}</Typography>;
   }
 
   if (!business) {
@@ -86,17 +110,55 @@ const ManageBusiness = ({ params }) => {
 
   return (
     <Container>
-      <Typography variant="h4" sx={{ mb: 4 }}>Gestión de Empresa</Typography>
-      <Box component="form" onSubmit={handleSubmit} sx={{ mb: 4 }}>
-        <InputText label="Número de Empresa" name="id" value={business.id} onChange={handleInputChange} disabled={true}/>
-        <InputText label="Nombre" name="name" value={business.name} onChange={handleInputChange} />
-        <InputText label="Email" name="email" value={business.email} onChange={handleInputChange} />
-        <InputText label="Teléfono" name="phoneNumber" value={business.phoneNumber} onChange={handleInputChange} />
-        <InputText label="Dirección" name="address" value={business.address} onChange={handleInputChange} />
-        <Button variant="contained" color="error" onClick={handleDelete} sx={{ px: 3, py: 1.5, fontSize: '1rem', mt: 4, ml: 2 }}>
+      <Typography variant='h4' sx={{ mb: 4 }}>
+        Gestión de Empresa
+      </Typography>
+      <Box component='form' onSubmit={handleSubmit} sx={{ mb: 4 }}>
+        <InputText
+          label='Número de Empresa'
+          name='id'
+          value={business.id}
+          onChange={handleInputChange}
+          disabled={true}
+        />
+        <InputText
+          label='Nombre'
+          name='name'
+          value={business.name}
+          onChange={handleInputChange}
+        />
+        <InputText
+          label='Email'
+          name='email'
+          value={business.email}
+          onChange={handleInputChange}
+        />
+        <InputText
+          label='Teléfono'
+          name='phoneNumber'
+          value={business.phoneNumber}
+          onChange={handleInputChange}
+        />
+        <InputText
+          label='Dirección'
+          name='address'
+          value={business.address}
+          onChange={handleInputChange}
+        />
+        <Button
+          variant='contained'
+          color='error'
+          onClick={handleDelete}
+          sx={{ px: 3, py: 1.5, fontSize: '1rem', mt: 4, ml: 2 }}
+        >
           Eliminar Empresa
         </Button>
-        <Button variant="contained" color="primary" type="submit" sx={{ px: 3, py: 1.5, fontSize: '1rem', mt: 4, ml: 2 }}>
+        <Button
+          variant='contained'
+          color='primary'
+          type='submit'
+          sx={{ px: 3, py: 1.5, fontSize: '1rem', mt: 4, ml: 2 }}
+        >
           Actualizar Empresa
         </Button>
         <Alert
@@ -107,7 +169,7 @@ const ManageBusiness = ({ params }) => {
         />
       </Box>
     </Container>
-  );  
+  );
 };
 
 export default ManageBusiness;

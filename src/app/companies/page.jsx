@@ -1,11 +1,18 @@
-"use client";
+'use client';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Container, Box, CircularProgress, Typography, TextField, Button} from '@mui/material';
-import Lists from "@/commons/Lists";
+import {
+  Container,
+  Box,
+  Typography,
+  TextField,
+  Button,
+} from '@mui/material';
+import Lists from '@/commons/Lists';
 import Alert from '@/commons/Alert';
-import { getBusinessData} from "@/services/dataBusiness";
+import { getBusinessData } from '@/services/dataBusiness';
 import { useRouter } from 'next/navigation';
+import Loader from '@/components/Loader';
 
 const Businesses = () => {
   const { user } = useSelector((state) => state.auth);
@@ -15,20 +22,18 @@ const Businesses = () => {
   const [filteredBusinesses, setFilteredBusinesses] = useState([]);
   const [selectedBusinesses, setSelectedBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState('');
   const [alertInfo, setAlertInfo] = useState({
     open: false,
     type: 'info',
-    message: ''
+    message: '',
   });
 
   useEffect(() => {
     fetchBusinesses();
     if (isAdminOrSuper) {
-      
-    } /*else {
-      router.push('/');
-    }*/
+      fetchBusinesses();
+    }
   }, [isAdminOrSuper]);
 
   const fetchBusinesses = async () => {
@@ -37,20 +42,20 @@ const Businesses = () => {
       const data = await getBusinessData();
       setBusinesses(data);
       setFilteredBusinesses(data);
-    } 
-    catch (error) {
-      const errorMessage = error.response?.data?.message || 'Error al cargar las empresas.';
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || 'Error al cargar las empresas.';
       setAlertInfo({ open: true, type: 'error', message: errorMessage });
-    } 
-    finally {
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    const filtered = businesses.filter(business =>
-      Object.values(business).some(value => {
-        const stringValue = value === null || value === undefined ? '' : value.toString();
+    const filtered = businesses.filter((business) =>
+      Object.values(business).some((value) => {
+        const stringValue =
+          value === null || value === undefined ? '' : value.toString();
         return stringValue.toLowerCase().includes(filter.toLowerCase());
       })
     );
@@ -62,49 +67,60 @@ const Businesses = () => {
   };
 
   const handleCreateBusiness = () => {
-    router.push("/companies/manage");
+    router.push('/companies/manage');
   };
 
   const handleRowClick = (businessId) => {
     router.push(`/companies/manage/${businessId}`);
   };
 
-  const columns = ["Nombre", "Email", "Teléfono", "Dirección"];
+  const columns = ['Nombre', 'Email', 'Teléfono', 'Dirección'];
   const columnMappings = {
-    "Nombre": "name",
-    "Email": "email",
-    "Teléfono": "phoneNumber",
-    "Dirección": "address",
+    Nombre: 'name',
+    Email: 'email',
+    Teléfono: 'phoneNumber',
+    Dirección: 'address',
   };
 
   if (loading) {
-    return <CircularProgress />;
+    return <Loader />;
   }
 
   if (businesses.length === 0) {
     return (
-      <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '15em' }}>
-        <Typography variant="h6" sx={{ textAlign: 'center' }}>No se encontraron empresas.</Typography>
+      <Container
+        maxWidth='xl'
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '15em',
+        }}
+      >
+        <Typography variant='h6' sx={{ textAlign: 'center' }}>
+          No se encontraron empresas.
+        </Typography>
       </Container>
     );
   }
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth='xl'>
       <Box sx={{ mx: 10 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
           {user?.role === 'super' && (
-            <Button variant="contained" onClick={handleCreateBusiness}>
+            <Button variant='contained' onClick={handleCreateBusiness}>
               Crear Empresa
             </Button>
           )}
           <TextField
-            label="Filtrar Empresas"
-            variant="outlined"
+            label='Filtrar Empresas'
+            variant='outlined'
             value={filter}
             onChange={handleFilterChange}
             sx={{ width: '50%' }}
-          />         
+          />
         </Box>
         <Lists
           data={filteredBusinesses}
@@ -125,4 +141,3 @@ const Businesses = () => {
 };
 
 export default Businesses;
-

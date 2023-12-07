@@ -1,42 +1,57 @@
-"use client";
-import React, { useEffect, useState, useRef } from "react";
-import { useSelector } from "react-redux";
-import { getUserInfoById, updateUserInfoByDni, deleteUser, assignUserRole } from "@/services/dataUser";
-import { Typography, Container, CircularProgress, Box, Button, Avatar, Select, MenuItem, InputLabel } from "@mui/material";
-import InputText from "@/commons/InputText";
-import { useRouter } from "next/navigation";
-import Alert from "@/commons/Alert";
-import dayjs from "dayjs";
-import { getBranchesByBusiness } from "@/services/dataBranches";
-import { getBusinessData } from "@/services/dataBusiness";
+'use client';
+import React, { useEffect, useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import {
+  getUserInfoById,
+  updateUserInfoByDni,
+  deleteUser,
+  assignUserRole,
+} from '@/services/dataUser';
+import {
+  Typography,
+  Container,
+  Box,
+  Button,
+  Avatar,
+  Select,
+  MenuItem,
+  InputLabel,
+} from '@mui/material';
+import InputText from '@/commons/InputText';
+import { useRouter } from 'next/navigation';
+import Alert from '@/commons/Alert';
+import dayjs from 'dayjs';
+import { getBranchesByBusiness } from '@/services/dataBranches';
+import { getBusinessData } from '@/services/dataBusiness';
+import Loader from '@/components/Loader';
 
 const ViewUser = ({ params }) => {
   const { user } = useSelector((state) => state.auth);
-  const isSuperUser = user?.role === "super";
+  const isSuperUser = user?.role === 'super';
   const [showChangeLabel, setShowChangeLabel] = useState(false);
   const [userRow, setUserRow] = useState({
-    fullName: "",
-    email: "",
-    phoneNumber: "",
-    role: "",
-    businessId: "",
-    branchId: "",
+    fullName: '',
+    email: '',
+    phoneNumber: '',
+    role: '',
+    businessId: '',
+    branchId: '',
   });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [business, setBusiness] = useState([]); // -> agregado x fran
   const [branchesByBusiness, setBranchesByBusiness] = useState([]); // -> Agregado x fran
-  const [selectedBusiness, setSelectedBusiness] = useState("");
-  const [selectedBranch, setSelectedBranch] = useState("");
+  const [selectedBusiness, setSelectedBusiness] = useState('');
+  const [selectedBranch, setSelectedBranch] = useState('');
 
   const fileInputRef = useRef();
   const router = useRouter();
 
   const [alertInfo, setAlertInfo] = useState({
     open: false,
-    type: "info",
-    message: "",
+    type: 'info',
+    message: '',
   });
   /////
   useEffect(() => {
@@ -64,23 +79,23 @@ const ViewUser = ({ params }) => {
   
   const formatLastAccess = (lastLogin) => {
     return lastLogin
-      ? dayjs(lastLogin).format("DD/MM/YYYY HH:mm")
-      : "No tiene accesos al sistema";
+      ? dayjs(lastLogin).format('DD/MM/YYYY HH:mm')
+      : 'No tiene accesos al sistema';
   };
 
   const getInitials = (name) =>
     name
-      .split(" ")
+      .split(' ')
       .map((n) => n[0])
-      .join("");
+      .join('');
   const avatarUrl =
     userRow?.photo ||
     `https://via.placeholder.com/300?text=${getInitials(
-      userRow?.fullName || ""
+      userRow?.fullName || ''
     )}`;
 
   const handleBackToList = () => {
-    router.push("/users");
+    router.push('/users');
   };
 
   const handleFileSelect = (event) => {
@@ -92,10 +107,10 @@ const ViewUser = ({ params }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log("Updating field", name, "to", value);
+    console.log('Updating field', name, 'to', value);
     setUserRow((prevUserRow) => ({
       ...prevUserRow,
-      [name]: value !== undefined ? value : "",
+      [name]: value !== undefined ? value : '',
     }));
   };
 
@@ -106,15 +121,15 @@ const ViewUser = ({ params }) => {
       setUserRow((prevUserRow) => ({ ...prevUserRow, role: selectedRole }));
       setAlertInfo({
         open: true,
-        type: "success",
-        message: "Rol actualizado correctamente.",
+        type: 'success',
+        message: 'Rol actualizado correctamente.',
       });
     } catch (error) {
-      console.error("Error al cambiar el rol:", error);
+      console.error('Error al cambiar el rol:', error);
       setAlertInfo({
         open: true,
-        type: "error",
-        message: "Error al cambiar el rol del usuario.",
+        type: 'error',
+        message: 'Error al cambiar el rol del usuario.',
       });
     }
   };
@@ -123,48 +138,48 @@ const ViewUser = ({ params }) => {
     if (!selectedFile) {
       setAlertInfo({
         open: true,
-        type: "error",
-        message: "Por favor, selecciona una foto primero.",
+        type: 'error',
+        message: 'Por favor, selecciona una foto primero.',
       });
       return;
     }
     const formData = new FormData();
-    formData.append("photo", selectedFile);
+    formData.append('photo', selectedFile);
     try {
       const updatedUser = await updateUserInfoByDni(formData);
       setUserRow(updatedUser);
       setAlertInfo({
         open: true,
-        type: "success",
-        message: "Foto actualizada correctamente.",
+        type: 'success',
+        message: 'Foto actualizada correctamente.',
       });
     } catch (error) {
       setAlertInfo({
         open: true,
-        type: "error",
-        message: "Error al actualizar la foto.",
+        type: 'error',
+        message: 'Error al actualizar la foto.',
       });
     }
   };
 
   const handleDeleteUser = async () => {
     const confirm = window.confirm(
-      "¿Estás seguro de que quieres eliminar este usuario?"
+      '¿Estás seguro de que quieres eliminar este usuario?'
     );
     if (confirm) {
       try {
         await deleteUser(userRow.dni);
         setAlertInfo({
           open: true,
-          type: "success",
-          message: "Usuario eliminado con éxito.",
+          type: 'success',
+          message: 'Usuario eliminado con éxito.',
         });
-        router.push("/users");
+        router.push('/users');
       } catch (error) {
         setAlertInfo({
           open: true,
-          type: "error",
-          message: "Error al eliminar el usuario.",
+          type: 'error',
+          message: 'Error al eliminar el usuario.',
         });
       }
     }
@@ -177,7 +192,7 @@ const ViewUser = ({ params }) => {
         const branchesData = await getBusinessData();
         setBusiness(branchesData); // Establece el estado con los datos de las sucursales
       } catch (error) {
-        console.error("Error al obtener datos de sucursales:", error);
+        console.error('Error al obtener datos de sucursales:', error);
       }
     };
 
@@ -217,7 +232,7 @@ const ViewUser = ({ params }) => {
   };
   const handleBranchChange = (event) => {
     const selectedValue = event.target.value;
-    console.log('SUCURSAL ELEGIDA:',selectedValue);
+    console.log('SUCURSAL ELEGIDA:', selectedValue);
     setSelectedBranch(selectedValue);
   };
 
@@ -225,8 +240,8 @@ const ViewUser = ({ params }) => {
     if (!userRow.dni) {
       setAlertInfo({
         open: true,
-        type: "error",
-        message: "DNI no está definido",
+        type: 'error',
+        message: 'DNI no está definido',
       });
       return;
     }
@@ -238,46 +253,45 @@ const ViewUser = ({ params }) => {
       });
       const userDataToUpdate = {
         ...userRow,
-        businessId: (userRow.role === "oper" || userRow.role === "admin") ? selectedBusiness : null,
-        branchId: userRow.role === "oper" ? selectedBranch : null,
-      };     
+        businessId:
+          userRow.role === 'oper' || userRow.role === 'admin'
+            ? selectedBusiness
+            : null,
+        branchId: userRow.role === 'oper' ? selectedBranch : null,
+      };
       const updatedUser = await updateUserInfoByDni(userDataToUpdate);
-      console.log('USUARIO ACTUALIZADO:', updatedUser);      
+      console.log('USUARIO ACTUALIZADO:', updatedUser);
       if (updatedUser.data) {
-        setUserRow(prevState => ({
+        setUserRow((prevState) => ({
           ...prevState,
           ...updatedUser.data,
-        })); 
+        }));
         setSelectedBusiness(updatedUser.data.businessId || selectedBusiness);
         setSelectedBranch(updatedUser.data.branchId || selectedBranch);
         setAlertInfo({
           open: true,
-          type: "success",
-          message: "Usuario actualizado con éxito.",
+          type: 'success',
+          message: 'Usuario actualizado con éxito.',
         });
-      } 
-      else {
-        throw new Error("No se recibieron datos actualizados del servidor");
+      } else {
+        throw new Error('No se recibieron datos actualizados del servidor');
       }
     } catch (error) {
-      console.error("Error al actualizar la información del usuario:", error);
+      console.error('Error al actualizar la información del usuario:', error);
       setAlertInfo({
         open: true,
-        type: "error",
-        message: error.message || "Error al actualizar la información.",
+        type: 'error',
+        message: error.message || 'Error al actualizar la información.',
       });
     }
   };
-  
-  
-  
 
   if (loading) {
-    return <CircularProgress />;
+    return <Loader />;
   }
 
   if (error) {
-    return <Typography color="error">{error}</Typography>;
+    return <Typography color='error'>{error}</Typography>;
   }
 
   if (!userRow) {
@@ -286,52 +300,52 @@ const ViewUser = ({ params }) => {
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h5" sx={{ mb: 10 }}>
+      <Typography variant='h5' sx={{ mb: 10 }}>
         Detalles del Usuario
       </Typography>
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
         }}
       >
         <Box sx={{ flexGrow: 1, pr: 3 }}>
           <InputText
-            label="DNI"
+            label='DNI'
             value={userRow.dni}
             disabled={true}
             onChange={handleInputChange}
-            name="dni"
+            name='dni'
           />
           <InputText
-            label="Nombre Completo"
+            label='Nombre Completo'
             value={userRow.fullName}
             disabled={!isSuperUser}
             onChange={handleInputChange}
-            name="fullName"
+            name='fullName'
           />
           <InputText
-            label="Email"
+            label='Email'
             value={userRow.email}
             disabled={!isSuperUser}
             onChange={handleInputChange}
-            name="email"
+            name='email'
           />
           <InputText
-            label="Teléfono"
+            label='Teléfono'
             value={userRow.phoneNumber}
             disabled={!isSuperUser}
             onChange={handleInputChange}
-            name="phoneNumber"
+            name='phoneNumber'
           />
         </Box>
         <Box
           sx={{
-            position: "relative",
+            position: 'relative',
             width: 300,
             height: 300,
-            "&:hover": { cursor: "pointer" },
+            '&:hover': { cursor: 'pointer' },
           }}
           onMouseOver={() => setShowChangeLabel(true)}
           onMouseOut={() => setShowChangeLabel(false)}
@@ -341,19 +355,19 @@ const ViewUser = ({ params }) => {
           {showChangeLabel && (
             <Box
               sx={{
-                position: "absolute",
+                position: 'absolute',
                 top: 0,
                 left: 0,
-                width: "100%",
-                height: "100%",
-                borderRadius: "50%",
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
                 opacity: showChangeLabel ? 1 : 0,
-                transition: "opacity 1s ease",
+                transition: 'opacity 1s ease',
               }}
               onClick={handleUploadPhoto}
             >
@@ -361,41 +375,41 @@ const ViewUser = ({ params }) => {
             </Box>
           )}
           <input
-            type="file"
+            type='file'
             ref={fileInputRef}
             onChange={handleFileSelect}
-            style={{ display: "none" }}
+            style={{ display: 'none' }}
           />
         </Box>
       </Box>
 
       <Box>
-        <InputLabel id="rolId">Rol</InputLabel>
+        <InputLabel id='rolId'>Rol</InputLabel>
         {isSuperUser ? (
           <Select
-            labelId="rolId"
-            value={userRow.role || ""}
+            labelId='rolId'
+            value={userRow.role || ''}
             onChange={(e) => handleRoleChange(e.target.value)}
-            name="role"
+            name='role'
           >
-            <MenuItem value="super">Superadministrador</MenuItem>
-            <MenuItem value="admin">Administrador</MenuItem>
-            <MenuItem value="oper">Operador</MenuItem>
-            <MenuItem value="user">Usuario</MenuItem>
+            <MenuItem value='super'>Superadministrador</MenuItem>
+            <MenuItem value='admin'>Administrador</MenuItem>
+            <MenuItem value='oper'>Operador</MenuItem>
+            <MenuItem value='user'>Usuario</MenuItem>
           </Select>
         ) : (
-          <InputText label="Rol" value={userRow.role} disabled />
+          <InputText label='Rol' value={userRow.role} disabled />
         )}
       </Box>
 
-      {userRow.role === "admin" || userRow.role === "oper" ? (
-        <Box sx={{ marginTop: "8px" }}>
-          <InputLabel id="businessId">Selecciona una empresa</InputLabel>
+      {userRow.role === 'admin' || userRow.role === 'oper' ? (
+        <Box sx={{ marginTop: '8px' }}>
+          <InputLabel id='businessId'>Selecciona una empresa</InputLabel>
           <Select
-            labelId="businessId"
+            labelId='businessId'
             value={selectedBusiness || userRow.businessId}
             onChange={handleBusinessChange}
-            name="business"
+            name='business'
           >
             <MenuItem value=''>
               <b>Ninguna</b>
@@ -408,16 +422,16 @@ const ViewUser = ({ params }) => {
           </Select>
         </Box>
       ) : (
-        ""
+        ''
       )}
-      {userRow.role === "oper" && (
-        <Box sx={{ marginTop: "8px" }}>
-          <InputLabel id="branchesId">Selecciona una sucursal</InputLabel>
+      {userRow.role === 'oper' && (
+        <Box sx={{ marginTop: '8px' }}>
+          <InputLabel id='branchesId'>Selecciona una sucursal</InputLabel>
           <Select
-            labelId="branchesId"
+            labelId='branchesId'
             value={selectedBranch || userRow.branchId}
             onChange={handleBranchChange}
-            name="branchesByBusiness"
+            name='branchesByBusiness'
           >
             <MenuItem value=''>
               <b>Ninguna</b>
@@ -432,33 +446,33 @@ const ViewUser = ({ params }) => {
       )}
 
       <InputText
-        label="Último Acceso"
+        label='Último Acceso'
         value={formatLastAccess(userRow.lastLogin)}
         disabled
       />
-      <Box sx={{ display: "flex", justifyContent: "flex-start", mt: 4 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 4 }}>
         <Button
-          variant="outlined"
-          color="primary"
+          variant='outlined'
+          color='primary'
           onClick={handleBackToList}
-          sx={{ px: 3, py: 1.5, fontSize: "1rem" }}
+          sx={{ px: 3, py: 1.5, fontSize: '1rem' }}
         >
           Volver al Listado
         </Button>
         <Button
-          variant="contained"
-          color="error"
+          variant='contained'
+          color='error'
           onClick={handleDeleteUser}
-          sx={{ ml: 2, px: 3, py: 1.5, fontSize: "1rem" }}
+          sx={{ ml: 2, px: 3, py: 1.5, fontSize: '1rem' }}
         >
           Eliminar
         </Button>
         {isSuperUser && (
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             onClick={handleAcceptChanges}
-            sx={{ ml: 2, px: 3, py: 1.5, fontSize: "1rem" }}
+            sx={{ ml: 2, px: 3, py: 1.5, fontSize: '1rem' }}
           >
             Aceptar Cambios
           </Button>
