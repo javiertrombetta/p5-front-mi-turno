@@ -30,6 +30,7 @@ const Businesses = () => {
   });
 
   useEffect(() => {
+    fetchBusinesses();
     if (isAdminOrSuper) {
       fetchBusinesses();
     }
