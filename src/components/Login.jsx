@@ -26,7 +26,7 @@ export default function SignIn() {
   });
   const router = useRouter();
   const dispatch = useDispatch();
-
+/*
   useEffect(() => {
     if (user) {
       switch (user.role) {
@@ -49,7 +49,7 @@ export default function SignIn() {
       }
     }
   }, [router, user]);
-
+*/
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
