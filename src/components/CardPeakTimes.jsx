@@ -1,81 +1,63 @@
-import React, { useState, useEffect } from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
+import React, { useEffect, useState } from 'react';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { getMetricsData } from "@/services/dataMetrics";
-import CardTotalAssists from "./CardTotalAssists";
-import CardTotalReservation from "./CardTotalReservation";
+import { getMetricsData } from '@/services/dataMetrics';
 
 const CardPeakTimes = ({ metrics, selectedBranchId, selectedDate }) => {
-  const [isLoading, setIsLoading] = useState(true);
   const [peakTime, setPeakTime] = useState(null);
-  const [dateMetrics, setDateMetrics] = useState("")
 
-  useEffect(() => {
-    if (selectedBranchId && metrics?.peakTimes?.[selectedBranchId]) {
-      setPeakTime(metrics.peakTimes[selectedBranchId]);
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
-    }
-  }, [metrics, selectedBranchId]);
-
-  //agrgado x fran
   useEffect(() => {
     const fetchMetricsData = async () => {
       try {
-        const branchId = selectedBranchId;
-        
-        if (branchId && selectedDate) {
-          
-          const metricsData = await getMetricsData(branchId, selectedDate);
-          setDateMetrics(metricsData || {});
+        if (selectedBranchId && metrics?.peakTimes?.[selectedBranchId]) {
+          setPeakTime(metrics.peakTimes[selectedBranchId]);
+        } else if (selectedBranchId && selectedDate) {
+          const metricsData = await getMetricsData(selectedBranchId, selectedDate);
+          setPeakTime(metricsData?.peakTimes?.[selectedBranchId] ?? null);
         }
       } catch (error) {
-        console.log('Error al obtener métricas: ' + error);
+        console.error('Error al obtener métricas: ', error);
       }
     };
-  
+
     fetchMetricsData();
-  }, [selectedBranchId, selectedDate]);
-  //sigue lo de javi
+  }, [selectedBranchId, selectedDate, metrics]);
 
-  const formattedPeakTime = isLoading ? "Cargando..." : `${peakTime} hs.`;
+  const formattedPeakTime = peakTime !== null ? `${peakTime} hs.` : 'N/A';
 
- 
   return (
     <Card
       style={{
-        borderRadius: "15px",
-        borderBottom: `30px solid #9421C3`,
+        borderRadius: '15px',
+        borderBottom: '30px solid #9421C3',
       }}
-      sx={{ backgroundColor: "#CC6AFF" }}
+      sx={{ backgroundColor: '#CC6AFF' }}
     >
-      <CardContent style={{ display: "flex", alignItems: "center" }}>
-        <div style={{ flex: 1, color: "white" }}>
-          <Typography variant="h3" component="div">
-          {`${peakTime} hs.`} {/* modificado x fran */}
+      <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ flex: 1, color: 'white' }}>
+          <Typography variant='h3' component='div'>
+            {formattedPeakTime}
           </Typography>
           <Typography
-            variant="h6"
-            component="p"
-            style={{ color: "white", fontSize: "1rem" }}
+            variant='h6'
+            component='p'
+            style={{ color: 'white', fontSize: '1rem' }}
           >
             Hora pico de asistencia
           </Typography>
         </div>
-
         <div>
           <IconButton
             style={{
-              fontSize: "4rem",
-              border: "none",
+              fontSize: '4rem',
+              border: 'none',
             }}
-            sx={{ color: "primary.main" }}
+            sx={{ color: 'primary.main' }}
           >
-            <AccessTimeIcon style={{ fontSize: "4rem" }} />
+            <AccessTimeIcon style={{ fontSize: '4rem' }} />
           </IconButton>
         </div>
       </CardContent>
@@ -84,3 +66,4 @@ const CardPeakTimes = ({ metrics, selectedBranchId, selectedDate }) => {
 };
 
 export default CardPeakTimes;
+
