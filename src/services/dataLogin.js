@@ -19,7 +19,12 @@ export const loginUser = async (email, password) => {
     const response = await axios.post(
       `${API_URL}/users/login`,
       { email, password },
-      { withCredentials: true }
+      { withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+        credentials: "include",
+      }
+      
     );
     return response.data.payload;
   } catch (error) { 
