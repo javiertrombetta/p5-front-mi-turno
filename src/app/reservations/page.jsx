@@ -44,7 +44,7 @@ const Reservations = () => {
   const isUserRole = user?.role === 'user';
 
   useEffect(() => {
-    const fetchAndFormatReservations = async (role) => {
+    const fetchAndFormatReservations = async () => {
       try {
         let data;
         if (user.role === 'super') {
@@ -54,46 +54,38 @@ const Reservations = () => {
         } else {
           data = await getReservationsData();
         }
-        return data
-          .filter((item) => item.state.toLowerCase() !== 'cancelado')
-          .map((item) => {
-            const formatDate = (date) => {
-              return dayjs(date).format('DD/MM/YYYY');
-            };
-
-            const formatTime = (time) => {
-              return time.replace('::', ':').substring(0, 5);
-            };
-
-            return {
-              ...item,
-              dateTime: formatDate(item.date) + ' ' + formatTime(item.time),
-              branchName: item.branch.name,
-              state: item.state.toUpperCase(),
-            };
-          });
-      } catch (error) {
-        const errorMessage =
-          error.response?.data?.message || `Error al cargar las reservas.`;
-        setAlertInfo({ open: true, type: 'error', message: errorMessage });
-        return [];
-      }
-    };
-    const fetchData = async () => {
-      if (user) {
-        setLoading(true);
-        const formattedData = await fetchAndFormatReservations(user.role);
+    
+        const formattedData = data.map((item) => {
+          const branchName = item.branch ? item.branch.name : "No especificado";
+          const dateTime = dayjs.utc(item.date).local().format('DD/MM/YYYY HH:mm');
+    
+          return {
+            ...item,
+            dateTime,
+            branchName,
+            state: item.state.toUpperCase(),
+          };
+        });
+    
         setReservations(formattedData);
+      } catch (error) {
+        const errorMessage = error.response?.data?.message || `Error al cargar las reservas.`;
+        setAlertInfo({ open: true, type: 'error', message: errorMessage });
+      } finally {
         setLoading(false);
       }
     };
-    fetchData();
+
+    if (user) {
+      fetchAndFormatReservations();
+    }
   }, [user]);
 
   const filteredReservations = reservations.filter((reservation) =>
-    Object.values(reservation).some((value) =>
-      value.toString().toLowerCase().includes(filter.toLowerCase())
-    )
+    Object.values(reservation).some((value) => {
+      const valueString = value ? value.toString() : '';
+      return valueString.toLowerCase().includes(filter.toLowerCase());
+    })
   );
 
   const handleClearSelection = () => {
@@ -176,6 +168,8 @@ const Reservations = () => {
     return <Loader/>;
   }
 
+  const hasReservations = filteredReservations.length > 0;
+/*
   if (reservations.length === 0) {
     return (
       <Container
@@ -205,7 +199,7 @@ const Reservations = () => {
         )}
       </Container>
     );
-  }
+  }*/
 
   const columns = [
     'N° de la reserva',
@@ -276,17 +270,22 @@ const Reservations = () => {
               </Button>
             </Box>
           )}
-        </Box>
-  
-        <Lists
-          data={filteredReservations}
-          columns={columns}
-          columnMappings={columnMappings}
-          onRowClick={handleRowClick}
-          selectedItems={selectedReservations}
-          onCheckboxChange={handleCheckboxChange}
-          showCheckboxAndControls={!isUserRole}
-        />
+        </Box>  
+        {hasReservations ? (
+          <Lists
+            data={filteredReservations}
+            columns={columns}
+            columnMappings={columnMappings}
+            onRowClick={handleRowClick}
+            selectedItems={selectedReservations}
+            onCheckboxChange={handleCheckboxChange}
+            showCheckboxAndControls={!isUserRole}
+          />
+        ) : (
+          <Typography variant='h6' sx={{ textAlign: 'center', mt: 5 }}>
+            No hay reservas disponibles en este momento.
+          </Typography>
+        )}
       </Box>
       <Alert
         open={alertInfo.open}

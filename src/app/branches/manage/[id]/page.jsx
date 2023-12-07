@@ -40,53 +40,46 @@ const ManageBranches = ({ params }) => {
   });
 
   useEffect(() => {
-    if (!id) {
-      setBranch({
-        id: '',
-        name: '',
-        email: '',
-        phoneNumber: '',
-        address: '',
-        isEnable: false,
-        openingTime: '00:00',
-        closingTime: '00:00',
-        capacity: 0,
-        turnDuration: 0,
-      });
-    } else {
-      const formatTimeIfNeeded = (timeString) => {
-        if (!timeString) return '';
-        const isLongFormat = timeString.length === 8;
-        if (isLongFormat) {
-          return formatTimeHHMMSS(timeString);
-        }
-        return timeString;
-      };
-      const fetchBranch = async () => {
-        setLoading(true);
-        try {
-          const data = await getBranchById(id);
-          const formattedData = {
-            ...data,
-            openingTime: formatTimeIfNeeded(data.openingTime),
-            closingTime: formatTimeIfNeeded(data.closingTime),
-          };
+    const initialBranchState = {
+      id: '',
+      name: '',
+      email: '',
+      phoneNumber: '',
+      address: '',
+      isEnable: false,
+      openingTime: '00:00',
+      closingTime: '00:00',
+      capacity: 0,
+      turnDuration: 0,
+    };
 
-          setBranch(formattedData);
-        } catch (error) {
-          const errorMessage =
-            error.response?.data?.message || 'Error al cargar la sucursal.';
-          setAlertInfo({ open: true, type: 'error', message: errorMessage });
-        } finally {
-          setLoading(false);
-        }
-      };
-      if (id) {
-        fetchBranch();
+    const formatTimeIfNeeded = (timeString) => {
+      if (!timeString) return '';
+      const isLongFormat = timeString.length === 8;
+      return isLongFormat ? formatTimeHHMMSS(timeString) : timeString;
+    };
+
+    const fetchBranch = async () => {
+      setLoading(true);
+      try {
+        const data = await getBranchById(id);
+        const formattedData = {
+          ...data,
+          openingTime: formatTimeIfNeeded(data.openingTime),
+          closingTime: formatTimeIfNeeded(data.closingTime),
+        };
+
+        setBranch(formattedData);
+      } catch (error) {
+        const errorMessage = error.response?.data?.message || 'Error al cargar la sucursal.';
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
       }
-    }
-  }, [id]);
+    };
 
+    id ? fetchBranch() : setBranch(initialBranchState);
+  }, [id]);
   const handleBackToList = () => {
     router.push('/branches');
   };
@@ -149,7 +142,17 @@ const ManageBranches = ({ params }) => {
     setScheduleDialogOpen(true);
   };
 
-  const handleCloseScheduleDialog = () => {
+  const handleCloseScheduleDialog = () => {   
+    const newTimeSlots = generateTimeSlots(
+      branch.openingTime,
+      branch.closingTime,
+      parseInt(branch.turnDuration)
+    );  
+    setBranch(prevState => ({
+      ...prevState,
+      timeSlots: newTimeSlots
+    }));
+  
     setScheduleDialogOpen(false);
   };
 
