@@ -60,12 +60,16 @@ const RoutesProtection = ({ children }) => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>      
+      <header>
       {isLogged && <Navbar />}
+      </header>      
       <main style={{ flex: 1, marginTop: '3em' }}>
         {children}
       </main>
-      {isLogged && <Footer />}
+      <footer>
+        {isLogged && <Footer />}
+      </footer>      
       {isLogged && user.role != 'super' && <MailButton />}
       {alert.open && (
         <Alert message={alert.message} onClose={() => setAlert({ ...alert, open: false })} />

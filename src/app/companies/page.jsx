@@ -23,12 +23,13 @@ const Businesses = () => {
   });
 
   useEffect(() => {
+    fetchBusinesses();
     if (isAdminOrSuper) {
-      fetchBusinesses();
-    } else {
+      
+    } /*else {
       router.push('/');
-    }
-  }, [user, isAdminOrSuper, router]);
+    }*/
+  }, [isAdminOrSuper]);
 
   const fetchBusinesses = async () => {
     setLoading(true);
