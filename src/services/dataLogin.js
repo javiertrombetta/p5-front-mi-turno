@@ -2,15 +2,19 @@ import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export const checkAuth = async (user, router, dispatch) => {
+export const checkAuth = async () => {
   try {
     const response = await axios.get(`${API_URL}/users/me`, {
       withCredentials: true,
     });
-    const userData = response.data;
-    return userData;
+    return response.data;
   } catch (error) {
-    console.error("Error al verificar la autenticación:", error);
+    if (error.response && error.response.status === 401) {
+      return null;
+    } else {
+      console.error("Error al verificar la autenticación:", error);
+      throw error;
+    }
   }
 };
 

@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkAuth } from '@/services/dataLogin';
-import {
-  loginSuccess,
-  logoutSuccess,
-  isLoggedIn,
-} from '@/hooks/slices/authSlice';
+import { loginSuccess, logoutSuccess } from '@/hooks/slices/authSlice';
 import Navbar from '@/commons/Navbar';
 import Footer from '@/commons/Footer';
 import Alert from '@/commons/Alert';
 import MailButton from '@/components/MailButton';
 import Loader from '@/components/Loader';
-import { store } from '@/hooks/store';
 
 const RoutesProtection = ({ children }) => {
   const dispatch = useDispatch();
@@ -22,20 +17,13 @@ const RoutesProtection = ({ children }) => {
   useEffect(() => {
     const checkUser = async () => {
       if (!user) {
-        try {
-          const axiosUser = await checkAuth();
-          if (axiosUser) {
-            dispatch(loginSuccess({ user: axiosUser }));
-          } else {
-            store.dispatch({ type: 'RESET_APP' });
-          }
-        } catch (error) {
-          console.error('Error en autenticación:', error);
-          store.dispatch({ type: 'RESET_APP' });
-          setAlert({ open: true, message: 'Error en autenticación' });
-        } finally {
-          setIsLoading(false);
+        const axiosUser = await checkAuth();
+        if (axiosUser) {
+          dispatch(loginSuccess({ user: axiosUser }));
+        } else {          
+          dispatch(logoutSuccess());
         }
+        setIsLoading(false);
       }
     };
     checkUser();
@@ -62,4 +50,5 @@ const RoutesProtection = ({ children }) => {
 };
 
 export default RoutesProtection;
+
 
