@@ -34,8 +34,7 @@ function Navbar() {
         break;
       case "admin":
         items = [
-          { href: "/dashboard", icon: <DashboardIcon />, text: "Dashboard" },
-          { href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservations" },
+          { href: "/dashboard", icon: <DashboardIcon />, text: "Dashboard" },          
           { href: "/users", icon: <PeopleIcon />, text: "Operadores" },
           { href: "/branches", icon: <StoreMallDirectoryIcon />, text: "Sucursales" }
         ];
