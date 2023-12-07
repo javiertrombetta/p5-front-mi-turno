@@ -38,6 +38,7 @@ const ViewReservation = ({ params }) => {
   });
 
   const isSuperRole = useSelector((state) => state.auth.user?.role === 'super');
+  const isUserRole = useSelector((state) => state.auth.user?.role === 'user');
 
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
 
@@ -282,29 +283,33 @@ const ViewReservation = ({ params }) => {
           Volver al Listado
         </Button>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Select
-            value={selectedState}
-            onChange={handleSelectStateChange}
-            displayEmpty
-            sx={{ minWidth: 185, mr: 2, height: '3.3rem' }}
-          >
-            <MenuItem value=''>
-              <em>Seleccionar Estado</em>
-            </MenuItem>
-            <MenuItem value='Pendiente'>Pendiente</MenuItem>
-            <MenuItem value='Confirmado'>Confirmado</MenuItem>
-            <MenuItem value='Cancelado'>Cancelado</MenuItem>
-            <MenuItem value='Finalizado'>Finalizado</MenuItem>
-            <MenuItem value='Ausente'>Ausente</MenuItem>
-          </Select>
-          <Button
-            variant='contained'
-            onClick={handleChangeState}
-            disabled={!selectedState}
-            sx={{ px: 3, py: 1.5, fontSize: '1rem', mr: 2 }}
-          >
-            Cambiar Estado
-          </Button>
+        {!isUserRole && (
+          <>
+            <Select
+              value={selectedState}
+              onChange={handleSelectStateChange}
+              displayEmpty
+              sx={{ minWidth: 185, mr: 2, height: '3.3rem' }}
+            >
+              <MenuItem value=''>
+                <em>Seleccionar Estado</em>
+              </MenuItem>
+              <MenuItem value='Pendiente'>Pendiente</MenuItem>
+              <MenuItem value='Confirmado'>Confirmado</MenuItem>
+              <MenuItem value='Cancelado'>Cancelado</MenuItem>
+              <MenuItem value='Finalizado'>Finalizado</MenuItem>
+              <MenuItem value='Ausente'>Ausente</MenuItem>
+            </Select>
+            <Button
+              variant='contained'
+              onClick={handleChangeState}
+              disabled={!selectedState}
+              sx={{ px: 3, py: 1.5, fontSize: '1rem', mr: 2 }}
+            >
+              Cambiar Estado
+            </Button>
+          </>
+          )}
           <Button
             variant='contained'
             color='secondary'
