@@ -1,17 +1,17 @@
+'use client';
 import { useEffect, useState } from 'react';
 import { Typography, Avatar, Snackbar, Alert } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import Loader from '@/components/Loader';
 
 const UserInfo = ({ user }) => {
-  const router = useRouter();
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) {
-      setOpenSnackbar(true);
-      router.push('/');
+    if (user) {
+      setLoading(false);
     }
-  }, [user, router]);
+  }, [user]);
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
@@ -19,6 +19,10 @@ const UserInfo = ({ user }) => {
     }
     setOpenSnackbar(false);
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   if (!user) {
     return null;
