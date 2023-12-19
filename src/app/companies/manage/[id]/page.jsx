@@ -161,6 +161,14 @@ const ManageBusiness = ({ params }) => {
         >
           Actualizar Empresa
         </Button>
+        <Button
+          variant='contained'
+          color='secondary'
+          onClick={() => router.back()}
+          sx={{ px: 3, py: 1.5, fontSize: '1rem', mt: 4, ml: 2 }}
+        >
+          Volver
+        </Button>
         <Alert
           open={alertInfo.open}
           type={alertInfo.type}
