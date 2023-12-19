@@ -28,7 +28,6 @@ export default function SignIn() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Si el usuario está logueado, redirecciona según el rol
     if (isLogged) {
       redirectToRoleRoute(user.role);
     }
