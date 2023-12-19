@@ -14,10 +14,10 @@ import Alert from '@/commons/Alert';
 import { loginUser } from '@/services/dataLogin';
 import { loginSuccess } from '@/hooks/slices/authSlice';
 import { useRouter } from 'next/navigation';
+import Loader from './Loader';
 
 export default function SignIn() {
-  const { user } = useSelector((state) => state.auth);
-  const { isLogged } = useSelector((state) => state.auth);
+  const { user, isLogged } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [alert, setAlert] = useState({
     open: false,
@@ -27,28 +27,12 @@ export default function SignIn() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  /* useEffect(() => {
-    if (user) {
-      switch (user.role) {
-        case 'super':
-          router.push('/dashboard');
-          break;
-        case 'admin':
-          router.push('/dashboard');
-          break;
-        case 'oper':
-          router.push('/reservations');
-          break;
-        case 'user':
-          router.push('/reservations');
-          break;
-        default:
-          console.error(
-            'Rol desconocido. Por favor, ingresá con tus credenciales al sistema.'
-          );
-      }
+  useEffect(() => {
+    // Si el usuario está logueado, redirecciona según el rol
+    if (isLogged) {
+      redirectToRoleRoute(user.role);
     }
-  }, [router, user]); */
+  }, [isLogged, user]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -66,22 +50,7 @@ export default function SignIn() {
             user: response,
           })
         );
-        switch (response.role) {
-          case 'super':
-            router.push('/dashboard');
-            break;
-          case 'admin':
-            router.push('/dashboard');
-            break;
-          case 'oper':
-            router.push('/reservations');
-            break;
-          case 'user':
-            router.push('/reservations');
-            break;
-          default:
-            console.error('Rol desconocido');
-        }
+        redirectToRoleRoute(response.role);
       }, 500);
     } catch (error) {
       let message = 'Error de servidor o conexión';
@@ -102,9 +71,32 @@ export default function SignIn() {
     }
   };
 
+  const redirectToRoleRoute = (role) => {
+    switch (role) {
+      case 'super':
+        router.push('/dashboard');
+        break;
+      case 'admin':
+        router.push('/dashboard');
+        break;
+      case 'oper':
+        router.push('/reservations');
+        break;
+      case 'user':
+        router.push('/reservations');
+        break;
+      default:
+        console.error('Rol desconocido');
+    }
+  };
+
   const handleCloseAlert = () => {
     setAlert({ ...alert, open: false });
   };
+
+  if (isLogged) {
+    return <Loader />;
+  }
 
   return (
     <Container component='main' maxWidth='xs' sx={{ marginTop: '5rem' }}>
