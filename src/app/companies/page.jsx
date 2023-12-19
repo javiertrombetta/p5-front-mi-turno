@@ -1,13 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import {
-  Container,
-  Box,
-  Typography,
-  TextField,
-  Button,
-} from '@mui/material';
+import { Container, Box, Typography, TextField, Button } from '@mui/material';
 import Lists from '@/commons/Lists';
 import Alert from '@/commons/Alert';
 import { getBusinessData } from '@/services/dataBusiness';
@@ -33,7 +27,7 @@ const Businesses = () => {
     if (isAdminOrSuper) {
       fetchBusinesses();
     } else {
-      setBusinesses([]);    
+      setBusinesses([]);
       router.push('/');
     }
   }, [isAdminOrSuper, router]);
@@ -124,13 +118,30 @@ const Businesses = () => {
             sx={{ width: '50%' }}
           />
         </Box>
-        <Lists
-          data={filteredBusinesses}
-          columns={columns}
-          columnMappings={columnMappings}
-          onRowClick={handleRowClick}
-          showCheckboxAndControls={false}
-        />
+
+        {filteredBusinesses.length === 0 ? (
+          <Container
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '15em',
+            }}
+          >
+            <Typography variant='h6' sx={{ textAlign: 'center' }}>
+              No se encontraron empresas que coincidan con el filtro.
+            </Typography>
+          </Container>
+        ) : (
+          <Lists
+            data={filteredBusinesses}
+            columns={columns}
+            columnMappings={columnMappings}
+            onRowClick={handleRowClick}
+            showCheckboxAndControls={false}
+          />
+        )}
       </Box>
       <Alert
         open={alertInfo.open}
