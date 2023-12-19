@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -31,20 +31,22 @@ const Dashboard = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-  const fetchBranches = async () => {
-    try {
-      const branchesData = await getBranchesData();
-      if (branchesData) {       
-        setBranches(branchesData.sort((a, b) => a.name.localeCompare(b.name)));
-      } else {
-        setBranches([]);
+    const fetchBranches = async () => {
+      try {
+        const branchesData = await getBranchesData();
+        if (branchesData) {
+          setBranches(
+            branchesData.sort((a, b) => a.name.localeCompare(b.name))
+          );
+        } else {
+          setBranches([]);
+        }
+      } catch (error) {
+        setError('Error al obtener las sucursales: ' + error.message);
       }
-    } catch (error) {
-      setError('Error al obtener las sucursales: ' + error.message);
-    }
-  };
-  fetchBranches();
-}, []);
+    };
+    fetchBranches();
+  }, []);
 
   useEffect(() => {
     const fetchMetrics = async () => {
@@ -79,7 +81,6 @@ const Dashboard = () => {
     return <Typography color='error'>{error}</Typography>;
   }
 
-
   return (
     <Container>
       {userRole !== undefined &&
@@ -93,7 +94,7 @@ const Dashboard = () => {
                 label='Seleccionar sucursal'
                 value={selectedBranchIndex}
                 onChange={handleBranchChange}
-                sx={{ minWidth: '32.5%', marginBottom: 5 }}
+                sx={{ minWidth: '32.5%', marginBottom: 5, marginRight: 2 }}
               >
                 {branches.map((branch, index) => (
                   <MenuItem key={branch.id} value={index}>
@@ -107,6 +108,7 @@ const Dashboard = () => {
                   value={selectedDate}
                   onChange={handleDateChange}
                   format='dd/MM/yyyy'
+                  disableFuture
                 >
                   {(params) => <TextField {...params} readOnly />}
                 </DatePicker>
@@ -116,7 +118,7 @@ const Dashboard = () => {
                 onClick={clearDateSelection}
                 sx={{ ml: 1, mb: 0.2, py: 1.8 }}
               >
-                Limpiar Fecha
+                actualizar
               </Button>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={4}>
