@@ -91,8 +91,8 @@ const CreateBusiness = () => {
           Crear Empresa
         </Button>
         <Button
-          variant='contained'
-          color='secondary'
+          variant='outlined'
+          color='primary'
           onClick={() => router.back()}
           sx={{ px: 3, py: 1.5, fontSize: '1rem', mt: 4, ml: 2 }}
         >
