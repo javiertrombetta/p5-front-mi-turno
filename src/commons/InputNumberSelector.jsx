@@ -3,13 +3,16 @@ import { Box, Button, TextField } from '@mui/material';
 
 const InputNumberSelector = ({ initialValue = 0, onChange }) => {
   const [value, setValue] = useState(initialValue || 0);
+  const isDuration = onChange && initialValue === 0;
 
   const handleIncrement = () => {
-    updateValue(value + 1);
+    updateValue(isDuration ? value + 5 : value + 1);
   };
 
   const handleDecrement = () => {
-    updateValue(value > 0 ? value - 1 : 0);
+    updateValue(
+      isDuration ? (value >= 5 ? value - 5 : 0) : value > 0 ? value - 1 : 0
+    );
   };
 
   const updateValue = (newValue) => {
@@ -20,15 +23,19 @@ const InputNumberSelector = ({ initialValue = 0, onChange }) => {
   };
 
   return (
-    <Box display="flex" alignItems="center">
-      <Button onClick={handleDecrement} variant="contained" sx={{ mr: 1 }}>-</Button>
+    <Box display='flex' alignItems='center'>
+      <Button onClick={handleDecrement} variant='contained' sx={{ mr: 1 }}>
+        {isDuration ? '-5' : '-'}
+      </Button>
       <TextField
-        type="number"
+        type='number'
         value={value}
-        inputProps={{ min: 0, readOnly: true }} 
+        inputProps={{ min: 0, readOnly: true }}
         sx={{ width: '5rem' }}
       />
-      <Button onClick={handleIncrement} variant="contained" sx={{ ml: 1 }}>+</Button>
+      <Button onClick={handleIncrement} variant='contained' sx={{ ml: 1 }}>
+        {isDuration ? '+5' : '+'}
+      </Button>
     </Box>
   );
 };

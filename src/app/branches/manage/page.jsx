@@ -9,7 +9,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-  Select,  
+  Select,
 } from '@mui/material';
 import InputText from '@/commons/InputText';
 import InputNumberSelector from '@/commons/InputNumberSelector';
@@ -199,14 +199,6 @@ const CreateBranches = () => {
           <Button
             variant='outlined'
             color='primary'
-            onClick={handleBackToList}
-            sx={{ px: 3, py: 1.5, fontSize: '1rem' }}
-          >
-            Volver al Listado
-          </Button>
-          <Button
-            variant='outlined'
-            color='primary'
             onClick={handleOpenScheduleDialog}
             sx={{ px: 3, py: 1.5, fontSize: '1rem' }}
           >
@@ -219,6 +211,14 @@ const CreateBranches = () => {
             sx={{ px: 3, py: 1.5, fontSize: '1rem' }}
           >
             Crear Sucursal
+          </Button>
+          <Button
+            variant='outlined'
+            color='primary'
+            onClick={handleBackToList}
+            sx={{ px: 3, py: 1.5, fontSize: '1rem' }}
+          >
+            Volver
           </Button>
         </Box>
       </Box>
