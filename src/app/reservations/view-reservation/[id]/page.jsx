@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import InputText from '@/commons/InputText';
 import ConfirmCancelPopup from '@/components/PopupConfirmCancel';
+import ConfirmDeletePopup from '@/components/PopupConfirmDelete';
 import { useRouter } from 'next/navigation';
 import Alert from '@/commons/Alert';
 import QRCode from 'qrcode.react';
@@ -53,7 +54,8 @@ const ViewReservation = ({ params }) => {
   useEffect(() => {
     const fetchReservation = async () => {
       try {
-        const fetchedReservation = await getReservationById(params.id);
+        const { id } = params
+        const fetchedReservation = await getReservationById(id);
         setReservation({
           ...fetchedReservation,
           state: fetchedReservation.state.toUpperCase(),
@@ -149,7 +151,19 @@ const ViewReservation = ({ params }) => {
       });
     }
   };
-  const handleDeleteReservation = async () => {
+  const handleDeleteReservationClick = async () => {
+    if (!canCancel) {
+      setAlertInfo({
+        open: true,
+        type: 'error',
+        message:
+          'No se puede eliminar la reserva dentro de las 2 horas previas a la misma.',
+      });
+      return;
+    }
+    setShowConfirmPopup(true);
+  };
+  const handleConfirmDelete = async () => {
     setAlertInfo({
       open: true,
       type: 'info',
@@ -333,7 +347,8 @@ const ViewReservation = ({ params }) => {
             <Button
               variant='contained'
               color='error'
-              onClick={handleDeleteReservation}
+              onClick={handleDeleteReservationClick}
+              disabled={!canCancel}
               sx={{ px: 3, py: 1.5, fontSize: '1rem' }}
             >
               Eliminar Reserva
@@ -343,6 +358,11 @@ const ViewReservation = ({ params }) => {
             open={showConfirmPopup}
             onClose={handleClosePopup}
             onConfirm={handleConfirmCancel}
+          />
+          <ConfirmDeletePopup 
+             open={showConfirmPopup}
+             onClose={handleClosePopup}
+             onConfirm={handleConfirmDelete}
           />
         </Box>
       </Box>

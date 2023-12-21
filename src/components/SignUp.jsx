@@ -12,6 +12,7 @@ import InputPassword from "@/commons/InputPassword";
 import dataRegister from "@/services/dataRegister";
 import { useRouter } from "next/navigation";
 import Alert from '@/commons/Alert';
+import PasswordRequirements from "./PasswordRequirements";
 
 export default function SignUp() {
   const router = useRouter();
@@ -121,6 +122,7 @@ export default function SignUp() {
             value={formData.password}
             onChange={handleChange}            
           />
+          {formData.password.length >= 1 ? <PasswordRequirements /> : ""}
           <InputPassword
             fullWidth
             label="Repetir Contraseña"
@@ -141,6 +143,7 @@ export default function SignUp() {
             href="/forgot-password" 
             variant="body2" 
             sx={{ 
+              
               textDecoration: "none", 
               ':hover': {
                 color: 'var(--primary-dark)',

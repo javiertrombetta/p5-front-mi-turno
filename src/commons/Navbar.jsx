@@ -30,19 +30,19 @@ function Navbar() {
     switch (userRole) {
       case "user":
       case "oper":
-        items = [{ href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservaciones" }];
+        items = [{ href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservas" }];
         break;
       case "admin":
         items = [
-          { href: "/dashboard", icon: <DashboardIcon />, text: "Dashboard" },          
+          { href: "/dashboard", icon: <DashboardIcon />, text: "Estadísticas" },          
           { href: "/users", icon: <PeopleIcon />, text: "Operadores" },
           { href: "/branches", icon: <StoreMallDirectoryIcon />, text: "Sucursales" }
         ];
         break;
       case "super":
         items = [
-          { href: "/dashboard", icon: <DashboardIcon />, text: "Dashboard" },
-          { href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservations" },
+          { href: "/dashboard", icon: <DashboardIcon />, text: "Estadísticas" },
+          { href: "/reservations", icon: <CalendarMonthIcon />, text: "Reservas" },
           { href: "/users", icon: <PeopleIcon />, text: "Usuarios" },
           { href: "/companies", icon: <BusinessIcon />, text: "Empresas" },
           { href: "/branches", icon: <StoreMallDirectoryIcon />, text: "Sucursales" }
