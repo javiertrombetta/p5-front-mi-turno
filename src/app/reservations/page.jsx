@@ -97,46 +97,67 @@ const Reservations = () => {
   };
 
   const handleChangeReservationState = async () => {
+    setAlertInfo({
+      open: true,
+      type: 'info',
+      message: 'Actualizando estado...',
+    });
+  
     let updatedReservations = [...reservations];
-    let errorOccurred = false;
-
-    for (const reservationId of selectedReservations) {
-      if (errorOccurred) break;
-      try {
-        await updateReservationState(
-          reservationId,
-          selectedState.toLowerCase()
-        );
-        updatedReservations = updatedReservations.map((reservation) =>
-          reservation.id === reservationId
-            ? { ...reservation, state: selectedState.toUpperCase() }
-            : reservation
-        );
-      } catch (error) {
-        const errorMessage =
-          error.response?.data?.message ||
-          `Error al actualizar el estado de la reserva con ID: ${reservationId}`;
+    let promises = [];
+    let errors = [];
+  
+    selectedReservations.forEach((reservationId) => {
+      const promise = updateReservationState(
+        reservationId,
+        selectedState.toLowerCase()
+      )
+        .then(() => {
+          updatedReservations = updatedReservations.map((reservation) =>
+            reservation.id === reservationId
+              ? { ...reservation, state: selectedState.toUpperCase() }
+              : reservation
+          );
+        })
+        .catch((error) => {
+          const errorMessage =
+            error.response?.data?.message ||
+            `Error al actualizar el estado de la reserva con ID: ${reservationId}`;
+          errors.push(errorMessage);
+        });
+  
+      promises.push(promise);
+    });
+  
+    try {
+      await Promise.all(promises);
+  
+      if (errors.length === 0) {
+        setReservations(updatedReservations);
+        setAlertInfo({
+          open: true,
+          type: 'success',
+          message: 'Estado(s) de la(s) reserva(s) actualizado(s) con éxito.',
+        });
+      } else {
         setAlertInfo({
           open: true,
           type: 'error',
-          message: errorMessage,
+          message: `Se produjeron errores al actualizar algunas reservas. Detalles: ${errors.join(', ')}`,
         });
-        errorOccurred = true;
       }
-    }
-
-    if (!errorOccurred) {
-      setReservations(updatedReservations);
+    } catch (allErrors) {
+      console.error(allErrors);
       setAlertInfo({
         open: true,
-        type: 'success',
-        message: 'Estado(s) de la(s) reserva(s) actualizado(s) con éxito.',
+        type: 'error',
+        message: 'Se produjo un error al actualizar las reservas.',
       });
+    } finally {
       setSelectedReservations([]);
       setSelectedState('');
     }
   };
-
   const handleCheckboxChange = (reservationId) => {
     setSelectedReservations((prev) =>
       prev.includes(reservationId)
@@ -212,8 +233,8 @@ const Reservations = () => {
     'N° de la reserva': 'id',
     '¿Quién asiste?': 'clientName',
     '¿Cuándo?': 'dateTime',
-    Sucursal: 'branchName',
-    Estado: 'state',
+    'Sucursal': 'branchName',
+    'Estado': 'state',
   };
 
   return (
@@ -283,7 +304,7 @@ const Reservations = () => {
           />
         ) : (
           <Typography variant='h6' sx={{ textAlign: 'center', mt: 5 }}>
-            No hay reservas disponibles en este momento.
+            No se encontraron reservas en la búsqueda.
           </Typography>
         )}
       </Box>
