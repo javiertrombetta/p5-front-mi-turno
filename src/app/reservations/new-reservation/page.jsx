@@ -1,9 +1,9 @@
-"use client";
-import { Button, Container } from "@mui/material";
-import Checkout from "@/components/Checkout";
-import { useEffect, useState } from "react";
+'use client';
+import { Button, Container } from '@mui/material';
+import Checkout from '@/components/Checkout';
+import { useEffect, useState } from 'react';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
 const Reservation = () => {
   const router = useRouter();
@@ -19,9 +19,9 @@ const Reservation = () => {
 
   useEffect(() => {
     if (countdown === 0) {
-      router.push('/reservations');
+      window.location.reload();
     }
-  }, [countdown, router]);
+  }, [countdown]);
 
   const minutes = Math.floor(countdown / 60);
   const seconds = countdown % 60;
@@ -29,15 +29,15 @@ const Reservation = () => {
 
   return (
     <Container
-      maxWidth="lg"
-      sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}
+      maxWidth='lg'
+      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}
     >
       <Checkout />
       <Button
-        variant="contained"
-        color={isLastMinute ? "error" : "primary"}
+        variant='contained'
+        color={isLastMinute ? 'error' : 'primary'}
         sx={{
-          mt: 2, 
+          mt: 2,
           py: 2,
           boxShadow: isLastMinute ? 3 : 1,
           transform: countdown % 10 === 0 ? 'scale(1.5)' : 'scale(1)',
@@ -52,4 +52,3 @@ const Reservation = () => {
 };
 
 export default Reservation;
-
