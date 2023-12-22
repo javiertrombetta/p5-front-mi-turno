@@ -50,15 +50,18 @@ const Reservations = () => {
         if (user.role === 'super') {
           data = await getAllReservations();
         } else if (user.role === 'oper') {
-          data = await getBranchReservations();
+          data = await getAllReservations();
         } else {
           data = await getReservationsData();
         }
-    
+
         const formattedData = data.map((item) => {
-          const branchName = item.branch ? item.branch.name : "No especificado";
-          const dateTime = dayjs.utc(item.date).local().format('DD/MM/YYYY HH:mm');
-    
+          const branchName = item.branch ? item.branch.name : 'No especificado';
+          const dateTime = dayjs
+            .utc(item.date)
+            .local()
+            .format('DD/MM/YYYY HH:mm');
+
           return {
             ...item,
             dateTime,
@@ -66,10 +69,11 @@ const Reservations = () => {
             state: item.state.toUpperCase(),
           };
         });
-    
+
         setReservations(formattedData);
       } catch (error) {
-        const errorMessage = error.response?.data?.message || `Error al cargar las reservas.`;
+        const errorMessage =
+          error.response?.data?.message || `Error al cargar las reservas.`;
         setAlertInfo({ open: true, type: 'error', message: errorMessage });
       } finally {
         setLoading(false);
@@ -162,14 +166,14 @@ const Reservations = () => {
   };
 
   if (!user) {
-    return <Loader/>;
+    return <Loader />;
   }
   if (loading) {
-    return <Loader/>;
+    return <Loader />;
   }
 
   const hasReservations = filteredReservations.length > 0;
-/*
+  /*
   if (reservations.length === 0) {
     return (
       <Container
@@ -236,7 +240,7 @@ const Reservations = () => {
             onChange={handleFilterChange}
             sx={{ width: '50%' }}
           />
-  
+
           {!isUserRole && (
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
@@ -270,7 +274,7 @@ const Reservations = () => {
               </Button>
             </Box>
           )}
-        </Box>  
+        </Box>
         {hasReservations ? (
           <Lists
             data={filteredReservations}
@@ -283,7 +287,7 @@ const Reservations = () => {
           />
         ) : (
           <Typography variant='h6' sx={{ textAlign: 'center', mt: 5 }}>
-            No hay reservas disponibles en este momento.
+            No existen coincidencias en tu búsqueda.
           </Typography>
         )}
       </Box>
@@ -294,7 +298,7 @@ const Reservations = () => {
         onClose={() => setAlertInfo({ ...alertInfo, open: false })}
       />
     </Container>
-  );  
+  );
 };
 
 export default Reservations;
