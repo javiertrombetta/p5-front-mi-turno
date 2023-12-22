@@ -1,13 +1,21 @@
 import { TextField } from "@mui/material";
 import { useState } from "react";
 
-const InputText = ({ label, name, value = "", onChange, disabled = false, margin = "normal", type = "text" }) => {
+const InputText = ({
+  label,
+  name,
+  value = "",
+  onChange,
+  disabled = false,
+  margin = "normal",
+  type = "text",
+}) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isBlurred, setIsBlurred] = useState(false);
 
   const handleBlur = () => {
     setIsFocused(false);
-    setIsBlurred(true); 
+    setIsBlurred(true);
   };
 
   const handleFocus = () => {
@@ -15,7 +23,7 @@ const InputText = ({ label, name, value = "", onChange, disabled = false, margin
   };
 
   const handleChange = (e) => {
-    if (type === 'tel') {
+    if (type === "tel") {
       const newValue = e.target.value;
       if (/^\d*$/.test(newValue)) {
         onChange(e);
@@ -48,19 +56,19 @@ const InputText = ({ label, name, value = "", onChange, disabled = false, margin
       onBlur={handleBlur}
       onFocus={handleFocus}
       disabled={disabled}
-      error={showError()} 
+      error={showError()}
       helperText={showHelperText()}
       FormHelperTextProps={{
         sx: {
-          position: 'absolute',
-          bottom: '-1.5em',
-        }
+          position: "absolute",
+          bottom: "-1.5em",
+        },
       }}
       sx={{
         transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
         "&:hover, &:focus-within": {
           transform: disabled ? "none" : "scale(1.02)",
-          boxShadow: disabled ? "none" : "0px 4px 12px rgba(0, 0, 0, 0.1)",        
+          boxShadow: disabled ? "none" : "0px 4px 12px rgba(0, 0, 0, 0.1)",
         },
       }}
     />
