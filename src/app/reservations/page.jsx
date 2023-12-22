@@ -44,56 +44,52 @@ const Reservations = () => {
   const isUserRole = user?.role === 'user';
 
   useEffect(() => {
-    const fetchAndFormatReservations = async (role) => {
+    const fetchAndFormatReservations = async () => {
       try {
         let data;
         if (user.role === 'super') {
           data = await getAllReservations();
         } else if (user.role === 'oper') {
-          data = await getBranchReservations();
+          data = await getAllReservations();
         } else {
           data = await getReservationsData();
         }
-        return data
-          .filter((item) => item.state.toLowerCase() !== 'cancelado')
-          .map((item) => {
-            const formatDate = (date) => {
-              return dayjs(date).format('DD/MM/YYYY');
-            };
 
-            const formatTime = (time) => {
-              return time.replace('::', ':').substring(0, 5);
-            };
+        const formattedData = data.map((item) => {
+          const branchName = item.branch ? item.branch.name : 'No especificado';
+          const dateTime = dayjs
+            .utc(item.date)
+            .local()
+            .format('DD/MM/YYYY HH:mm');
 
-            return {
-              ...item,
-              dateTime: formatDate(item.date) + ' ' + formatTime(item.time),
-              branchName: item.branch.name,
-              state: item.state.toUpperCase(),
-            };
-          });
+          return {
+            ...item,
+            dateTime,
+            branchName,
+            state: item.state.toUpperCase(),
+          };
+        });
+
+        setReservations(formattedData);
       } catch (error) {
         const errorMessage =
           error.response?.data?.message || `Error al cargar las reservas.`;
         setAlertInfo({ open: true, type: 'error', message: errorMessage });
-        return [];
-      }
-    };
-    const fetchData = async () => {
-      if (user) {
-        setLoading(true);
-        const formattedData = await fetchAndFormatReservations(user.role);
-        setReservations(formattedData);
+      } finally {
         setLoading(false);
       }
     };
-    fetchData();
+
+    if (user) {
+      fetchAndFormatReservations();
+    }
   }, [user]);
 
   const filteredReservations = reservations.filter((reservation) =>
-    Object.values(reservation).some((value) =>
-      value.toString().toLowerCase().includes(filter.toLowerCase())
-    )
+    Object.values(reservation).some((value) => {
+      const valueString = value ? value.toString() : '';
+      return valueString.toLowerCase().includes(filter.toLowerCase());
+    })
   );
 
   const handleClearSelection = () => {
@@ -105,46 +101,69 @@ const Reservations = () => {
   };
 
   const handleChangeReservationState = async () => {
-    let updatedReservations = [...reservations];
-    let errorOccurred = false;
+    setAlertInfo({
+      open: true,
+      type: 'info',
+      message: 'Actualizando estado...',
+    });
 
-    for (const reservationId of selectedReservations) {
-      if (errorOccurred) break;
-      try {
-        await updateReservationState(
-          reservationId,
-          selectedState.toLowerCase()
-        );
-        updatedReservations = updatedReservations.map((reservation) =>
-          reservation.id === reservationId
-            ? { ...reservation, state: selectedState.toUpperCase() }
-            : reservation
-        );
-      } catch (error) {
-        const errorMessage =
-          error.response?.data?.message ||
-          `Error al actualizar el estado de la reserva con ID: ${reservationId}`;
+    let updatedReservations = [...reservations];
+    let promises = [];
+    let errors = [];
+
+    selectedReservations.forEach((reservationId) => {
+      const promise = updateReservationState(
+        reservationId,
+        selectedState.toLowerCase()
+      )
+        .then(() => {
+          updatedReservations = updatedReservations.map((reservation) =>
+            reservation.id === reservationId
+              ? { ...reservation, state: selectedState.toUpperCase() }
+              : reservation
+          );
+        })
+        .catch((error) => {
+          const errorMessage =
+            error.response?.data?.message ||
+            `Error al actualizar el estado de la reserva con ID: ${reservationId}`;
+          errors.push(errorMessage);
+        });
+
+      promises.push(promise);
+    });
+
+    try {
+      await Promise.all(promises);
+
+      if (errors.length === 0) {
+        setReservations(updatedReservations);
+        setAlertInfo({
+          open: true,
+          type: 'success',
+          message: 'Estado(s) de la(s) reserva(s) actualizado(s) con éxito.',
+        });
+      } else {
         setAlertInfo({
           open: true,
           type: 'error',
-          message: errorMessage,
+          message: `Se produjeron errores al actualizar algunas reservas. Detalles: ${errors.join(
+            ', '
+          )}`,
         });
-        errorOccurred = true;
       }
-    }
-
-    if (!errorOccurred) {
-      setReservations(updatedReservations);
+    } catch (allErrors) {
+      console.error(allErrors);
       setAlertInfo({
         open: true,
-        type: 'success',
-        message: 'Estado(s) de la(s) reserva(s) actualizado(s) con éxito.',
+        type: 'error',
+        message: 'Se produjo un error al actualizar las reservas.',
       });
+    } finally {
       setSelectedReservations([]);
       setSelectedState('');
     }
   };
-
   const handleCheckboxChange = (reservationId) => {
     setSelectedReservations((prev) =>
       prev.includes(reservationId)
@@ -170,12 +189,14 @@ const Reservations = () => {
   };
 
   if (!user) {
-    return <Loader/>;
+    return <Loader />;
   }
   if (loading) {
-    return <Loader/>;
+    return <Loader />;
   }
 
+  const hasReservations = filteredReservations.length > 0;
+  /*
   if (reservations.length === 0) {
     return (
       <Container
@@ -205,7 +226,7 @@ const Reservations = () => {
         )}
       </Container>
     );
-  }
+  }*/
 
   const columns = [
     'N° de la reserva',
@@ -242,7 +263,7 @@ const Reservations = () => {
             onChange={handleFilterChange}
             sx={{ width: '50%' }}
           />
-  
+
           {!isUserRole && (
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
@@ -277,16 +298,21 @@ const Reservations = () => {
             </Box>
           )}
         </Box>
-  
-        <Lists
-          data={filteredReservations}
-          columns={columns}
-          columnMappings={columnMappings}
-          onRowClick={handleRowClick}
-          selectedItems={selectedReservations}
-          onCheckboxChange={handleCheckboxChange}
-          showCheckboxAndControls={!isUserRole}
-        />
+        {hasReservations ? (
+          <Lists
+            data={filteredReservations}
+            columns={columns}
+            columnMappings={columnMappings}
+            onRowClick={handleRowClick}
+            selectedItems={selectedReservations}
+            onCheckboxChange={handleCheckboxChange}
+            showCheckboxAndControls={!isUserRole}
+          />
+        ) : (
+          <Typography variant='h6' sx={{ textAlign: 'center', mt: 5 }}>
+            No existen coincidencias en tu búsqueda.
+          </Typography>
+        )}
       </Box>
       <Alert
         open={alertInfo.open}
@@ -295,7 +321,7 @@ const Reservations = () => {
         onClose={() => setAlertInfo({ ...alertInfo, open: false })}
       />
     </Container>
-  );  
+  );
 };
 
 export default Reservations;
