@@ -1,6 +1,6 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+"use client";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Container,
   Box,
@@ -9,37 +9,40 @@ import {
   Button,
   Select,
   MenuItem,
-} from '@mui/material';
-import Lists from '@/commons/Lists';
-import Alert from '@/commons/Alert';
+} from "@mui/material";
+import Lists from "@/commons/Lists";
+import Alert from "@/commons/Alert";
 import {
   getAllOpersByBusiness,
   getAllUsers,
   assignUserRole,
-} from '@/services/dataUser';
+} from "@/services/dataUser";
 
-import { useRouter } from 'next/navigation';
-import dayjs from 'dayjs';
-import Loader from '@/components/Loader';
+import { useRouter } from "next/navigation";
+import dayjs from "dayjs";
+import Loader from "@/components/Loader";
 
 const Users = () => {
   const { user } = useSelector((state) => state.auth);
-  const isUserRole = user?.role === 'user';
+  const isUserRole = user?.role === "user";
+  const isAdminRole = user?.role === "admin";
+  const isOperRole = user?.role === "oper";
+  const isSuperRole = user?.role === "super";
   const router = useRouter();
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [selectedRole, setSelectedRole] = useState('');
+  const [selectedRole, setSelectedRole] = useState("");
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState("");
   const [alertInfo, setAlertInfo] = useState({
     open: false,
-    type: 'info',
-    message: '',
+    type: "info",
+    message: "",
   });
 
   const formatLastLogin = (lastLogin) => {
-    return lastLogin ? dayjs(lastLogin).format('DD/MM/YYYY HH:ss') : 'N/A';
+    return lastLogin ? dayjs(lastLogin).format("DD/MM/YYYY HH:ss") : "N/A";
   };
 
   useEffect(() => {
@@ -48,7 +51,7 @@ const Users = () => {
       setLoading(true);
       try {
         let data;
-        if (user.role === 'super') {
+        if (user.role === "super") {
           data = await getAllUsers();
         } else {
           data = await getAllOpersByBusiness();
@@ -61,10 +64,10 @@ const Users = () => {
         setUsers(formattedData);
       } catch (error) {
         const errorMessage =
-          error.response?.data?.message || 'Error al cargar las sucursales.';
+          error.response?.data?.message || "Error al cargar las sucursales.";
         setAlertInfo({
           open: true,
-          type: 'error',
+          type: "error",
           message: errorMessage,
         });
       } finally {
@@ -79,7 +82,7 @@ const Users = () => {
     const filtered = users.filter((user) =>
       Object.values(user).some((value) => {
         const stringValue =
-          value === null || value === undefined ? '' : value.toString();
+          value === null || value === undefined ? "" : value.toString();
         return stringValue.toLowerCase().includes(filter.toLowerCase());
       })
     );
@@ -92,18 +95,17 @@ const Users = () => {
     );
   };
 
-  const handleRoleChange = (event) => {
-    setSelectedRole(event.target.value);
-  };
-
   const handleClearSelection = () => {
     setSelectedUsers([]);
+  };
+  const handleRoleChange = (event) => {
+    setSelectedRole(event.target.value);
   };
   const handleChangeRole = async () => {
     setAlertInfo({
       open: true,
-      type: 'info',
-      message: 'Cambiando rol...',
+      type: "info",
+      message: "Cambiando rol...",
     });
     let updatedUsers = [...users];
     let errorOccurred = false;
@@ -121,7 +123,7 @@ const Users = () => {
           `Error al cambiar el rol de la sucursal con ID: ${branchId}`;
         setAlertInfo({
           open: true,
-          type: 'error',
+          type: "error",
           message: `Error al cambiar el rol del usuario con DNI: ${dni}`,
         });
         errorOccurred = true;
@@ -131,8 +133,8 @@ const Users = () => {
       setUsers(updatedUsers);
       setAlertInfo({
         open: true,
-        type: 'success',
-        message: 'Rol(es) actualizado(s) correctamente.',
+        type: "success",
+        message: "Rol(es) actualizado(s) correctamente.",
       });
     }
     setSelectedUsers([]);
@@ -146,13 +148,13 @@ const Users = () => {
     router.push(`/users/view-user/${rowData}`);
   };
 
-  const columns = ['DNI', 'Nombre Completo', 'Email', 'Rol', 'Ultimo Acceso'];
+  const columns = ["DNI", "Nombre Completo", "Email", "Rol", "Ultimo Acceso"];
   const columnMappings = {
-    DNI: 'dni',
-    'Nombre Completo': 'fullName',
-    Email: 'email',
-    Rol: 'role',
-    'Ultimo Acceso': 'lastLogin',
+    DNI: "dni",
+    "Nombre Completo": "fullName",
+    Email: "email",
+    Rol: "role",
+    "Ultimo Acceso": "lastLogin",
   };
 
   if (loading) {
@@ -162,35 +164,35 @@ const Users = () => {
   if (users.length === 0) {
     return (
       <Container
-        maxWidth='xl'
+        maxWidth="xl"
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '15em',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "15em",
         }}
       >
-        <Typography variant='h6' sx={{ textAlign: 'center' }}>
-          No se encontraron operadores.
+        <Typography variant="h6" sx={{ textAlign: "center" }}>
+          No se encontraron operadores en la búsqueda.
         </Typography>
       </Container>
     );
   }
-
+  const hasOperators = filteredUsers.length > 0;
   return (
-    <Container maxWidth='xl'>
+    <Container maxWidth="xl">
       <Box sx={{ mx: 10 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
           <TextField
-            label='Filtrar Usuarios'
-            variant='outlined'
+            label="Filtrar Usuarios"
+            variant="outlined"
             value={filter}
             onChange={handleFilterChange}
-            sx={{ width: '50%' }}
+            sx={{ width: "50%" }}
           />
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <Button variant='outlined' onClick={handleClearSelection}>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Button variant="outlined" onClick={handleClearSelection}>
               Limpiar seleccionados
             </Button>
             <Select
@@ -199,16 +201,16 @@ const Users = () => {
               displayEmpty
               sx={{ minWidth: 160 }}
             >
-              <MenuItem value=''>
+              <MenuItem value="">
                 <em>Seleccionar Rol</em>
               </MenuItem>
-              <MenuItem value='super'>Super</MenuItem>
-              <MenuItem value='admin'>Admin</MenuItem>
-              <MenuItem value='oper'>Oper</MenuItem>
-              <MenuItem value='user'>User</MenuItem>
+              <MenuItem value="super">Super</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+              <MenuItem value="oper">Oper</MenuItem>
+              <MenuItem value="user">User</MenuItem>
             </Select>
             <Button
-              variant='contained'
+              variant="contained"
               onClick={handleChangeRole}
               disabled={selectedUsers.length === 0 || !selectedRole}
             >
@@ -216,15 +218,21 @@ const Users = () => {
             </Button>
           </Box>
         </Box>
-        <Lists
-          data={filteredUsers}
-          columns={columns}
-          columnMappings={columnMappings}
-          onRowClick={handleRowClick}
-          selectedItems={selectedUsers}
-          onCheckboxChange={handleCheckboxChange}
-          showCheckboxAndControls={!isUserRole}
-        />
+        {hasOperators ? (
+          <Lists
+            data={filteredUsers}
+            columns={columns}
+            columnMappings={columnMappings}
+            onRowClick={handleRowClick}
+            selectedItems={selectedUsers}
+            onCheckboxChange={handleCheckboxChange}
+            showCheckboxAndControls={!isUserRole}
+          />
+        ) : (
+          <Typography variant="h6" sx={{ textAlign: "center", mt: 5 }}>
+            No se encontraron usuarios en la búsqueda.
+          </Typography>
+        )}
       </Box>
       <Alert
         open={alertInfo.open}
