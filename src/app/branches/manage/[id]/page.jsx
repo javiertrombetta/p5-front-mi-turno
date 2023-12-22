@@ -12,8 +12,6 @@ import {
   Select,
 } from '@mui/material';
 import InputText from '@/commons/InputText';
-import InputNumberSelector from '@/commons/InputNumberSelector';
-import InputTimeSelector from '@/commons/InputTimeSelector';
 import Alert from '@/commons/Alert';
 import {
   getBranchById,
@@ -23,11 +21,12 @@ import {
 import ScheduleAndDateDialog from '@/components/PopupDisableDates';
 import { generateTimeSlots, formatTimeHHMMSS } from '@/utils/time';
 import Loader from '@/components/Loader';
+import BranchEditForm from '@/components/BranchEditForm';
 
 const ManageBranches = ({ params }) => {
   const router = useRouter();
   const { id } = params;
-  const [branch, setBranch] = useState({  
+  const [branch, setBranch] = useState({
     isEnable: false,
   });
   const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
@@ -40,53 +39,47 @@ const ManageBranches = ({ params }) => {
   });
 
   useEffect(() => {
-    if (!id) {
-      setBranch({
-        id: '',
-        name: '',
-        email: '',
-        phoneNumber: '',
-        address: '',
-        isEnable: false,
-        openingTime: '00:00',
-        closingTime: '00:00',
-        capacity: 0,
-        turnDuration: 0,
-      });
-    } else {
-      const formatTimeIfNeeded = (timeString) => {
-        if (!timeString) return '';
-        const isLongFormat = timeString.length === 8;
-        if (isLongFormat) {
-          return formatTimeHHMMSS(timeString);
-        }
-        return timeString;
-      };
-      const fetchBranch = async () => {
-        setLoading(true);
-        try {
-          const data = await getBranchById(id);
-          const formattedData = {
-            ...data,
-            openingTime: formatTimeIfNeeded(data.openingTime),
-            closingTime: formatTimeIfNeeded(data.closingTime),
-          };
+    const initialBranchState = {
+      id: '',
+      name: '',
+      email: '',
+      phoneNumber: '',
+      address: '',
+      isEnable: false,
+      openingTime: '00:00',
+      closingTime: '00:00',
+      capacity: 0,
+      turnDuration: 0,
+    };
 
-          setBranch(formattedData);
-        } catch (error) {
-          const errorMessage =
-            error.response?.data?.message || 'Error al cargar la sucursal.';
-          setAlertInfo({ open: true, type: 'error', message: errorMessage });
-        } finally {
-          setLoading(false);
-        }
-      };
-      if (id) {
-        fetchBranch();
+    const formatTimeIfNeeded = (timeString) => {
+      if (!timeString) return '';
+      const isLongFormat = timeString.length === 8;
+      return isLongFormat ? formatTimeHHMMSS(timeString) : timeString;
+    };
+
+    const fetchBranch = async () => {
+      setLoading(true);
+      try {
+        const data = await getBranchById(id);
+        const formattedData = {
+          ...data,
+          openingTime: formatTimeIfNeeded(data.openingTime),
+          closingTime: formatTimeIfNeeded(data.closingTime),
+        };
+
+        setBranch(formattedData);
+      } catch (error) {
+        const errorMessage =
+          error.response?.data?.message || 'Error al cargar la sucursal.';
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
       }
-    }
-  }, [id]);
+    };
 
+    id ? fetchBranch() : setBranch(initialBranchState);
+  }, [id]);
   const handleBackToList = () => {
     router.push('/branches');
   };
@@ -95,7 +88,7 @@ const ManageBranches = ({ params }) => {
     const { name, value } = e.target;
     setBranch((prevBranch) => ({
       ...prevBranch,
-      [name]: value !== undefined ? value : prevBranch[name]
+      [name]: value !== undefined ? value : prevBranch[name],
     }));
   };
 
@@ -150,6 +143,16 @@ const ManageBranches = ({ params }) => {
   };
 
   const handleCloseScheduleDialog = () => {
+    const newTimeSlots = generateTimeSlots(
+      branch.openingTime,
+      branch.closingTime,
+      parseInt(branch.turnDuration)
+    );
+    setBranch((prevState) => ({
+      ...prevState,
+      timeSlots: newTimeSlots,
+    }));
+
     setScheduleDialogOpen(false);
   };
 
@@ -229,7 +232,7 @@ const ManageBranches = ({ params }) => {
             labelId='isEnable-label'
             id='isEnable'
             name='isEnable'
-            value={branch.isEnable !== undefined ? branch.isEnable : true} // Usar un valor por defecto
+            value={branch.isEnable !== undefined ? branch.isEnable : true}
             label='Habilitada'
             onChange={handleInputChange}
           >
@@ -237,67 +240,22 @@ const ManageBranches = ({ params }) => {
             <MenuItem value={false}>No</MenuItem>
           </Select>
         </FormControl>
-        <Box display='flex' alignItems='center' gap={2} sx={{ mt: 4 }}>
-          <Typography variant='subtitle1' sx={{ width: 'auto' }}>
-            Hora de Apertura:
-          </Typography>
-          <InputTimeSelector
-            initialValue={branch.openingTime}
-            onChange={(newTime) => handleTimeChange('openingTime', newTime)}
-          />
-        </Box>
-        <Box display='flex' alignItems='center' gap={2} sx={{ mt: 4 }}>
-          <Typography variant='subtitle1' sx={{ width: 'auto' }}>
-            Hora de Cierre:
-          </Typography>
-          <InputTimeSelector
-            initialValue={branch.closingTime}
-            onChange={(newTime) => handleTimeChange('closingTime', newTime)}
-          />
-        </Box>
-        <Box display='flex' alignItems='center' gap={2} sx={{ mt: 4 }}>
-          <Typography variant='subtitle1' sx={{ width: 'auto' }}>
-            Capacidad por turno:
-          </Typography>
-          <InputNumberSelector
-            initialValue={branch.capacity}
-            onChange={handleCapacityChange}
-          />
-        </Box>
-        <Box display='flex' alignItems='center' gap={2} sx={{ mt: 4 }}>
-          <Typography variant='subtitle1' sx={{ width: 'auto' }}>
-            Duración del Turno (en minutos):
-          </Typography>
-          <InputNumberSelector
-            initialValue={parseInt(branch.turnDuration)}
-            onChange={handleTurnDurationChange}
-          />
-        </Box>
+        <br />
+        <BranchEditForm
+          branch={branch}
+          handleCapacityChange={handleCapacityChange}
+          handleTurnDurationChange={handleTurnDurationChange}
+          handleOpenScheduleDialog={handleOpenScheduleDialog}
+          handleTimeChange={handleTimeChange}
+        />
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            width: '100%',
-            marginTop: 5,
+            justifyContent: 'flex-start',
+            gap: '1rem',
+            marginTop: '2rem',
           }}
         >
-          <Button
-            variant='outlined'
-            color='primary'
-            onClick={handleBackToList}
-            sx={{ px: 3, py: 1.5, fontSize: '1rem' }}
-          >
-            Volver al Listado
-          </Button>
-          <Button
-            variant='outlined'
-            color='primary'
-            onClick={handleOpenScheduleDialog}
-            sx={{ px: 3, py: 1.5, fontSize: '1rem' }}
-          >
-            Gestionar Horarios y Fechas Específicas
-          </Button>
           <Button
             variant='contained'
             color='error'
@@ -313,6 +271,14 @@ const ManageBranches = ({ params }) => {
             sx={{ px: 3, py: 1.5, fontSize: '1rem' }}
           >
             Actualizar Sucursal
+          </Button>
+          <Button
+            variant='outlined'
+            color='primary'
+            onClick={handleBackToList}
+            sx={{ px: 3, py: 1.5, fontSize: '1rem' }}
+          >
+            Volver
           </Button>
         </Box>
       </Box>

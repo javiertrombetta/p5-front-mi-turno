@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 
-const InputTimeSelector = ({ initialValue = "00:00", onChange }) => {
+const InputTimeSelector = ({ initialValue = '00:00', onChange }) => {
   const [time, setTime] = useState(initialValue);
 
   const incrementHours = () => {
@@ -16,16 +16,18 @@ const InputTimeSelector = ({ initialValue = "00:00", onChange }) => {
 
   const incrementMinutes = () => {
     const [hours, minutes] = time.split(':').map(Number);
-    updateTime(hours, (minutes + 1) % 60);
+    updateTime(hours, (minutes + 5) % 60);
   };
 
   const decrementMinutes = () => {
     const [hours, minutes] = time.split(':').map(Number);
-    updateTime(hours, (minutes - 1 + 60) % 60);
+    updateTime(hours, (minutes - 5 + 60) % 60);
   };
 
   const updateTime = (newHours, newMinutes) => {
-    const newTime = `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
+    const newTime = `${newHours.toString().padStart(2, '0')}:${newMinutes
+      .toString()
+      .padStart(2, '0')}`;
     setTime(newTime);
     if (onChange) {
       onChange(newTime);
@@ -33,21 +35,27 @@ const InputTimeSelector = ({ initialValue = "00:00", onChange }) => {
   };
 
   return (
-    <Box display="flex" alignItems="center">
-      <Button onClick={incrementHours} variant="contained" sx={{ mr: 1 }}>+ Horas</Button>
-      <Button onClick={decrementHours} variant="contained" sx={{ mr: 1 }}>- Horas</Button>
+    <Box display='flex' alignItems='center'>
+      <Button onClick={incrementHours} variant='contained' sx={{ mr: 1 }}>
+        + Horas
+      </Button>
+      <Button onClick={decrementHours} variant='contained' sx={{ mr: 1 }}>
+        - Horas
+      </Button>
       <TextField
-        type="text"
+        type='text'
         value={time}
         inputProps={{ readOnly: true }}
         sx={{ width: '6rem', textAlign: 'center' }}
       />
-      <Button onClick={incrementMinutes} variant="contained" sx={{ ml: 1 }}>+ Minutos</Button>
-      <Button onClick={decrementMinutes} variant="contained" sx={{ ml: 1 }}>- Minutos</Button>
+      <Button onClick={incrementMinutes} variant='contained' sx={{ ml: 1 }}>
+        +5 Minutos
+      </Button>
+      <Button onClick={decrementMinutes} variant='contained' sx={{ ml: 1 }}>
+        -5 Minutos
+      </Button>
     </Box>
   );
 };
 
 export default InputTimeSelector;
-
-
