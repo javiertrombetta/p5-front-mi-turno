@@ -50,15 +50,18 @@ const Reservations = () => {
         if (user.role === 'super') {
           data = await getAllReservations();
         } else if (user.role === 'oper') {
-          data = await getBranchReservations();
+          data = await getAllReservations();
         } else {
           data = await getReservationsData();
         }
-    
+
         const formattedData = data.map((item) => {
-          const branchName = item.branch ? item.branch.name : "No especificado";
-          const dateTime = dayjs.utc(item.date).local().format('DD/MM/YYYY HH:mm');
-    
+          const branchName = item.branch ? item.branch.name : 'No especificado';
+          const dateTime = dayjs
+            .utc(item.date)
+            .local()
+            .format('DD/MM/YYYY HH:mm');
+
           return {
             ...item,
             dateTime,
@@ -66,10 +69,11 @@ const Reservations = () => {
             state: item.state.toUpperCase(),
           };
         });
-    
+
         setReservations(formattedData);
       } catch (error) {
-        const errorMessage = error.response?.data?.message || `Error al cargar las reservas.`;
+        const errorMessage =
+          error.response?.data?.message || `Error al cargar las reservas.`;
         setAlertInfo({ open: true, type: 'error', message: errorMessage });
       } finally {
         setLoading(false);
@@ -102,11 +106,11 @@ const Reservations = () => {
       type: 'info',
       message: 'Actualizando estado...',
     });
-  
+
     let updatedReservations = [...reservations];
     let promises = [];
     let errors = [];
-  
+
     selectedReservations.forEach((reservationId) => {
       const promise = updateReservationState(
         reservationId,
@@ -125,13 +129,13 @@ const Reservations = () => {
             `Error al actualizar el estado de la reserva con ID: ${reservationId}`;
           errors.push(errorMessage);
         });
-  
+
       promises.push(promise);
     });
-  
+
     try {
       await Promise.all(promises);
-  
+
       if (errors.length === 0) {
         setReservations(updatedReservations);
         setAlertInfo({
@@ -143,7 +147,9 @@ const Reservations = () => {
         setAlertInfo({
           open: true,
           type: 'error',
-          message: `Se produjeron errores al actualizar algunas reservas. Detalles: ${errors.join(', ')}`,
+          message: `Se produjeron errores al actualizar algunas reservas. Detalles: ${errors.join(
+            ', '
+          )}`,
         });
       }
     } catch (allErrors) {
@@ -183,14 +189,14 @@ const Reservations = () => {
   };
 
   if (!user) {
-    return <Loader/>;
+    return <Loader />;
   }
   if (loading) {
-    return <Loader/>;
+    return <Loader />;
   }
 
   const hasReservations = filteredReservations.length > 0;
-/*
+  /*
   if (reservations.length === 0) {
     return (
       <Container
@@ -233,8 +239,8 @@ const Reservations = () => {
     'N° de la reserva': 'id',
     '¿Quién asiste?': 'clientName',
     '¿Cuándo?': 'dateTime',
-    'Sucursal': 'branchName',
-    'Estado': 'state',
+    Sucursal: 'branchName',
+    Estado: 'state',
   };
 
   return (
@@ -257,7 +263,7 @@ const Reservations = () => {
             onChange={handleFilterChange}
             sx={{ width: '50%' }}
           />
-  
+
           {!isUserRole && (
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
@@ -291,7 +297,7 @@ const Reservations = () => {
               </Button>
             </Box>
           )}
-        </Box>  
+        </Box>
         {hasReservations ? (
           <Lists
             data={filteredReservations}
@@ -304,7 +310,7 @@ const Reservations = () => {
           />
         ) : (
           <Typography variant='h6' sx={{ textAlign: 'center', mt: 5 }}>
-            No se encontraron reservas en la búsqueda.
+            No existen coincidencias en tu búsqueda.
           </Typography>
         )}
       </Box>
@@ -315,7 +321,7 @@ const Reservations = () => {
         onClose={() => setAlertInfo({ ...alertInfo, open: false })}
       />
     </Container>
-  );  
+  );
 };
 
 export default Reservations;
