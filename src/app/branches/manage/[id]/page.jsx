@@ -26,6 +26,10 @@ import BranchEditForm from '@/components/BranchEditForm';
 const ManageBranches = ({ params }) => {
   const router = useRouter();
   const { id } = params;
+  const [businessInfo, setBusinessInfo] = useState({
+    id: '',
+    name: '',
+  });
   const [branch, setBranch] = useState({
     isEnable: false,
   });
@@ -62,6 +66,7 @@ const ManageBranches = ({ params }) => {
       setLoading(true);
       try {
         const data = await getBranchById(id);
+        console.log('Informacion General', data);
         const formattedData = {
           ...data,
           openingTime: formatTimeIfNeeded(data.openingTime),
@@ -69,6 +74,7 @@ const ManageBranches = ({ params }) => {
         };
 
         setBranch(formattedData);
+        setBusinessInfo(data.business);
       } catch (error) {
         const errorMessage =
           error.response?.data?.message || 'Error al cargar la sucursal.';
@@ -240,6 +246,25 @@ const ManageBranches = ({ params }) => {
             <MenuItem value={false}>No</MenuItem>
           </Select>
         </FormControl>
+        <FormControl fullWidth margin='normal'>
+          <InputLabel
+            id='business-label'
+            style={{ backgroundColor: 'white', paddingRight: '5px' }}
+          >
+            Empresa
+          </InputLabel>
+          <Select
+            labelId='business-label'
+            id='business'
+            name='business'
+            value={businessInfo?.name || ''}
+            label='Empresa'
+            disabled
+          >
+            <MenuItem value={businessInfo?.name}>{businessInfo?.name}</MenuItem>
+          </Select>
+        </FormControl>
+
         <br />
         <BranchEditForm
           branch={branch}
