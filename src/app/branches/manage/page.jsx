@@ -65,8 +65,6 @@ const CreateBranches = () => {
     if (name === 'isEnable') {
       setBranch({ ...branch, [name]: value === 'true' });
     } else if (name === 'businessId') {
-      // Asumiendo que 'businessId' es la propiedad en 'branch' donde quieres almacenar el ID de la empresa
-      // No necesitas buscar el objeto business, ya que value ya es el ID
       setBranch({ ...branch, [name]: value });
     } else {
       setBranch({ ...branch, [name]: value });
