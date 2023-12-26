@@ -10,6 +10,8 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Input,
+  FormHelperText,
 } from '@mui/material';
 import InputText from '@/commons/InputText';
 import InputNumberSelector from '@/commons/InputNumberSelector';
@@ -19,11 +21,13 @@ import { createBranch } from '@/services/dataBranches';
 import ScheduleAndDateDialog from '@/components/PopupDisableDates';
 import { generateTimeSlots } from '@/utils/time';
 import Loader from '@/components/Loader';
+import { getBusinessData } from '@/services/dataBusiness';
 
 const CreateBranches = () => {
   const router = useRouter();
+  const [businesses, setBusinesses] = useState([]);
+  const [selectedBusiness, setSelectedBusiness] = useState('');
   const [branch, setBranch] = useState({
-    id: '',
     name: '',
     email: '',
     phoneNumber: '',
@@ -33,6 +37,7 @@ const CreateBranches = () => {
     closingTime: '00:00',
     capacity: 0,
     turnDuration: 0,
+    businessId: null,
   });
   const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -42,14 +47,27 @@ const CreateBranches = () => {
     message: '',
   });
 
+  const businessData = async () => {
+    const data = await getBusinessData();
+    setBusinesses(data);
+  };
+  useEffect(() => {
+    businessData();
+  }, []);
+
   const handleBackToList = () => {
     router.push('/branches');
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
     if (name === 'isEnable') {
       setBranch({ ...branch, [name]: value === 'true' });
+    } else if (name === 'businessId') {
+      // Asumiendo que 'businessId' es la propiedad en 'branch' donde quieres almacenar el ID de la empresa
+      // No necesitas buscar el objeto business, ya que value ya es el ID
+      setBranch({ ...branch, [name]: value });
     } else {
       setBranch({ ...branch, [name]: value });
     }
@@ -60,7 +78,7 @@ const CreateBranches = () => {
     setAlertInfo({ open: true, type: 'info', message: 'Creando sucursal...' });
     setLoading(true);
     try {
-      console.log('CREATE SUCURSAL ENVIADO:', branch);
+      console.log('branch:', branch);
       await createBranch(branch);
       setAlertInfo({
         open: true,
@@ -149,6 +167,25 @@ const CreateBranches = () => {
           >
             <MenuItem value={true}>Sí</MenuItem>
             <MenuItem value={false}>No</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth required>
+          <InputLabel id='business-label'>Empresa</InputLabel>
+          <Select
+            labelId='business-label'
+            id='business'
+            name='businessId'
+            value={branch.businessId || ''}
+            label='Empresa'
+            onChange={handleInputChange}
+          >
+            {businesses &&
+              businesses.map((business) => (
+                <MenuItem value={business.id} key={business.id}>
+                  {business.name}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
         <Box display='flex' alignItems='center' gap={2} sx={{ mt: 4 }}>
