@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
+console.log(API_URL); // Esto debería imprimir 'http://localhost:3000'
 export const getAllUsers = async () => {
   try {
     const response = await axios.get(`${API_URL}/users`, {
@@ -26,19 +26,23 @@ export const getAllOpersByBusiness = async () => {
 };
 export const getUserInfo = async () => {
   try {
-    const response = await axios.get(`${API_URL}/users/me`, { withCredentials: true });
+    const response = await axios.get(`${API_URL}/users/me`, {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
-    console.error('Error al obtener la información del usuario:', error);
+    console.error("Error al obtener la información del usuario:", error);
     throw error;
   }
 };
 export const getUserInfoById = async (dni) => {
   try {
-    const response = await axios.get(`${API_URL}/users/${dni}`, { withCredentials: true });
+    const response = await axios.get(`${API_URL}/users/${dni}`, {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
-    console.error('Error al obtener la información del usuario:', error);
+    console.error("Error al obtener la información del usuario:", error);
     throw error;
   }
 };
@@ -47,19 +51,18 @@ export const updateMyInfo = async (userData) => {
     const response = await axios.put(`${API_URL}/users/me`, userData, {
       withCredentials: true,
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
     return response.data;
   } catch (error) {
-    console.error('Error al actualizar la información del usuario:', error);
+    console.error("Error al actualizar la información del usuario:", error);
     throw error;
   }
 };
 export const updateUserInfoByDni = async (userData) => {
   try {
-
-    const { dni } = userData;   
+    const { dni } = userData;
     if (!dni) {
       throw new Error("DNI no proporcionado o indefinido");
     }
@@ -67,27 +70,26 @@ export const updateUserInfoByDni = async (userData) => {
     const response = await axios.put(`${API_URL}/users/${dni}`, userData, {
       withCredentials: true,
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
     return response.data;
   } catch (error) {
-    console.error('Error al actualizar la información del usuario:', error);
+    console.error("Error al actualizar la información del usuario:", error);
     throw error;
   }
 };
 
-
 export const changeUserPassword = async (currentPassword, newPassword) => {
   try {
     const response = await axios.put(
-      `${API_URL}/users/me/change-password`, 
+      `${API_URL}/users/me/change-password`,
       { currentPassword, newPassword },
       { withCredentials: true }
     );
     return response.data;
   } catch (error) {
-    console.error('Error al cambiar la contraseña:', error);
+    console.error("Error al cambiar la contraseña:", error);
     throw error;
   }
 };
@@ -95,23 +97,31 @@ export const deleteUser = async (dni) => {
   try {
     await axios.delete(`${API_URL}/users/${dni}`, { withCredentials: true });
   } catch (error) {
-    console.error('Error al eliminar el usuario:', error);
+    console.error("Error al eliminar el usuario:", error);
     throw error;
   }
 };
 export const assignUserRole = async (dni, newRole) => {
   try {
-    await axios.post(`${API_URL}/users/${dni}/assign-role`, { newRole }, { withCredentials: true });
+    await axios.post(
+      `${API_URL}/users/${dni}/assign-role`,
+      { newRole },
+      { withCredentials: true }
+    );
   } catch (error) {
-    console.error('Error al asignar rol:', error);
+    console.error("Error al asignar rol:", error);
     throw error;
   }
 };
 export const sendMessage = async (message) => {
   try {
-    const response = await axios.post(`${API_URL}/users/send-message`, { message }, {
-      withCredentials: true,
-    });
+    const response = await axios.post(
+      `${API_URL}/users/send-message`,
+      { message },
+      {
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error al enviar el mensaje:", error);

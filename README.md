@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Mi Turno Web
 
-## Getting Started
+## Descripción del Proyecto
 
-First, run the development server:
+**Mi Turno Web** es una aplicación web diseñada para gestionar la reserva de turnos en empresas con sucursales físicas. Permite a las sucursales administrar la cantidad de clientes simultáneos y gestionar los rangos horarios disponibles. Los turnos tienen una duración de 15 minutos y pueden ser cancelados con hasta 2 horas de antelación. La plataforma también incluye un panel gráfico que muestra las reservas y proporciona métricas basadas en las interacciones.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Tecnologías Utilizadas
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Backend:** Node.js, Express
+- **Frontend:** React.js, Next.js
+- **Base de Datos:** PostgreSQL Sequelize
+- **Gráficos:** tailwind
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+![mtw1](https://ibb.co/yd5v71R)
+![mtw2](https://ibb.co/chqDt9f)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Funcionalidades
 
-## Learn More
+### Funcionalidades Principales
 
-To learn more about Next.js, take a look at the following resources:
+- **Alta de clientes:** Permite registrar clientes con nombre, apellido, DNI y correo electrónico.
+- **Sistema de autenticación:** Roles de acceso para Empresa/Administrador, Sucursal/Operador y Cliente/Usuario.
+  - **Administrador:** Gestión de sucursales, horarios y clientes simultáneos.
+  - **Operador:** Visualización de reservas y confirmación de asistencia.
+  - **Usuario:** Reserva, edición y cancelación de turnos.
+- **Panel de reservas:** Visualización y gestión de turnos disponibles, con notificaciones de baja disponibilidad.
+- **Notificaciones por correo:** Confirmación de alta, cambios en la reserva, recordatorio 24 horas antes del turno.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Funcionalidades Adicionales (Opcional)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- Confirmación de asistencia por parte del comercio.
+- Integración con Google Calendar.
+- Panel de métricas para reservas y asistencias.
+- Deploy en la nube.
+- Visualización en tiempo real de reservas (WebSockets).
+- Contenedores Docker.
 
-## Deploy on Vercel
+## Instalación y Ejecución
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Clonar el repositorio.
+2. Instalar las dependencias:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+   ```bash
+   npm install
+   npm start
+
+
+   ```
