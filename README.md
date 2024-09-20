@@ -11,8 +11,8 @@
 - **Base de Datos:** PostgreSQL Sequelize
 - **Gráficos:** tailwind
 
-![mtw1](https://ibb.co/yd5v71R)
-![mtw2](https://ibb.co/chqDt9f)
+![mtw2](https://i.ibb.co/yF2W5Cv/Captura-desde-2024-09-20-20-54-14.png)
+![mtw1](https://i.ibb.co/RYPrdmS/Captura-desde-2024-09-20-20-48-38.png)
 
 ## Funcionalidades
 
