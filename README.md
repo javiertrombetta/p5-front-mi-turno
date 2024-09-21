@@ -13,6 +13,7 @@
 
 ![mtw2](https://i.ibb.co/yF2W5Cv/Captura-desde-2024-09-20-20-54-14.png)
 ![mtw1](https://i.ibb.co/RYPrdmS/Captura-desde-2024-09-20-20-48-38.png)
+![mtw3](https://i.ibb.co/dDzrdCr/Captura-desde-2024-09-20-20-59-57.png)
 
 ## Funcionalidades
 
@@ -42,7 +43,7 @@
 
    ```bash
    npm install
-   npm start
+   npm run dev
 
 
    ```
